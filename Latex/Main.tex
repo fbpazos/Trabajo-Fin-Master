@@ -1,0 +1,96 @@
+\input{Include/Preamble}
+\input{Content/_Info}
+
+\begin{document}
+\pagenumbering{roman} % Roman numerals are used in the numbering of the pages preceding the body of the work.
+
+% Cover
+\input{Include/Cover}
+
+\newpage % blank page
+\thispagestyle{empty}
+\mbox{}
+\newpage % blank page
+\thispagestyle{empty}
+\mbox{}
+
+% 0. Abstract
+\renewcommand\abstractname{\large\bfseries\filcenter\uppercase{Summary}}
+\begin{abstract}
+\thispagestyle{plain}
+\setcounter{page}{3}
+	
+	% Write your abstract
+    \input{Content/0. Abstract}
+	
+	\textbf{Keywords:  \KeywordsAbstract} % add the keywords
+	
+	\vfill
+\end{abstract}
+	\newpage % Blank page
+	\thispagestyle{empty}
+	\mbox{}
+
+
+\chapter*{Dedication}
+
+\setcounter{page}{5}
+    
+% Write here	
+    \input{Content/1. Dedication.tex}
+\vfill
+
+\newpage % blank page
+\thispagestyle{empty}
+\mbox{}
+    
+
+\tableofcontents
+\thispagestyle{fancy}
+
+\newpage % blank page
+\thispagestyle{empty}
+\mbox{}
+
+%--
+% List of figures. If they are not included, comment the following lines
+%-
+\listoffigures
+\thispagestyle{fancy}
+
+\newpage % blank page
+\thispagestyle{empty}
+\mbox{}
+
+%--
+% List of tables. If they are not included, comment the following lines
+%-
+\listoftables
+\thispagestyle{fancy}
+
+\newpage % blankpage
+\thispagestyle{empty}
+\mbox{}
+
+
+\clearpage
+\pagenumbering{arabic} % numbering with Arabic numerals for the rest of the document.
+
+
+% 2. Introduction
+\input{Content/2. Introduction.tex}
+
+% 3. Thesis
+\input{Content/3. Thesis.tex}
+
+% 4. Conclusions
+\input{Content/4. Conclusions.tex}
+
+% 5. Bibliography
+\input{Content/5. Bibliography.tex}
+
+% 6. Appendix
+\input{Content/6. Appendix.tex}
+
+%\input{Sections/Content/Seminar-Summary}
+\end{document}
