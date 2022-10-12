@@ -1,0 +1,20 @@
+{
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./test",
+        "-p",
+        "test_*.py"
+    ],
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestArgs": [
+        "-v",
+        "--cov",
+        "--cov-report=lcov:Coverage/lcov/lcov.info",
+        "--cov-report=html:Coverage/html",
+        "--cov-report=xml:Coverage/xml/coverage.xml",
+        "Test"
+    ],
+    "python.analysis.typeCheckingMode": "basic"
+}
