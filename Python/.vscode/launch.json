@@ -18,7 +18,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/test/__init__.py",
-            "console": "externalTerminal",
+            "console": "integratedTerminal",
             "justMyCode": true
         }
     ]

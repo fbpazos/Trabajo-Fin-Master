@@ -119,7 +119,7 @@ def pchip(x,y,u,sorted=False):
         '''
         n = len(h) 
         d = np.zeros(len(h))
-        print(len(d))
+
 
         k = np.where(np.sign(delta[0:-1]) *np.sign(delta[1:]) > 0)[0] # Find the indices of the points where the slopes are of the same sign
         k = k+1  # Add 1 to the indices to get the indices of the slopes
@@ -133,9 +133,8 @@ def pchip(x,y,u,sorted=False):
         d[0] = pchip_end(h[0],h[1],delta[0],delta[1])
 
         d = np.append(d,pchip_end(h[-2],h[-3],delta[-2],delta[-3]))
-        print(len(d))
+
         return d
-    
     
     # Sort the points
     x = np.array(x)
@@ -150,8 +149,6 @@ def pchip(x,y,u,sorted=False):
     delta = np.diff(y)/h
 
     d = pchip_slopes(h,delta)
-
-
 
     n = len(x)
     c = (3*delta - 2*d[:-1] - d[1:])/(h)
@@ -204,7 +201,6 @@ def splitnetx(x,y,u,sorted=False):
         c = np.zeros(len(h)).astype(float)
         r = np.zeros(len(h)).astype(float)
 
-
         a[:-1] = h[1:]
         a[-1] = h[-2]+h[-1]
         b[0] = h[1]
@@ -218,13 +214,8 @@ def splitnetx(x,y,u,sorted=False):
         r[0] = ((h[0]+2*c[0])*h[1]*delta[0]+ h[0]**2*delta[1])/c[0]
         r[1:] = 3*(h[1:]*delta[:-1]+ h[:-1]*delta[1:])
         r = np.append(r,(h[-1]**2*delta[-2]+ (2*a[-1]+h[-1])*h[-2]*delta[-1])/a[-1])
-        
 
-        
-
-        
         res = np.linalg.solve(np.diag(a,-1) + np.diag(b) + np.diag(c,1),r)
-        
 
         return res.astype(float)
 
@@ -241,8 +232,6 @@ def splitnetx(x,y,u,sorted=False):
     delta = np.diff(y)/h
 
     d = splineslopes(h,delta)
-
-
 
     n = len(x)
     c = (3*delta - 2*d[:-1] - d[1:])/(h)
@@ -261,3 +250,5 @@ def splitnetx(x,y,u,sorted=False):
             
 
     return v
+
+
