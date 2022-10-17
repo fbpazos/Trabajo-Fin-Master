@@ -1,7 +1,8 @@
 from unittest import TestCase
-
-from matplotlib.pyplot import cla
+import pytest
+from bqplot import pyplot as plt
 from BasicLineAlg.Interpolation.interpolation import interPoly, piecewiseLinear, pchip, splitnetx
+from BasicLineAlg.Interpolation.InterpolationVisualizer import InterpolVisualizer
 import numpy as np
 
 
@@ -77,7 +78,6 @@ class test_PieceWiseLinearInterpolation(TestCase):
         print(i1,v[i1])
 
         self.assertTrue(np.isclose(v[i1],-5))
-
 
 class test_pchip(TestCase):
     def test_interpolation(self):
@@ -176,3 +176,54 @@ class test_splitnetx(TestCase):
 
 
        
+class test_InterpolationVisualizer(TestCase):
+    # Run before each test
+    
+    def runtest_setup(self):
+        try:
+            plt.close(self.interpolVisualizer.fig)
+        except AttributeError:
+            pass
+
+
+        x = list(np.arange(1,7,1).astype(float)) 
+        y =  np.array([16, 18, 21, 17, 15, 12],dtype=float)
+        u = list(np.arange(1,6.1,0.1).astype(float))
+
+        self.interpolVisualizer = InterpolVisualizer(x,y,u)
+        self.interpolVisualizer.run()
+        plt.show()
+
+        print("Setting Up - Interpolation Visualizer")
+
+    def test_updatePoints(self):
+        self.runtest_setup()
+
+        oldX = self.interpolVisualizer.x.copy()
+        oldY = self.interpolVisualizer.y.copy()
+        # 1. Properly update the points
+        self.interpolVisualizer.scatterPlot.x = np.append(self.interpolVisualizer.scatterPlot.x, 5.5)
+        self.interpolVisualizer.scatterPlot.y = np.append(self.interpolVisualizer.scatterPlot.y, 14)
+
+        self.assertTrue(len(self.interpolVisualizer.scatterPlot.x) == len(oldX)+1)
+        self.assertTrue(len(self.interpolVisualizer.scatterPlot.y) == len(oldY)+1)
+
+        # 2. If same X value is added, it should not update
+        self.interpolVisualizer.scatterPlot.x = np.append(self.interpolVisualizer.scatterPlot.x, 5.5)
+        self.interpolVisualizer.scatterPlot.y = np.append(self.interpolVisualizer.scatterPlot.y, 14)
+
+        self.assertTrue(len(self.interpolVisualizer.scatterPlot.x) == len(oldX)+1)
+        self.assertTrue(len(self.interpolVisualizer.scatterPlot.y) == len(oldY)+1)
+
+        # 3. If ONLY Y value is added, it should not update Y
+        self.interpolVisualizer.scatterPlot.y = np.append(self.interpolVisualizer.scatterPlot.y, 14)
+
+        self.assertTrue(len(self.interpolVisualizer.scatterPlot.y) == len(oldY)+1)
+
+    def test_updateMesh(self):
+        pass
+
+
+
+
+    

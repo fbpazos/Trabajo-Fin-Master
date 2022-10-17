@@ -1,17 +1,191 @@
 import numpy as np
-from interpolation import interPoly, piecewiseLinear, pchip, splitnetx
+from .interpolation import interPoly, piecewiseLinear, pchip, splitnetx
 from bqplot import pyplot as plt
 import ipywidgets as widgets
+import bqplot as bq
 
 class InterpolVisualizer:
+    def __init__(self,xInitial,yInitial,uInitial) -> None:
+        if len(xInitial) != len(yInitial):
+            raise Exception("The length of the X and Y coordinates must be the same")
+
+        self.x = np.array(xInitial).astype(float)
+        self.y = np.array(yInitial).astype(float)
+        self.u = np.array(uInitial).astype(float)
+        
+        self.Originals = [self.x,self.y,self.u]
+
+        self.methods = {
+            'InterPoly':[interPoly,"blue"],
+            'Piecewise Linear':[piecewiseLinear,"green"],
+            'Pchip':[pchip,"orange"],
+            'SplitNetX':[splitnetx,"purple"]
+        }
+
+
+
+    def initializeComponents(self):
+        '''
+        Initializes the components of the GUI
+        Components:
+            - Checkboxes
+                Checkboxes for each interpolation method
+            - Slider
+                Slider for the mesh size
+            - Reset Button
+                Button to reset the points
+        '''
+
+        # Widgets
+        # Checkboxes
+        self.checkboxes = []
+        for key,val in self.methods.items():
+            checkbox = widgets.Checkbox(description=key, value=True, style={'background': val[1]})
+            checkbox.observe(self.update_checkboxes, 'value')
+            self.methods[key].append(checkbox)
+            self.checkboxes.append(checkbox)
+            
+
+        # Reset button
+        self.reset_button = widgets.Button(description='Reset')
+        self.reset_button.on_click(self.reset)
+
+        # Range slider
+        values = [min(self.x), max(self.x)]
+        self.slider = widgets.FloatRangeSlider(
+            value=values,
+            min=values[0] - (values[1]-values[0])/2 ,
+            max=values[1] + (values[1]-values[0])/2,
+            step=0.1,
+            description='Mesh:',
+            disabled=False,
+            continuous_update=False,
+            orientation='horizontal',
+            readout=True,
+            readout_format='.1f',
+        )
+        self.slider.observe(self.update_Mesh,'value')
+
+       
+
+
+    def scatterDots(self):
+        self.ScatteredDots = bq.Scatter(x=self.x,y=self.y, scales={'x': self.x_sc, 'y': self.y_sc}, colors=['red'],name="Points",enable_move = True, enable_add = False, display_legend=False, labels=["Points"])
+        
+        # observe change XY
+        self.ScatteredDots.observe(self.update_X,'x')
+        self.ScatteredDots.observe(self.update_Y,'y')
+        self.ScatteredDots.interactions = {'click':  'add'}
+
+    
+    def interpolLines(self):
+        self.InterpolLines = [
+            bq.Lines(x=self.u,y=val[0](self.x,self.y,self.u),scales={'x': self.x_sc, 'y': self.y_sc}, colors=[val[1]],name=key, display_legend=False, labels=[key], enable_move = False, enable_add = False) 
+            for key,val in self.methods.items()
+                if val[2].value
+            ]
+
+    def update_X(self,change):
+        self.x = change['new'] if change is not None and change["name"]=="x" and len(list(change['new'])) == len(set(change["new"])) else self.x
+
+        self.slider.min = min(self.x) - (max(self.x)-min(self.x))/2
+        self.slider.max = max(self.x) + (max(self.x)-min(self.x))/2
+
+    def update_Y(self,change):
+        self.y = change['new'] if change is not None and change["name"]=="y" and len(list(change['new'])) == len(set(change["new"])) else self.y
+
+        self.scatterDots()
+        self.interpolLines()
+
+        toUpdate = [*self.InterpolLines,self.ScatteredDots]
+
+        self.Fig.marks = toUpdate
+        
+        yVals = [j for line in self.InterpolLines for j in line.y]
+        
+        if len(yVals) != 0:
+            self.y_sc.min = min(yVals)
+            self.y_sc.max = max(yVals)
+
+    def update_Mesh(self, change):
+        '''
+        Updates the mesh and the plot according to the new mesh
+        '''
+        self.u = np.linspace(change['new'][0], change['new'][1], 100)
+        self.update_X(None)
+        self.update_Y(None)
+        
+        # Reset X scale
+        self.x_sc.min = min(self.u)
+        self.x_sc.max = max(self.u)
+
+    def update_checkboxes(self, change):
+        '''
+        Updates the plot according to the new checkboxes
+        '''
+        self.update_X(None)
+        self.update_Y(None)
+    def reset(self, b):
+        '''
+        Resets the points to the original ones
+        '''
+        self.x = self.Originals[0]
+        self.y = self.Originals[1]
+        self.u = self.Originals[2]
+        
+        values = [min(self.x), max(self.x)]
+        self.u = np.linspace(values[0], values[1], 100)
+        
+        
+        self.update_X(None)
+        self.update_Y(None)
+
+        # Reset Y scale
+        self.y_sc.min = min(self.y) 
+        self.y_sc.max = max(self.y)
+        
+
+        # Reset X scale
+        self.x_sc.min = min(self.x)
+        self.x_sc.max = max(self.x)
+        
+
+    def run(self):
+        
+        self.x_sc = bq.LinearScale()
+        self.y_sc = bq.LinearScale()
+        ax_x = bq.Axis(scale=self.x_sc, grid_lines='solid', label='X')
+        ax_y = bq.Axis(scale=self.y_sc, orientation='vertical', tick_format='0.2f',grid_lines='solid', label='Y')
+        
+        
+        self.initializeComponents()
+        self.interpolLines()
+        self.scatterDots()
+
+        self.Fig = bq.Figure(marks=[*self.InterpolLines, self.ScatteredDots], axes=[ax_x, ax_y], title='Interpolation Visualizer', legend_location='top-right', animation_duration=1000, )
+
+        self.Toolbar = bq.Toolbar(figure=self.Fig)
+
+        self.checkboxesVbox = widgets.VBox(self.checkboxes)
+        tools = widgets.VBox([self.checkboxesVbox,self.slider,self.reset_button])
+        
+        widgetsgrid = widgets.GridspecLayout(11, 7)
+        
+        widgetsgrid[0,:] = self.Toolbar
+        widgetsgrid[1:,:4] = self.Fig
+        widgetsgrid[1:,4:] = tools
+
+        return widgetsgrid
+
+
+
+
+class InterpolVisualizer_UnOptimized:
     def __init__(self,xInitial,yInitial,uInitial):
         
         
         if len(xInitial) != len(yInitial):
             raise Exception("The length of the X and Y coordinates must be the same")
-
-        
-
 
         self.x = np.array(xInitial).astype(float)
         self.y = np.array(yInitial).astype(float)
@@ -56,13 +230,15 @@ class InterpolVisualizer:
             readout_format='.1f',
         )
         # Linking the widgets to the functions
-        self.slider.observe(self.update_Mesh, 'value')
+        self.slider.observe(self.update_Mesh,'value')
         self.reset_button.on_click(self.reset)
         for checkbox in self.checkboxes:
-            checkbox.observe(self.update_checkboxes, 'value')
+            checkbox.observe(self.update_checkboxes,'value')
 
     
         self.checkboxesVbox = widgets.VBox(self.checkboxes)
+
+        
 
     def initializeBQPlot(self):
         '''
@@ -72,6 +248,8 @@ class InterpolVisualizer:
 
         self.fig = plt.figure(title='Interpolation Visualizer')
         
+        self.Toolbar = plt.Toolbar(figure=self.fig)
+
         self.interpolate()
         self.scattering()    
         plt.legend()
@@ -112,11 +290,12 @@ class InterpolVisualizer:
         '''
 
         plt.clear()
-        self.y = change['new'] if change is not None and change["name"]=="y" else self.y
+        self.y = change['new'] if change is not None and change["name"]=="y" and  len(self.x) == len(list(change['new']))  else self.y
 
         self.slider.min = min(self.x) - (max(self.x)-min(self.x))/2
         self.slider.max = max(self.x) + (max(self.x)-min(self.x))/2
-
+        
+        
         self.interpolate()
         self.scattering()
         
@@ -144,8 +323,10 @@ class InterpolVisualizer:
         self.x = self.Originals[0]
         self.y = self.Originals[1]
         self.u = self.Originals[2]
+
         self.update_pointsX(None)
         self.update_pointsY(None)
+
 
     def interpolate(self):
         '''
@@ -172,9 +353,12 @@ class InterpolVisualizer:
 
         tools = widgets.VBox([self.checkboxesVbox,self.slider,self.reset_button])
         
-        widgetsgrid = widgets.GridspecLayout(10, 7)
-        widgetsgrid[:,:4] = self.fig
+        widgetsgrid = widgets.GridspecLayout(11, 7)
+        
+        widgetsgrid[0,:] = self.Toolbar
+        widgetsgrid[1:,:4] = self.fig
         widgetsgrid[1:,4:] = tools
+        
         
         
         return widgetsgrid
