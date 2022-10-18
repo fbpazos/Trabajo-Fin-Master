@@ -192,36 +192,99 @@ class test_InterpolationVisualizer(TestCase):
 
         self.interpolVisualizer = InterpolVisualizer(x,y,u)
         self.interpolVisualizer.run()
-        plt.show()
 
-        print("Setting Up - Interpolation Visualizer")
+
+        print("Setting Up - Interpolation Visualizer Test")
 
     def test_updatePoints(self):
         self.runtest_setup()
+        
+        oldX = self.interpolVisualizer.ScatteredDots.x
+        oldY = self.interpolVisualizer.ScatteredDots.y
+        
+        # 1. Adding a point will correctly update the scattered dots
+        self.interpolVisualizer.ScatteredDots.x = np.append(self.interpolVisualizer.ScatteredDots.x,7)
+        self.interpolVisualizer.ScatteredDots.y = np.append(self.interpolVisualizer.ScatteredDots.y,7)
+        self.assertTrue(
+            len(self.interpolVisualizer.ScatteredDots.x) == len(oldX)+1 and
+            len(self.interpolVisualizer.ScatteredDots.y) == len(oldY)+1
+        )
 
-        oldX = self.interpolVisualizer.x.copy()
-        oldY = self.interpolVisualizer.y.copy()
-        # 1. Properly update the points
-        self.interpolVisualizer.scatterPlot.x = np.append(self.interpolVisualizer.scatterPlot.x, 5.5)
-        self.interpolVisualizer.scatterPlot.y = np.append(self.interpolVisualizer.scatterPlot.y, 14)
+        # 2. Adding same Val of X will not update the scattered dots
+        self.interpolVisualizer.ScatteredDots.x = np.append(self.interpolVisualizer.ScatteredDots.x,7)
+        self.interpolVisualizer.ScatteredDots.y = np.append(self.interpolVisualizer.ScatteredDots.y,7)  
+        self.assertTrue(
+            len(self.interpolVisualizer.ScatteredDots.x) == len(oldX)+1 and
+            len(self.interpolVisualizer.ScatteredDots.y) == len(oldY)+1
+        )
 
-        self.assertTrue(len(self.interpolVisualizer.scatterPlot.x) == len(oldX)+1)
-        self.assertTrue(len(self.interpolVisualizer.scatterPlot.y) == len(oldY)+1)
+        # 3. Adding Y without X will not update the scattered dots
+        self.interpolVisualizer.ScatteredDots.y = np.append(self.interpolVisualizer.ScatteredDots.y,7) 
+        self.assertTrue(
+            len(self.interpolVisualizer.ScatteredDots.y) == len(oldY)+1
+        )
 
-        # 2. If same X value is added, it should not update
-        self.interpolVisualizer.scatterPlot.x = np.append(self.interpolVisualizer.scatterPlot.x, 5.5)
-        self.interpolVisualizer.scatterPlot.y = np.append(self.interpolVisualizer.scatterPlot.y, 14)
 
-        self.assertTrue(len(self.interpolVisualizer.scatterPlot.x) == len(oldX)+1)
-        self.assertTrue(len(self.interpolVisualizer.scatterPlot.y) == len(oldY)+1)
-
-        # 3. If ONLY Y value is added, it should not update Y
-        self.interpolVisualizer.scatterPlot.y = np.append(self.interpolVisualizer.scatterPlot.y, 14)
-
-        self.assertTrue(len(self.interpolVisualizer.scatterPlot.y) == len(oldY)+1)
 
     def test_updateMesh(self):
-        pass
+        self.runtest_setup()
+
+        oldU = self.interpolVisualizer.u
+        old_x_sc = self.interpolVisualizer.x_sc.min
+        old_y_sc = self.interpolVisualizer.y_sc.min
+
+        self.assertTrue(
+            old_x_sc is None and
+            old_y_sc is None
+        )
+
+        # Modify the mesh should modify sc_x and sc_y
+        self.interpolVisualizer.slider.value = [-8.0, 20]
+
+        self.assertTrue(
+            self.interpolVisualizer.x_sc.min != old_x_sc and
+            self.interpolVisualizer.y_sc.min != old_y_sc            
+        )
+        
+        self.assertTrue(
+            self.interpolVisualizer.u[0] == self.interpolVisualizer.slider.min 
+                and
+            self.interpolVisualizer.u[-1] == self.interpolVisualizer.slider.max
+        )
+   
+    def test_updateCheckboxes(self):
+        self.runtest_setup()
+        
+        self.interpolVisualizer.interpolLines()
+        self.assertTrue(
+            len(self.interpolVisualizer.InterpolLines) == len(self.interpolVisualizer.methods)
+        )
+
+        self.interpolVisualizer.checkboxes[0].value = False
+        self.assertTrue(
+            len(self.interpolVisualizer.InterpolLines) == len(self.interpolVisualizer.methods)-1
+        )
+
+    def test_reset(self):
+        self.runtest_setup()
+
+
+        oldX = self.interpolVisualizer.ScatteredDots.x
+        oldY = self.interpolVisualizer.ScatteredDots.y
+        
+        # 1. Adding a point will correctly update the scattered dots
+        self.interpolVisualizer.ScatteredDots.x = np.append(self.interpolVisualizer.ScatteredDots.x,7)
+        self.interpolVisualizer.ScatteredDots.y = np.append(self.interpolVisualizer.ScatteredDots.y,7)
+
+        self.interpolVisualizer.reset(None)
+
+        self.assertTrue(
+            (self.interpolVisualizer.ScatteredDots.x == oldX).all() and
+            (self.interpolVisualizer.ScatteredDots.y == oldY).all()
+        )
+        
+
+
 
 
 

@@ -6,6 +6,14 @@ import bqplot as bq
 
 class InterpolVisualizer:
     def __init__(self,xInitial,yInitial,uInitial) -> None:
+        '''
+        Initializes the Class
+
+        Parameters:
+            - xInitial: Initial x coordinates
+            - yInitial: Initial y coordinates
+            - uInitial: Initial mesh
+        '''
         if len(xInitial) != len(yInitial):
             raise Exception("The length of the X and Y coordinates must be the same")
 
@@ -36,8 +44,13 @@ class InterpolVisualizer:
                 Button to reset the points
         '''
 
-        # Widgets
-        # Checkboxes
+        '''
+        Checkboxes
+        ======================
+        One checkbox for every possible interpolation method
+        Every checkbox will be associated with a method called update_checkboxes that will update the plot according to the updated checkboxes. 
+        Additionally, the checkbox will have the same color as the color of associated interpolation method
+        '''
         self.checkboxes = []
         for key,val in self.methods.items():
             checkbox = widgets.Checkbox(description=key, value=True, style={'background': val[1]})
@@ -46,11 +59,20 @@ class InterpolVisualizer:
             self.checkboxes.append(checkbox)
             
 
-        # Reset button
+        '''
+        Reset button
+        ======================
+        Button to reset the points to the original ones, linked to the method reset
+        '''
         self.reset_button = widgets.Button(description='Reset')
         self.reset_button.on_click(self.reset)
 
-        # Range slider
+        '''
+        Range slider
+        ======================
+        Slider to change the mesh size, linked to the method update_Mesh, with a default minimum of the minimum of the original points - 0.5*(max-min) 
+        and a default maximum of the maximum of the original points + 0.5*(max-min).
+        '''
         values = [min(self.x), max(self.x)]
         self.slider = widgets.FloatRangeSlider(
             value=values,
@@ -67,9 +89,12 @@ class InterpolVisualizer:
         self.slider.observe(self.update_Mesh,'value')
 
        
-
-
     def scatterDots(self):
+        '''
+        Updates ScatteredDots - the scatter plot of the data - according to the new points
+        It observers the changes in the x and y coordinates of the scatter plot and links them to the update_X and update_Y methods
+        It also lets adding new points
+        '''
         self.ScatteredDots = bq.Scatter(x=self.x,y=self.y, scales={'x': self.x_sc, 'y': self.y_sc}, colors=['red'],name="Points",enable_move = True, enable_add = False, display_legend=False, labels=["Points"])
         
         # observe change XY
@@ -79,6 +104,10 @@ class InterpolVisualizer:
 
     
     def interpolLines(self):
+        '''
+        Updates the interpolation lines according to the new points
+        It creates an array of Lines for every interpolation method that is checked in the checkboxes
+        '''
         self.InterpolLines = [
             bq.Lines(x=self.u,y=val[0](self.x,self.y,self.u),scales={'x': self.x_sc, 'y': self.y_sc}, colors=[val[1]],name=key, display_legend=False, labels=[key], enable_move = False, enable_add = False) 
             for key,val in self.methods.items()
@@ -86,13 +115,26 @@ class InterpolVisualizer:
             ]
 
     def update_X(self,change):
+        '''
+        Updates the x coordinates and the plot according to the new x coordinates if the change is not None and does not contain Repetitions (Definition of a function)
+        It also updates the slider according to the new x coordinates
+
+        This method will always be called when the x coordinates are changed and before the y coordinates are changed.
+        '''
         self.x = change['new'] if change is not None and change["name"]=="x" and len(list(change['new'])) == len(set(change["new"])) else self.x
 
         self.slider.min = min(self.x) - (max(self.x)-min(self.x))/2
         self.slider.max = max(self.x) + (max(self.x)-min(self.x))/2
 
     def update_Y(self,change):
-        self.y = change['new'] if change is not None and change["name"]=="y" and len(list(change['new'])) == len(set(change["new"])) else self.y
+        '''
+        Updates the y coordinates and the plot according to the new y coordinates if the change is not None and contains the same number of points as X 
+        It makes new scattering and inteprolation lines and updates the plot.
+        Also, it updates Scales and Axes according to the new points
+
+        This method will always be called when the y coordinates are changed and after the x coordinates are changed.
+        '''
+        self.y = change['new'] if change is not None and change["name"]=="y" and len(list(change['new'])) == len(self.x) else self.y
 
         self.scatterDots()
         self.interpolLines()
@@ -102,7 +144,6 @@ class InterpolVisualizer:
         self.Fig.marks = toUpdate
         
         yVals = [j for line in self.InterpolLines for j in line.y]
-        
         if len(yVals) != 0:
             self.y_sc.min = min(yVals)
             self.y_sc.max = max(yVals)
@@ -112,6 +153,7 @@ class InterpolVisualizer:
         Updates the mesh and the plot according to the new mesh
         '''
         self.u = np.linspace(change['new'][0], change['new'][1], 100)
+        
         self.update_X(None)
         self.update_Y(None)
         
@@ -127,7 +169,7 @@ class InterpolVisualizer:
         self.update_Y(None)
     def reset(self, b):
         '''
-        Resets the points to the original ones
+        Resets everything to what it was at the beginning of the program
         '''
         self.x = self.Originals[0]
         self.y = self.Originals[1]
@@ -151,7 +193,9 @@ class InterpolVisualizer:
         
 
     def run(self):
-        
+        '''
+        Runner method : Creates all the widgets and displays the plot with a given layout
+        '''
         self.x_sc = bq.LinearScale()
         self.y_sc = bq.LinearScale()
         ax_x = bq.Axis(scale=self.x_sc, grid_lines='solid', label='X')

@@ -15,6 +15,7 @@ def main():
             "--cov-report=lcov:Coverage/lcov/lcov.info",
             "--cov-report=html:Coverage/html",
             "--cov-report=xml:Coverage/xml/coverage.xml",
+             "-W ignore::DeprecationWarning",
             "Test"
             ]
     )
