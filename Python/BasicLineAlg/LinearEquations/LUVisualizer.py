@@ -129,7 +129,7 @@ class LUVisualizer:
     def runner(self):
         # Run the visualizer
         self.initializeComponents()
-        display(self.grid)
+        return (self.grid)
         
         
 
