@@ -134,19 +134,20 @@ class InterpolVisualizer:
 
         This method will always be called when the y coordinates are changed and after the x coordinates are changed.
         '''
-        self.y = change['new'] if change is not None and change["name"]=="y" and len(list(change['new'])) == len(self.x) else self.y
+        with self.widgetsgrid.hold_sync():
+            self.y = change['new'] if change is not None and change["name"]=="y" and len(list(change['new'])) == len(self.x) else self.y
 
-        self.scatterDots()
-        self.interpolLines()
+            self.scatterDots()
+            self.interpolLines()
 
-        toUpdate = [*self.InterpolLines,self.ScatteredDots]
+            toUpdate = [*self.InterpolLines,self.ScatteredDots]
 
-        self.Fig.marks = toUpdate
-        
-        yVals = [j for line in self.InterpolLines for j in line.y]
-        if len(yVals) != 0:
-            self.y_sc.min = min(yVals)
-            self.y_sc.max = max(yVals)
+            self.Fig.marks = toUpdate
+            
+            yVals = [j for line in self.InterpolLines for j in line.y]
+            if len(yVals) != 0:
+                self.y_sc.min = min(yVals)
+                self.y_sc.max = max(yVals)
 
     def update_Mesh(self, change):
         '''
@@ -213,16 +214,13 @@ class InterpolVisualizer:
         self.checkboxesVbox = widgets.VBox(self.checkboxes)
         tools = widgets.VBox([self.checkboxesVbox,self.slider,self.reset_button])
         
-        widgetsgrid = widgets.GridspecLayout(11, 7)
+        self.widgetsgrid = widgets.GridspecLayout(11, 7)
         
-        widgetsgrid[0,:] = self.Toolbar
-        widgetsgrid[1:,:4] = self.Fig
-        widgetsgrid[1:,4:] = tools
+        self.widgetsgrid[0,:] = self.Toolbar
+        self.widgetsgrid[1:,:4] = self.Fig
+        self.widgetsgrid[1:,4:] = tools
 
-        return widgetsgrid
-
-
-
+        return self.widgetsgrid
 
 class InterpolVisualizer_UnOptimized:
     def __init__(self,xInitial,yInitial,uInitial):

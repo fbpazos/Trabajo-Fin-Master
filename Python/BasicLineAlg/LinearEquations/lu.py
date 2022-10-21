@@ -55,7 +55,7 @@ def lu(Matrix:np.array):
 
     return P,L,U
 
-def interative_lu(P, L ,U , col, pivotRow):
+def interactive_lu(P, L ,U , col, pivotRow):
     '''
     Makes only one step of the LU factorization, updates P,L,U and takes the pivot row to do the Gaussian Elimination
 
@@ -89,7 +89,7 @@ def interative_lu(P, L ,U , col, pivotRow):
     L = L.astype(float)
 
     #col = lastColumn 
-    iMax = np.argmax(np.abs(U[col:,col])) + col if pivotRow <= col else pivotRow # Find the index of the row with the largest pivot element or use the pivot row if it is already found
+    iMax = np.argmax(np.abs(U[col:,col])) + col if pivotRow < col else pivotRow # Find the index of the row with the largest pivot element or use the pivot row if it is already found
 
     # Skip if the pivot is zero 
     if U[iMax,col] != 0:
@@ -105,7 +105,7 @@ def interative_lu(P, L ,U , col, pivotRow):
             U[row,col+1:] = U[row,col+1:] - L[row,col]*U[col,col+1:] # Update the remaining elements in the row using the multiplier
 
 
-    return P,L,U,(col+1 if col+1 < U.shape[1] else -1), iMax
+    return P,L,U,(col+1), iMax
 
 
 def permute(A:np.array, i:int, j:int):

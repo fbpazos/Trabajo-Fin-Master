@@ -5,7 +5,7 @@ import numpy as np
 
 
 
-from BasicLineAlg.LinearEquations.lu import lu, permute, interative_lu
+from BasicLineAlg.LinearEquations.lu import lu, permute, interactive_lu
 
 
 class test_LU(TestCase):
@@ -46,8 +46,8 @@ class test_LU(TestCase):
         P = np.eye(A.shape[0])
 
         lastColumn = 0
-        while lastColumn > -1:
-            P,L,U,lastColumn,iMax = interative_lu(P,L,U,lastColumn,-1)
+        while lastColumn > A.shape[1]:
+            P,L,U,lastColumn,iMax = interactive_lu(P,L,U,lastColumn,-1)
             self.assertTrue(np.allclose(P@A, L@U))
 
 
