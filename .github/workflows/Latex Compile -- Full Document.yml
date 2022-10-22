@@ -1,17 +1,22 @@
 name: Latex Compile -- Full Document.yml
-steps:
-- name: Github Action for LaTeX
-  uses: xu-cheng/latex-action@v2
-  with:
-    working_directory: /Latex
-    root_file: main.text
-    args: |
-      -interaction=nonstopmode
-      -file-line-error
-      -synctex=1
-      -pdf
-      -output-directory=../PDF
-      -shell-escape
-
+on: [push]
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v3
+        
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: main.text
+          working_directory: /Latex
+          
+      - name: Upload PDF file
+        uses: actions/upload-artifact@v3
+        with:
+          name: PDF
+          path: main.pdf
 
 
