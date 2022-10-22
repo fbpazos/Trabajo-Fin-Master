@@ -10,7 +10,7 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: main.text
+          root_file: main.tex
           working_directory: /Latex
           
       - name: Upload PDF file
