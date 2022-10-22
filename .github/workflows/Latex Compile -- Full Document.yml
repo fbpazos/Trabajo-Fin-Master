@@ -1,0 +1,20 @@
+# Path: Latex Compile -- Full Document.yml
+- name: Github Action for LaTeX
+  uses: xu-cheng/latex-action@v2
+  with:
+    working_directory: |
+      ./Latex
+    root_file: |
+      main.text
+    args: |
+      -interaction=nonstopmode
+      -file-line-error
+      -synctex=1
+      -pdf
+      -output-directory=../PDF
+      -shell-escape
+    extra_packages: |
+      
+    extra_system_packages: |
+
+
