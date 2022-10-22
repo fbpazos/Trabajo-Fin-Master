@@ -1,3 +1,5 @@
+name: Latex Compile -- Full Document.yml
+steps:
 - name: Github Action for LaTeX
   uses: xu-cheng/latex-action@v2
   with:
