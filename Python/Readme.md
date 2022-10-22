@@ -1,12 +1,12 @@
 # BasicLineAlg
-[]: # Title: BasicLineAlg
-[]: # Author: [Fernando Bellido Pazos](fbellidopazos@gmail.com)
-[]: # Date: 2019-01-01
-[]: # Version: 0.1
-[]: # License: MIT
-[]: # Description: Basic linear Algebra algorithms
-[]: # Tags: line, algorithm, basic
-[]: # URL: 
+- Title: BasicLineAlg
+- Author: [Fernando Bellido Pazos](fbellidopazos@gmail.com)
+- Date: 2022
+- Version: 0.1
+- License: ??
+- Description: Basic linear Algebra algorithms
+- Tags: line, algorithm, basic
+- URL: [Trabajo Fin de Master](https://github.com/fbellidopazos/Trabajo-Fin-Master)
 
 ## Introduction
 
