@@ -39,4 +39,4 @@ jobs:
     - name: Test with pytest
       run: |
         cd Python
-        pytest
+        pytest -v --cov --cov-report=lcov:Coverage/lcov/lcov.info --cov-report=html:Coverage/html --cov-report=xml:Coverage/xml/coverage.xml -W ignore::DeprecationWarning Test
