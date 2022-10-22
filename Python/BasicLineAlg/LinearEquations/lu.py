@@ -1,5 +1,5 @@
 import numpy as np
-def lu(Matrix:np.array):
+def lu(Matrix):
     '''
     LU decomposition of a square matrix A using Gaussian elimination.
     PA = LU where 
@@ -36,7 +36,7 @@ def lu(Matrix:np.array):
     # Loop over the columns of A
     for col in range(n):
         # Find the index of the row with the largest pivot element 
-        iMax = np.argmax(np.abs(A[col:,col])) + col 
+        iMax = int(np.argmax(np.abs(A[col:,col])) + col )
 
         # Skip if the pivot is zero 
         if A[iMax,col] != 0:
@@ -82,6 +82,7 @@ def interactive_lu(P, L ,U , col, pivotRow):
         An upper triangular matrix.
 
     '''
+
     if col+1 >= U.shape[1] or col<=-1 :
         return P,L,U,-1,-1
 
@@ -108,7 +109,7 @@ def interactive_lu(P, L ,U , col, pivotRow):
     return P,L,U,(col+1), iMax
 
 
-def permute(A:np.array, i:int, j:int):
+def permute(A, i:int, j:int):
     '''
     Permute the rows of a matrix.
 

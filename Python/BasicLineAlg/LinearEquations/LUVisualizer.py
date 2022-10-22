@@ -6,6 +6,8 @@ from .lu import interactive_lu
 class LUVisualizer:
     def __init__(self,matrix):
         self.A = np.array(matrix, dtype=float)
+        if self.A.shape[0] != self.A.shape[1]:
+            raise ValueError('Matrix must be square')
         self.step = 0
         self.L = np.eye(self.A.shape[0])
         self.U = self.A.copy()
@@ -35,7 +37,7 @@ class LUVisualizer:
             row = []
             for j in range(self.A.shape[1]):
                 # if the step is 0, then the buttons are disabled except for the first column
-                if j==self.step and i>=self.step and self.step != self.A.shape[1]-1:
+                if j==self.step and i>=self.step and self.step != self.A.shape[1]-1 and not np.isclose(self.U[i,j],0):
                     # color green for available buttons
                     row.append(widgets.Button(description=f"{self.A[i,j]:.2f}",disabled=False,layout=widgets.Layout(width='125px', height='30px'),button_style= 'success',))
                 else:
@@ -69,6 +71,8 @@ class LUVisualizer:
         Call luInteractive with PLU, step and index of pivot row
         Update the output
         '''
+        if b.disabled:
+            return # do nothing if the button is disabled
         self.previousSteps.append((self.P.copy(),self.L.copy(),self.U.copy(),self.step))
         self.P,self.L,self.U,self.step,_ = interactive_lu(self.P,self.L,self.U,self.step,b.index[0])
         with self.grid.hold_sync():
