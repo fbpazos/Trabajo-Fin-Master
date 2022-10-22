@@ -23,6 +23,8 @@ hmargin=3cm
 % In the template we include the file OUTPUT.XMPDATA. You can download that file and include the metadata that will be incorporated into the PDF file when you compile the memoria.tex file. Then upload it back to your project.  
 \usepackage[a-1b]{pdfx}
 \usepackage{datetime} % DATETIME
+\newdateformat{monthYear}{%
+  \monthname[\THEMONTH], \THEYEAR}
 % LINKS
 \usepackage{hyperref}
 \hypersetup{colorlinks=true,
@@ -193,8 +195,7 @@ hmargin=3cm
 \newtheorem*{notation}{Notación}
 \newtheorem{definition}[theorem]{Definición}
 
-\makeatother   
 % Fecha
-\newdateformat{monthyeardate}{\monthname[\THEMONTH] - \THEYEAR}
+
 
   
