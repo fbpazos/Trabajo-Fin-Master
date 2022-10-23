@@ -1,4 +1,4 @@
-name: Latex Compile -- Full Document.yml
+name: Latex Compilation
 on: [push]
 jobs:
   build_latex:
