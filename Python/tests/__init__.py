@@ -1,8 +1,4 @@
-import sys
 import pytest 
-import os
-import numpy as np
-import unittest
 
 
 
@@ -16,7 +12,7 @@ def main():
             "--cov-report=html:Coverage/html",
             "--cov-report=xml:Coverage/xml/coverage.xml",
              "-W ignore::DeprecationWarning",
-            "Test"
+            "tests"
             ]
     )
 

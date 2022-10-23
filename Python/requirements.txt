@@ -1,6 +1,4 @@
 numpy
-pytest
-pytest-cov
 matplotlib
 ipywidgets
 bqplot
