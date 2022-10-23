@@ -2,7 +2,7 @@
     "python.testing.unittestArgs": [
         "-v",
         "-s",
-        "./tests",
+        "./test",
         "-p",
         "test_*.py"
     ],
@@ -14,7 +14,7 @@
         "--cov-report=lcov:Coverage/lcov/lcov.info",
         "--cov-report=html:Coverage/html",
         "--cov-report=xml:Coverage/xml/coverage.xml",
-        "tests",
+        "Test",
         "--disable-warning"
     ],
     "python.analysis.typeCheckingMode": "basic"
