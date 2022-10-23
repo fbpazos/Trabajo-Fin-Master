@@ -39,4 +39,4 @@ jobs:
     - name: Test with pytest
       run: |
         cd Python
-        pytest -v -W ignore::DeprecationWarning Test
+        pytest -v -W ignore::DeprecationWarning tests
