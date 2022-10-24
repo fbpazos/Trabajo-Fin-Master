@@ -24,7 +24,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        cd Python - BNumMet
+        cd "Python - BNumMet"
         # Upgrade pip
         python -m pip install --upgrade pip 
 
@@ -35,11 +35,11 @@ jobs:
         pip install flake8 
 
         # Requirements
-        if [ -f requirements.txt ] && [ -f requirements_dev.txt ]; then pip install -r requirements.txt -r requirements_dev.txt; fi
+        pip install -r requirements.txt -r requirements_dev.txt
 
     - name: Lint with flake8
       run: |
-        cd Python - BNumMet
+        cd "Python - BNumMet"
 
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
@@ -49,7 +49,7 @@ jobs:
 
     - name: Test with pytest
       run: |
-        cd Python - BNumMet
+        cd "Python - BNumMet"
 
         # Run tests
         tox
