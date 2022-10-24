@@ -155,3 +155,4 @@ cython_debug/
 /Python_BNumMet/__pycache__
 /Python_BNumMet/venv_Linux
 lcov*
+BNumMet/desktop.ini
