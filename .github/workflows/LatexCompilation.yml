@@ -1,5 +1,12 @@
 name: Latex Compilation
-on: [push]
+
+# Only trigger, when the build workflow succeeded
+on:
+  workflow_run:
+    workflows: ["Python Tests"]
+    types:
+      - completed
+
 jobs:
   build_latex:
     runs-on: ubuntu-latest
