@@ -1,9 +1,8 @@
 import sys
-import pytest 
+import pytest
 import os
 import numpy as np
 import unittest
-
 
 
 def main():
@@ -15,13 +14,11 @@ def main():
             "--cov-report=lcov:Coverage/lcov/lcov.info",
             "--cov-report=html:Coverage/html",
             "--cov-report=xml:Coverage/xml/coverage.xml",
-             "-W ignore::DeprecationWarning",
-            "tests"
-            ]
+            "-W ignore::DeprecationWarning",
+            "tests",
+        ]
     )
 
 
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
