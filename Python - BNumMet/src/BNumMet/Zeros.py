@@ -1,5 +1,5 @@
 import numpy as np
-from BasicLineAlg.Interpolation.interpolation import interPoly
+from BNumMet.Interpolation import interPoly
 
 def bisect(f, interval, *args):
     '''

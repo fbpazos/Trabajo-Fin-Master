@@ -1,4 +1,4 @@
-from BasicLineAlg.Zeros.roots import *
+from BNumMet.Zeros import *
 import numpy as np
 from unittest import TestCase
 

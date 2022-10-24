@@ -1,7 +1,7 @@
 import numpy as np
 import ipywidgets as widgets
 from IPython.display import display, Math
-from .lu import interactive_lu
+from ..LinearEquations import interactive_lu
 
 class LUVisualizer:
     def __init__(self,matrix):

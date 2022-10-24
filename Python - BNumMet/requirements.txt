@@ -1,7 +1,5 @@
 numpy
-pytest
-pytest-cov
+bqplot
 matplotlib
 ipywidgets
-bqplot
 jupyterlab

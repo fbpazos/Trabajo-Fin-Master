@@ -6,8 +6,8 @@ import numpy as np
 
 
 
-from BasicLineAlg.LinearEquations.lu import lu, permute, interactive_lu
-from BasicLineAlg.LinearEquations.LUVisualizer import LUVisualizer
+from BNumMet.LinearEquations import lu, permute, interactive_lu
+from BNumMet.Visualizers.LUVisualizer import LUVisualizer
 
 
 class test_LU(TestCase):

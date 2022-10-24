@@ -1,8 +1,8 @@
 from unittest import TestCase
 import pytest
 from bqplot import pyplot as plt
-from BasicLineAlg.Interpolation.interpolation import interPoly, piecewiseLinear, pchip, splitnetx
-from BasicLineAlg.Interpolation.InterpolationVisualizer import InterpolVisualizer
+from BNumMet.Interpolation import interPoly, piecewiseLinear, pchip, splitnetx
+from BNumMet.Visualizers.InterpolationVisualizer import InterpolVisualizer
 import numpy as np
 
 

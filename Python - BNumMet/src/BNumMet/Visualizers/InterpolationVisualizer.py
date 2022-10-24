@@ -1,5 +1,5 @@
 import numpy as np
-from .interpolation import interPoly, piecewiseLinear, pchip, splitnetx
+from ..Interpolation import interPoly, piecewiseLinear, pchip, splitnetx
 from bqplot import pyplot as plt
 import ipywidgets as widgets
 import bqplot as bq

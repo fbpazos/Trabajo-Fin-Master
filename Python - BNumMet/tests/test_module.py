@@ -1,5 +1,5 @@
 from unittest import TestCase
-from BasicLineAlg.module import prettyPrintMatrix, sortInterpolVals
+from BNumMet.module import prettyPrintMatrix, sortInterpolVals
 
 class test_module(TestCase):
     def test_PrettyPrint(self):
