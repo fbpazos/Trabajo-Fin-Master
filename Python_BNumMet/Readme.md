@@ -28,9 +28,17 @@ pip install bnummet # This is not yet available
 ## Tests
 We recommend to use a virtual environment to install the package. To do so, you can use the following commands:
 
+Linux
+-------
 ```bash
 python3 -m venv venv # Create a virtual environment
 source venv/bin/activate # Activate the virtual environment
+```
+Windows
+-------
+```cmd
+python -m venv venv # Create a virtual environment
+venv\Scripts\activate # Activate the virtual environment
 ```
 
 Then, you can test the package using the following command:
