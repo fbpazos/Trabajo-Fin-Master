@@ -2,10 +2,10 @@ name: Latex Compilation
 
 # Only trigger, when the build workflow succeeded
 on:
-  workflow_run:
-    workflows: ["Python Tests"]
-    types:
-      - completed
+  push:
+    paths:
+      - 'Latex/**'
+      - '.github/workflows/LatexCompilation.yml'
 
 jobs:
   build_latex:
