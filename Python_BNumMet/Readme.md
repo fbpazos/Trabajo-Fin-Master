@@ -40,7 +40,8 @@ Windows
 python -m venv venv # Create a virtual environment
 venv\Scripts\activate # Activate the virtual environment
 ```
-
+Python Side
+-------
 Then, you can test the package using the following command:
 
 
@@ -56,7 +57,8 @@ pip install requirements_dev.txt # Install development dependencies (test librar
 pip install -e . # Installs the package in editable mode
 python tests/__init__.py # Run tests
 
-# It will generate a coverage report in the Tests/coverage folder in different formats (html, xml, lcov).
+# It will generate a coverage report in the Tests/coverage folder in different formats (html, xml, lcov). 
+# It will also format the code using the Black Library (I Might've forgottent to do so :) )
 ```
 
 ## BNumMet - Structure
