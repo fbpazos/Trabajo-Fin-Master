@@ -1,3 +1,5 @@
 tox
 pytest
 pytest-cov
+black
+black[jupyter]

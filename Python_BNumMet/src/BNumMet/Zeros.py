@@ -2,7 +2,7 @@ import numpy as np
 from BNumMet.Interpolation import interPoly
 
 
-def bisect(f, interval, *args):
+def bisect(f, interval, stopIters=100, iters=False, *args):
     """
     Finds a zeros over the given interval using the Bisection method and tolerance ~ machine precision
 
@@ -26,20 +26,23 @@ def bisect(f, interval, *args):
     if f0 * f1 > 0:
         raise ValueError("The function has no zeros in the given interval")
     x = x1
-    while f1:
-
+    iterations = 0
+    while f1 and iterations < stopIters:
+        iterations += 1
         x = 0.5 * (x0 + x1)
-        f = f(x, *args)
-        if f * f1 < 0:
+        faux = f(x, *args)
+        if faux * f1 < 0:
             x0 = x
-            f0 = f
+            f0 = faux
         else:
             x1 = x
-            f1 = f
+            f1 = faux
+    if iters:
+        return x, iterations
     return x
 
 
-def secant(fun, interval, *args):
+def secant(fun, interval, stopIters=100, iters=False, *args):
     """
     Finds a zeros over the given interval using the secant method
 
@@ -63,19 +66,19 @@ def secant(fun, interval, *args):
     if f0 * f1 > 0:
         raise ValueError("The function has no zeros in the given interval")
 
-    x = x1
-    while f1:
-        x = x1 - f1 * (x1 - x0) / (f1 - f0)
-        f = fun(x, *args)
+    iterations = 0
+    while abs(x1 - x0) > np.finfo(float).eps and iterations < stopIters:
+        iterations += 1
+        x2 = x0
         x0 = x1
-        x1 = x
-        f0 = f1
-        f1 = f
+        x1 = x1 + (x1 - x2) / (fun(x2, *args) / fun(x1, *args) - 1)
 
-    return x
+    if iters:
+        return x1, iterations
+    return x1
 
 
-def newton(fun, interval, *args):
+def newton(fun, funPrime, startPoint, stopIters=100, iters=False, *args):
     """
     Finds a zeros over the given interval using the Newton-Raphson method
 
@@ -91,25 +94,63 @@ def newton(fun, interval, *args):
         ValueError: if the function has no zeros in the given interval
 
     """
-    x0, x1 = interval
-    f0 = fun(x0, *args)
-    f1 = fun(x1, *args)
+    previousX = startPoint - 1
+    xn = startPoint
+    fn = fun(xn, *args)
+    if funPrime(xn, *args) == 0:
+        raise ValueError("The derivative of the function is zero")
 
-    if f0 * f1 > 0:
-        raise ValueError("The function has no zeros in the given interval")
-    x = x1
-    while f1:
-        x = x1 - f1 * (x1 - x0) / (f1 - f0)
-        f = fun(x, *args)
-        x0 = x1
-        x1 = x
-        f0 = f1
-        f1 = f
+    iterations = 0
+    while (
+        fn != 0
+        and not np.isclose(xn - previousX, 0)
+        and funPrime(xn, *args) != 0
+        and iterations < stopIters
+    ):
+        iterations += 1
 
-    return x
+        previousX = xn
+        xn = xn - fn / funPrime(xn, *args)
+        fn = fun(xn, *args)
+
+    if iters:
+        return xn, iterations
+    return xn
 
 
-def fZero(f, interval, *args):
+def IQI(f, xVals, stopIters=100, iters=False, *args):
+    """
+    Finds a zeros over the given interval using the Inverse Quadratic Interpolation method
+
+    params:
+        f: function to find the zeros
+        xVals : [x0,x1,x2]
+        *args: arguments of the function f
+
+    returns:
+        x: zeros of the function f
+
+    raises:
+        ValueError: if the function has no zeros in the given interval
+
+    """
+    x0, x1, x2 = xVals
+    iterations = 0
+    while abs(x1 - x0) > np.finfo(float).eps and iterations < stopIters:
+        iterations += 1
+        f0, f1, f2 = f(x0, *args), f(x1, *args), f(x2, *args)
+        aux1 = (x0 * f1 * f2) / ((f0 - f1) * (f0 - f2))
+        aux2 = (x1 * f0 * f2) / ((f1 - f0) * (f1 - f2))
+        aux3 = (x2 * f1 * f0) / ((f2 - f0) * (f2 - f1))
+        new = aux1 + aux2 + aux3
+        x0, x1, x2 = new, x0, x1
+
+    if iters:
+        return x0, iterations
+    return x0
+
+
+def fZero(f, interval, stopIters=100, iters=False, *args):
     """
     Finds a zeros over the given interval using a combination of Bisection and secant method
 
@@ -139,19 +180,18 @@ def fZero(f, interval, *args):
     d = x1 - xn
     e = d
 
-    while f1:
+    iterations = 0
+    while f1 and iterations < stopIters:
+        iterations += 1
         if np.sign(f0) == np.sign(f1):
             x0 = xn
             f0 = fn
             d = x1 - xn
             e = d
         elif np.sign(f0) < np.sign(f1):
-            xn = x1
-            x1 = x0
-            x0 = xn
-            fn = f1
-            f1 = f0
-            f0 = fn
+            x0, x1, xn = x1, x0, x1
+            f0, f1, fn = f1, f0, f1
+
         # Convergence test and possible exit
         m = 0.5 * (x0 - x1)
         tolerance = 2.0 * np.finfo(float).eps * max(abs(x1), 1.0)
@@ -199,4 +239,6 @@ def fZero(f, interval, *args):
 
         f1 = f(x1, *args)
 
+    if iters:
+        return x1, iterations
     return x1
