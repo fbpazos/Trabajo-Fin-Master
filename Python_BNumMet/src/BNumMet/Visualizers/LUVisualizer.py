@@ -188,7 +188,7 @@ class LUVisualizer:
             # Update the buttons
             self.updateButtons()
 
-    def runner(self):
+    def run(self):
         # Run the visualizer
         self.initializeComponents()
         return self.grid
