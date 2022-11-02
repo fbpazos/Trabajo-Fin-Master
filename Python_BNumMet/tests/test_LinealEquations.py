@@ -63,7 +63,7 @@ class Test_LUInteractive(TestCase):
     def runtest_setup(self):
         self.A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=float)
         self.luVisualizer = LUVisualizer(self.A)
-        self.luVisualizer.runner()
+        self.luVisualizer.run()
 
     def test_initialazation(self):
         self.runtest_setup()

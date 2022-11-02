@@ -2,4 +2,4 @@ tox
 pytest
 pytest-cov
 black
-black[jupyter]
+jupyter-black
