@@ -6,6 +6,21 @@ from ..LinearEquations import interactive_lu
 
 class LUVisualizer:
     def __init__(self, matrix):
+        """
+        Parameters
+        ----------
+        matrix : numpy.ndarray
+            Matrix to be decomposed (must be square)
+
+        Returns
+        -------
+        None
+
+        Exceptions
+        ----------
+        ValueError
+            If the matrix is not square
+        """
         self.A = np.array(matrix, dtype=float)
         if self.A.shape[0] != self.A.shape[1]:
             raise ValueError("Matrix must be square")
@@ -18,33 +33,54 @@ class LUVisualizer:
         self.previousSteps = []
 
     def initializeComponents(self):
-        # Outputs for P,L,U, PLU and A
+        """
+        Initialize the components of the visualizer (Output, Buttons, Grid)
+
+        Returns
+        -------
+        None
+        """
+        # OUTPUTS
+        # ==========================================================================
+        ## Output for the matrix P
         self.outP = widgets.HTMLMath(
             value=prettyPrintMatrix(self.P, True), placeholder="$P$", description="$P:$"
         )
+
+        ## Output for the matrix L
         self.outL = widgets.HTMLMath(
             value=prettyPrintMatrix(self.L, True), placeholder="$L$", description="$L:$"
         )
+
+        ## Output for the matrix U
         self.outU = widgets.HTMLMath(
             value=prettyPrintMatrix(self.U, True), placeholder="$U$", description="$U:$"
         )
+
+        ## Output for the matrix L*U
         self.outPLU = widgets.HTMLMath(
             value=prettyPrintMatrix(self.L @ self.U, True),
             placeholder="$LU$",
             description="$LU:$",
         )
+
+        ## Output for the matrix P*A
         self.outA = widgets.HTMLMath(
             value=prettyPrintMatrix(self.P @ self.A, True),
             placeholder="$PA$",
             description="$PA:$",
         )
+
+        ## Output for the checker(PA=LU)
         self.outChecker = widgets.HTMLMath(
             value=str(np.allclose(self.L @ self.U, self.P @ self.A)),
             placeholder="$PA=?LU$",
             description="$PA=?LU$",
         )
 
-        # Buttons for next step and reset
+        # BUTTONS
+        # ==========================================================================
+        ## Previous step button
         self.previousButton = widgets.Button(
             description="Previous Step",
             disabled=False,
@@ -53,6 +89,8 @@ class LUVisualizer:
             icon="arrow-left",
         )
         self.previousButton.on_click(self.previousStep)
+
+        ## Reset button
         self.resetButton = widgets.Button(
             description="Reset",
             disabled=False,
@@ -62,7 +100,8 @@ class LUVisualizer:
         )
         self.resetButton.on_click(self.reset)
 
-        # Make matrix with buttons
+        # MATRIX
+        # ==========================================================================
         self.buttonsMatrix = []
         for i in range(self.A.shape[0]):
             row = []
@@ -97,7 +136,8 @@ class LUVisualizer:
 
             self.buttonsMatrix.append(row)
 
-        # Layout as Grid
+        # GRID
+        # ==========================================================================
         self.grid = widgets.GridspecLayout(6, 5)
         # Add components to grid
         self.grid[0:3, 0:3] = widgets.VBox(
@@ -112,14 +152,23 @@ class LUVisualizer:
 
         self.grid[4, 0] = self.outPLU
         self.grid[4, 1] = self.outA
-        # self.grid[4,2] = self.outChecker
 
-    # Observer for the buttons
     def matrixPivotButton(self, b):
         """
+        Observer for the buttons in the matrix, when a button is clicked, the pivot is performed and the step is updated
+
         b.index contains the index of the pivot row
         Call luInteractive with PLU, step and index of pivot row
         Update the output
+
+        Parameters
+        ----------
+        b : Button
+            Button that was clicked
+
+        Returns
+        -------
+        None
         """
         if b.disabled:
             return  # do nothing if the button is disabled
@@ -136,7 +185,13 @@ class LUVisualizer:
             self.updateButtons()
 
     def updateButtons(self):
+        """
+        Update the buttons in the matrix, when a step is performed, blocks the buttons that are not available anymore
 
+        Returns
+        -------
+        None
+        """
         # Update the buttons
         for i in range(len(self.buttonsMatrix)):
             for j in range(len(self.buttonsMatrix[i])):
@@ -156,6 +211,13 @@ class LUVisualizer:
                 self.buttonsMatrix[i][j].description = f"{self.U[i,j]:.2f}"
 
     def updateOutput(self):
+        """
+        Update the output widgets
+
+        Returns
+        -------
+        None
+        """
         # Update the outputs
         self.outP.value = prettyPrintMatrix(self.P, True)
         self.outL.value = prettyPrintMatrix(self.L, True)
@@ -165,6 +227,18 @@ class LUVisualizer:
         # self.outChecker.value = str(np.allclose(self.P@self.A,self.L@self.U))
 
     def previousStep(self, b):
+        """
+        Observer for the previous step button, when clicked, it returns the state to the previous step
+
+        Parameters
+        ----------
+        b : Button
+            Button that was clicked (Not used)
+
+        Returns
+        -------
+        None
+        """
         # If there are previous steps, then go back to the previous step
         if len(self.previousSteps) > 0:
             self.P, self.L, self.U, self.step = self.previousSteps.pop()
@@ -174,6 +248,19 @@ class LUVisualizer:
                 self.updateButtons()
 
     def reset(self, b):
+        """
+        Observer for the reset button, when clicked, it returns the state to the initial state
+
+        Parameters
+        ----------
+        b : Button
+            Button that was clicked (Not used)
+
+        Returns
+        -------
+        None
+        """
+
         # Reset the LU decomposition Visualizer to the initial state
         self.step = 0
         self.L = np.eye(self.A.shape[0])
@@ -189,6 +276,13 @@ class LUVisualizer:
             self.updateButtons()
 
     def run(self):
+        """
+        Run the LU decomposition Visualizer
+
+        Returns
+        -------
+        None
+        """
         # Run the visualizer
         self.initializeComponents()
         return self.grid

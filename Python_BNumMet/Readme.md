@@ -61,6 +61,55 @@ python tests/__init__.py # Run tests
 # It will also format the code using the Black Library (I Might've forgottent to do so :) )
 ```
 
+## SonarQube
+In order to run the SonarQube analysis, you can use the following command:
+
+Start the SonarQube server (Docker Version)
+-------
+```bash
+docker run -d --name sonarqube -p 9000:9000 sonarqube
+```
+Since its running locally, you can access the server at http://localhost:9000, and the default credentials are admin/admin. 
+Additionally, for simplicity with login go to Administration -> Security -> Disable "Force User Authentication". ()
+
+
+Run the analysis
+-------
+Linux 
+```bash
+docker run --rm -ti -v "%cd%":"/usr/src" --link sonarqube newtmitch/sonar-scanner sonar-scanner /
+    -Dsonar.projectName="BNumMet" /
+    -Dsonar.projectKey="BNumMet" /
+    -Dsonar.sources="src/BNumMet/" /
+    -Dsonar.python.version=3 /
+    -Dsonar.python.xunit.reportPath="tests/Reports/testsReport.xml"  /
+    -Dsonar.python.coverage.reportPaths="tests/Reports/Coverage/xml/coverage.xml" /
+    -Dsonar.scm.disabled=true /
+    -Dsonar.tests="tests" /
+    -Dsonar.test.inclusions="tests/**" /
+    -Dsonar.test.exclusions="tests/Reports/Coverage/**"
+```
+
+Windows - just replace "$(pwd)" with "%cd%" 
+
+```cmd
+docker run --rm -ti -v "%cd%":"/usr/src" --link sonarqube newtmitch/sonar-scanner 
+sonar-scanner ^
+-Dsonar.projectName="BNumMet" ^
+-Dsonar.projectKey="BNumMet" ^
+-Dsonar.sources="src/BNumMet/" ^
+-Dsonar.python.version=3 ^
+-Dsonar.python.xunit.reportPath="tests/Reports/testsReport.xml"  ^
+-Dsonar.python.coverage.reportPaths="tests/Reports/Coverage/xml/coverage.xml" ^
+-Dsonar.scm.disabled=true ^
+-Dsonar.tests="tests" ^
+-Dsonar.test.inclusions="tests/**" ^
+-Dsonar.test.exclusions="tests/Reports/Coverage/**"
+```
+
+
+
+
 ## BNumMet - Structure
 ```bash
 .

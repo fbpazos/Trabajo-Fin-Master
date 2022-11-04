@@ -18,10 +18,11 @@ def main():
     res = pytest.main(
         [
             "-v",
+            "--junitxml=./tests/Reports/testsReport.xml",
             "--cov",
-            "--cov-report=lcov:./tests/Coverage/lcov/lcov.info",
-            "--cov-report=html:./tests/Coverage/html",
-            "--cov-report=xml:./tests/Coverage/xml/coverage.xml",
+            "--cov-report=lcov:./tests/Reports/Coverage/lcov/lcov.info",
+            "--cov-report=html:./tests/Reports/Coverage/html",
+            "--cov-report=xml:./tests/Reports/Coverage/xml/coverage.xml",
             "-W ignore::DeprecationWarning",
             "tests",
         ]
