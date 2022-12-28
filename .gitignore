@@ -154,6 +154,7 @@ cython_debug/
 /Python_BNumMet/venv
 /Python_BNumMet/__pycache__
 /Python_BNumMet/venv_Linux
+/Python_BNumMet/venv_Xiaomi
 lcov*
 BNumMet/desktop.ini
 Python_BNumMet/.scannerwork/.sonar_lock
