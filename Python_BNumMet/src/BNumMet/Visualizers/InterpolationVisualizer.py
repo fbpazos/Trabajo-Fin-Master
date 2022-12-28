@@ -1,12 +1,17 @@
 import numpy as np
-from ..Interpolation import interPoly, piecewiseLinear, pchip, splitnetx
+from ..Interpolation import polinomial, piecewise_linear, pchip, splitnetx
 from bqplot import pyplot as plt
 import ipywidgets as widgets
 import bqplot as bq
 
 
 class InterpolVisualizer:
-    def __init__(self, xInitial, yInitial, uInitial) -> None:
+    def __init__(
+        self,
+        xInitial=list(np.arange(1, 7, 1).astype(float)),
+        yInitial=[16, 18, 21, 17, 15, 12],
+        uInitial=list(np.arange(1, 6.1, 0.1)),
+    ) -> None:
         """
         Initializes the Class
 
@@ -16,7 +21,7 @@ class InterpolVisualizer:
             - uInitial: Initial mesh
         """
         if len(xInitial) != len(yInitial):
-            raise Exception("The length of the X and Y coordinates must be the same")
+            raise ValueError("The length of the X and Y coordinates must be the same")
 
         self.x = np.array(xInitial).astype(float)
         self.y = np.array(yInitial).astype(float)
@@ -25,8 +30,8 @@ class InterpolVisualizer:
         self.Originals = [self.x, self.y, self.u]
 
         self.methods = {
-            "InterPoly": [interPoly, "blue"],
-            "Piecewise Linear": [piecewiseLinear, "green"],
+            "InterPoly": [polinomial, "blue"],
+            "Piecewise Linear": [piecewise_linear, "green"],
             "Pchip": [pchip, "orange"],
             "SplitNetX": [splitnetx, "purple"],
         }
@@ -116,7 +121,7 @@ class InterpolVisualizer:
         Updates the interpolation lines according to the new points
         It creates an array of Lines for every interpolation method that is checked in the checkboxes
         """
-        self.InterpolLines = [
+        self.interpolationLines = [
             bq.Lines(
                 x=self.u,
                 y=val[0](self.x, self.y, self.u),
@@ -170,11 +175,11 @@ class InterpolVisualizer:
             self.scatterDots()
             self.interpolLines()
 
-            toUpdate = [*self.InterpolLines, self.ScatteredDots]
+            toUpdate = [*self.interpolationLines, self.ScatteredDots]
 
             self.Fig.marks = toUpdate
 
-            yVals = [j for line in self.InterpolLines for j in line.y]
+            yVals = [j for line in self.interpolationLines for j in line.y]
             if len(yVals) != 0:
                 self.y_sc.min = min(yVals)
                 self.y_sc.max = max(yVals)
@@ -241,7 +246,7 @@ class InterpolVisualizer:
         self.scatterDots()
 
         self.Fig = bq.Figure(
-            marks=[*self.InterpolLines, self.ScatteredDots],
+            marks=[*self.interpolationLines, self.ScatteredDots],
             axes=[ax_x, ax_y],
             title="Interpolation Visualizer",
             legend_location="top-right",

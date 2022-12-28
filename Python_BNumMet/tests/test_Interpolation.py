@@ -1,7 +1,7 @@
 from unittest import TestCase
 import pytest
 from bqplot import pyplot as plt
-from BNumMet.Interpolation import interPoly, piecewiseLinear, pchip, splitnetx
+from BNumMet.Interpolation import polinomial, piecewise_linear, pchip, splitnetx
 from BNumMet.Visualizers.InterpolationVisualizer import InterpolVisualizer
 import numpy as np
 
@@ -14,9 +14,9 @@ class test_PolyInterpolation(TestCase):
         x = np.array([1, 2, 3, 4])
         y = np.array([1, 4, 9, 16])
         u = np.array([1.5, 2.5, 3.5])
-        v = interPoly(x, y, u)
+        v = polinomial(x, y, u)
         self.assertTrue(np.allclose(v, np.array([2.25, 6.25, 12.25])))
-        self.assertTrue(np.allclose(interPoly(x, y, x), y))
+        self.assertTrue(np.allclose(polinomial(x, y, x), y))
 
     def test_notOrdered(self):
         """
@@ -25,7 +25,7 @@ class test_PolyInterpolation(TestCase):
         x = np.array([1, 2, 3, 4] + [2.5])
         y = np.array([1, 4, 9, 16] + [6.25])
         u = np.arange(1, 4.1, 0.1)
-        v = interPoly(x, y, u)
+        v = polinomial(x, y, u)
 
         # find the index of the point 2.5 on u
         i1 = np.where(np.isclose(u, 2.5))[0][0]
@@ -35,7 +35,7 @@ class test_PolyInterpolation(TestCase):
         self.assertTrue(np.isclose(v[i1], 6.25))
 
 
-class test_PieceWiseLinearInterpolation(TestCase):
+class test_piecewise_linearInterpolation(TestCase):
     def test_interpolation(self):
         """
         Test the piecewise linear interpolation
@@ -43,7 +43,7 @@ class test_PieceWiseLinearInterpolation(TestCase):
         x = np.array([1, 2, 3, 4])
         y = np.array([1, 4, 9, 16])
         u = np.arange(1, 4.2, 0.1)
-        v = piecewiseLinear(x, y, u)
+        v = piecewise_linear(x, y, u)
 
         for i in range(len(x)):
 
@@ -58,7 +58,7 @@ class test_PieceWiseLinearInterpolation(TestCase):
         x = np.array([1, 2, 3, 4] + [2.5])
         y = np.array([1, 4, 9, 16] + [-5])
         u = np.arange(1, 4.1, 0.1)
-        v = piecewiseLinear(
+        v = piecewise_linear(
             x, y, u, sorted=True
         )  # Sorted = True makes the assumption that x is sorted - IT IS NOT
 
@@ -76,7 +76,7 @@ class test_PieceWiseLinearInterpolation(TestCase):
         x = np.array([1, 2, 3, 4] + [2.5])
         y = np.array([1, 4, 9, 16] + [-5])
         u = np.arange(1, 4.1, 0.1)
-        v = piecewiseLinear(x, y, u, sorted=False)
+        v = piecewise_linear(x, y, u, sorted=False)
 
         # find the index of the point 2.5 on u
         i1 = np.where(np.isclose(u, 2.5))[0][0]
@@ -206,6 +206,31 @@ class test_InterpolationVisualizer(TestCase):
 
         print("Setting Up - Interpolation Visualizer Test")
 
+    def test_no_param_init(self):
+        """
+        Test the interpolation visualizer with no parameters passed in - should use default values for x, y, u
+        """
+        x = list(np.arange(1, 7, 1).astype(float))
+        y = np.array([16, 18, 21, 17, 15, 12], dtype=float)
+        u = list(np.arange(1, 6.1, 0.1).astype(float))
+
+        interpolVisualizer = InterpolVisualizer()
+        interpolVisualizer.run()
+
+        self.assertTrue(all(interpolVisualizer.x == x))
+        self.assertTrue(all(interpolVisualizer.y == y))
+        self.assertTrue(all(interpolVisualizer.u == u))
+
+    def test_raiseException_lenXnotEqualLenY(self):
+        self.runtest_setup()
+
+        x = [1, 2, 3, 4]
+        y = [1, 4, 9, 16, 25]
+        u = [1, 2, 3, 4, 5]
+
+        with self.assertRaises(ValueError):
+            InterpolVisualizer(x, y, u)
+
     def test_updatePoints(self):
         self.runtest_setup()
 
@@ -269,13 +294,13 @@ class test_InterpolationVisualizer(TestCase):
 
         self.interpolVisualizer.interpolLines()
         self.assertTrue(
-            len(self.interpolVisualizer.InterpolLines)
+            len(self.interpolVisualizer.interpolationLines)
             == len(self.interpolVisualizer.methods)
         )
 
         self.interpolVisualizer.checkboxes[0].value = False
         self.assertTrue(
-            len(self.interpolVisualizer.InterpolLines)
+            len(self.interpolVisualizer.interpolationLines)
             == len(self.interpolVisualizer.methods) - 1
         )
 

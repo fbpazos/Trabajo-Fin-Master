@@ -1,11 +1,11 @@
 import numpy as np
 import ipywidgets as widgets
 from IPython.display import display, Math
-from ..LinearEquations import interactive_lu
+from ..LinearSystems import interactive_lu
 
 
 class LUVisualizer:
-    def __init__(self, matrix):
+    def __init__(self, matrix=np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]], dtype=float)):
         """
         Parameters
         ----------
@@ -175,10 +175,11 @@ class LUVisualizer:
         self.previousSteps.append(
             (self.P.copy(), self.L.copy(), self.U.copy(), self.step)
         )
-        self.P, self.L, self.U, self.step, _ = interactive_lu(
-            self.P, self.L, self.U, self.step, b.index[0]
-        )
         with self.grid.hold_sync():
+            # Apply the LU decomposition to the matrix
+            self.P, self.L, self.U, self.step, _ = interactive_lu(
+                self.P, self.L, self.U, self.step, b.index[0]
+            )
             # Update the output
             self.updateOutput()
             # Update the buttons

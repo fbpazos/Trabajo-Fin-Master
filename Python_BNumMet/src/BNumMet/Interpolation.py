@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def interPoly(x, y, u):
+def polinomial(x, y, u):
     """
     Computes the polynomial interpolation of a set of points (x,y) at the points u
 
@@ -27,7 +27,7 @@ def interPoly(x, y, u):
     return v
 
 
-def piecewiseLinear(x, y, u, sorted=False):
+def piecewise_linear(x, y, u, sorted=False):
     """
     Computes the piecewise lineal interpolation of a set of points (x,y) at the points u, (x,y) ACCORDING TO THE ALGORITHM IN THE BOOK
 
@@ -102,12 +102,12 @@ def pchip(x, y, u, sorted=False):
         """
         # Noncentered, shape-preserving, three-point formula.
         d = ((2 * h1 + h2) * delta1 - h1 * delta2) / (h1 + h2)
-        # If slopes of the secant lines are of different sign, use 0.
-        if np.sign(delta1) != np.sign(delta2):
-            d = 0
-
-        # If the slopes are not of the same magnitude, use 0.
-        elif np.abs(d) > np.abs(3 * delta1) or np.abs(d) > np.abs(3 * delta2):
+        # If slopes of the secant lines are of different sign or If the slopes are not of the same magnitude, use 0.
+        if (
+            np.sign(delta1) != np.sign(delta2)
+            or np.abs(d) > np.abs(3 * delta1)
+            or np.abs(d) > np.abs(3 * delta2)
+        ):
             d = 0
 
         return d
@@ -128,7 +128,6 @@ def pchip(x, y, u, sorted=False):
         returns:
             d: list of slopes for the Hermite cubic
         """
-        n = len(h)
         d = np.zeros(len(h))
 
         k = np.where(np.sign(delta[0:-1]) * np.sign(delta[1:]) > 0)[
