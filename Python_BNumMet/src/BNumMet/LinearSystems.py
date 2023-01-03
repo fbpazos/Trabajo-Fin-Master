@@ -50,9 +50,9 @@ def lu(Matrix):
             pivot = A[col, col]
 
             A[col + 1 :, col] = A[col + 1 :, col] / pivot
-            A[col + 1 :, col + 1 :] = A[col + 1 :, col + 1 :] - np.outer(
-                A[col + 1 :, col], A[col, col + 1 :]
-            )
+            A[col + 1 :, col + 1 :] = A[col + 1 :, col + 1 :] - (
+                A[col + 1 :, :][:, [col]] @ A[[col], :][:, col + 1 :]
+            )  # It is the same as the matrix multiplition (A[col + 1 :, col][:, np.newaxis] @ A[col, col + 1 :][np.newaxis, :]) or np.outer(A[col + 1 :, col], A[col, col + 1 :])
 
     L = np.tril(A, -1) + np.eye(
         n
@@ -109,10 +109,10 @@ def interactive_lu(P, L, U, col, pivotRow):
 
         # Gaussian elimination using NumPy's broadcasting
         factors = U[col + 1 :, col] / U[col, col]
-        L[col + 1 :, col] = factors
-        U[col + 1 :, col + 1 :] = U[col + 1 :, col + 1 :] - np.outer(
-            factors, U[col, col + 1 :]
-        )
+        L[col + 1 :, col] = U[col + 1 :, col] / U[col, col]
+        U[col + 1 :, col + 1 :] = U[col + 1 :, col + 1 :] - (
+            L[col + 1 :, :][:, [col]] @ U[[col], :][:, col + 1 :]
+        )  # It is the same as the matrix multiplition  (L[col + 1 :, col]][:, np.newaxis] @ U[col, col + 1 :][np.newaxis, :]) or np.outer(L[col + 1 :, col], U[col, col + 1 :])
         U[col + 1 :, col] = 0
 
     return P, L, U, (col + 1), iMax

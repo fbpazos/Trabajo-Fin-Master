@@ -1,5 +1,5 @@
 import numpy as np
-from ..Interpolation import polinomial, piecewise_linear, pchip, splitnetx
+from ..Interpolation import polinomial, piecewise_linear, pchip, splines
 from bqplot import pyplot as plt
 import ipywidgets as widgets
 import bqplot as bq
@@ -33,7 +33,7 @@ class InterpolVisualizer:
             "InterPoly": [polinomial, "blue"],
             "Piecewise Linear": [piecewise_linear, "green"],
             "Pchip": [pchip, "orange"],
-            "SplitNetX": [splitnetx, "purple"],
+            "Splines": [splines, "purple"],
         }
 
     def initializeComponents(self):

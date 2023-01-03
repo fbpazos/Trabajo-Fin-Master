@@ -157,6 +157,6 @@ cython_debug/
 /Python_BNumMet/venv_Xiaomi
 lcov*
 BNumMet/desktop.ini
-Python_BNumMet/.scannerwork/.sonar_lock
-Python_BNumMet/.scannerwork/report-task.txt
+Python_BNumMet/.scannerwork
+
 Python_BNumMet/tests/Reports/testsReport.xml

@@ -1,7 +1,7 @@
 from unittest import TestCase
 import pytest
 from bqplot import pyplot as plt
-from BNumMet.Interpolation import polinomial, piecewise_linear, pchip, splitnetx
+from BNumMet.Interpolation import polinomial, piecewise_linear, pchip, splines
 from BNumMet.Visualizers.InterpolationVisualizer import InterpolVisualizer
 import numpy as np
 
@@ -137,15 +137,15 @@ class test_pchip(TestCase):
         self.assertTrue(np.isclose(v[i1], -5))
 
 
-class test_splitnetx(TestCase):
+class test_splines(TestCase):
     def test_interpolation(self):
         """
-        Test the splitnetx interpolation
+        Test the splines interpolation
         """
         x = np.array([1, 2, 3, 4])
         y = np.array([1, 4, 9, 16])
         u = np.arange(1, 4.2, 0.1)
-        v = splitnetx(x, y, u)
+        v = splines(x, y, u)
 
         for i in range(len(x)):
 
@@ -155,12 +155,12 @@ class test_splitnetx(TestCase):
 
     def test_notOrdered(self):
         """
-        Test the splitnetx interpolation with unsorted x - this should NOT work aka is False
+        Test the splines interpolation with unsorted x - this should NOT work aka is False
         """
         x = np.array([1, 2, 3, 4] + [2.5])
         y = np.array([1, 4, 9, 16] + [-5])
         u = np.arange(1, 4.1, 0.1)
-        v = splitnetx(
+        v = splines(
             x, y, u, sorted=True
         )  # Sorted = True makes the assumption that x is sorted - IT IS NOT
 
@@ -173,12 +173,12 @@ class test_splitnetx(TestCase):
 
     def test_notOrdered_unsorted(self):
         """
-        Test the splitnetx interpolation with unsorted x - this should work aka True
+        Test the splines interpolation with unsorted x - this should work aka True
         """
         x = np.array([1, 2, 3, 4] + [2.5])
         y = np.array([1, 4, 9, 16] + [-5])
         u = np.arange(1, 4.1, 0.1)
-        v = splitnetx(x, y, u, sorted=False)
+        v = splines(x, y, u, sorted=False)
 
         # find the index of the point 2.5 on u
         i1 = np.where(np.isclose(u, 2.5))[0][0]

@@ -53,21 +53,13 @@ def piecewise_linear(x, y, u, sorted=False):
     )  # Compute the slopes of the lines -- here we are using the fact that x is sorted
     n = len(x)
 
-    k = np.ones(len(u)).astype(
-        int
-    )  # Create a vector of ones of the same size as u, to store the result
-    for i in range(1, n):
-        k[x[i - 1] <= u] = int(
-            i
-        )  # Find the index of the points in u that are between x[i] and x[i+1] and store the index in k
+    k = np.zeros(np.size(u), dtype=int)
+    for j in np.arange(1, n - 1):
 
-    s = [
-        u[i] - x[k[i] - 1] for i in range(len(u))
-    ]  # Compute the distance between the points in u and the points in x that are between x[i] and x[i+1]
+        k[x[j] <= u] = j
 
-    v = [
-        y[k[i] - 1] + s[i] * delta[k[i] - 1] for i in range(len(u))
-    ]  # Compute the value of the interpolation at the points in u
+    s = u - x[k]
+    v = y[k] + s * delta[k]
 
     return v
 
@@ -166,26 +158,18 @@ def pchip(x, y, u, sorted=False):
     c = (3 * delta - 2 * d[:-1] - d[1:]) / (h)
     b = (d[:-1] - 2 * delta + d[1:]) / (h**2)
 
-    # Find the index of the points in u that are between x[i] and x[i+1]
-    k = np.ones(len(u)).astype(
-        int
-    )  # Create a vector of ones of the same size as u, to store the result
-    for i in range(1, n):
-        k[x[i - 1] <= u] = int(i)
+    k = np.zeros(np.size(u), dtype=int)
+    for j in np.arange(1, n - 1):
 
-    s = [
-        u[i] - x[k[i] - 1] for i in range(len(u))
-    ]  # Compute the distance between the points in u and the points in x that are between x[i] and x[i+1]
+        k[x[j] <= u] = j
 
-    v = [
-        y[k[i] - 1] + s[i] * (d[k[i] - 1] + s[i] * (c[k[i] - 1] + s[i] * b[k[i] - 1]))
-        for i in range(len(u))
-    ]  # Compute the value of the interpolation at the points in u
+    s = u - x[k]
+    v = y[k] + s * (d[k] + s * (c[k] + s * b[k]))
 
     return v
 
 
-def splitnetx(x, y, u, sorted=False):
+def splines(x, y, u, sorted=False):
     """
     Finds the piecewise cubic interpolatory spline S(x), with S(x(j)) = y(j), and returns v(k) = S(u(k)).
 
@@ -254,20 +238,12 @@ def splitnetx(x, y, u, sorted=False):
     c = (3 * delta - 2 * d[:-1] - d[1:]) / (h)
     b = (d[:-1] - 2 * delta + d[1:]) / (h**2)
 
-    # Find the index of the points in u that are between x[i] and x[i+1]
-    k = np.ones(len(u)).astype(
-        int
-    )  # Create a vector of ones of the same size as u, to store the result
-    for i in range(1, n):
-        k[x[i - 1] <= u] = int(i)
+    k = np.zeros(np.size(u), dtype=int)
+    for j in np.arange(1, n - 1):
 
-    s = [
-        u[i] - x[k[i] - 1] for i in range(len(u))
-    ]  # Compute the distance between the points in u and the points in x that are between x[i] and x[i+1]
+        k[x[j] <= u] = j
 
-    v = [
-        y[k[i] - 1] + s[i] * (d[k[i] - 1] + s[i] * (c[k[i] - 1] + s[i] * b[k[i] - 1]))
-        for i in range(len(u))
-    ]  # Compute the value of the interpolation at the points in u
+    s = u - x[k]
+    v = y[k] + s * (d[k] + s * (c[k] + s * b[k]))
 
     return v
