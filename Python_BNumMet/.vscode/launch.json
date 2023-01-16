@@ -18,9 +18,22 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/tests/__init__.py",
-            "console": "externalTerminal",
-            //"console": "integratedTerminal",
+            //"console": "externalTerminal",
+            "console": "internalConsole",
             "justMyCode": true
+        }, 
+        
+        // Run testa and Sonarscanner.bat
+        {
+            "name": "Tests and Sonar",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/tests/__init__.py",
+            "console": "internalConsole",
+            "justMyCode": true,
+            "postDebugTask": "Sonar",
         }
+        
+
     ]
 }

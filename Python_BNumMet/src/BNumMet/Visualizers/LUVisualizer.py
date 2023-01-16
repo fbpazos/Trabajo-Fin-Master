@@ -106,35 +106,14 @@ class LUVisualizer:
         for i in range(self.A.shape[0]):
             row = []
             for j in range(self.A.shape[1]):
-                # if the step is 0, then the buttons are disabled except for the first column
-                if (
-                    j == self.step
-                    and i >= self.step
-                    and self.step != self.A.shape[1] - 1
-                    and not np.isclose(self.U[i, j], 0)
-                ):
-                    # color green for available buttons
-                    row.append(
-                        widgets.Button(
-                            description=f"{self.A[i,j]:.2f}",
-                            disabled=False,
-                            layout=widgets.Layout(width="125px", height="30px"),
-                            button_style="success",
-                        )
-                    )
-                else:
-                    row.append(
-                        widgets.Button(
-                            description=f"{self.A[i,j]:.2f}",
-                            disabled=True,
-                            layout=widgets.Layout(width="125px", height="30px"),
-                        )
-                    )
+                row.append(widgets.Button(description=f"{self.A[i,j]:.2f}"))
                 row[-1].index = (i, j)
                 # Observer for the button
                 row[-1].on_click(self.matrixPivotButton)
 
             self.buttonsMatrix.append(row)
+
+        self.updateButtons()
 
         # GRID
         # ==========================================================================
@@ -196,18 +175,30 @@ class LUVisualizer:
         # Update the buttons
         for i in range(len(self.buttonsMatrix)):
             for j in range(len(self.buttonsMatrix[i])):
-                # if the step is 0, then the buttons are disabled except for the first column
-                if (
+
+                if (  # if the step is 0, then the buttons are disabled except for the first column
                     j == self.step
                     and i >= self.step
                     and self.step != self.A.shape[1] - 1
                     and not np.isclose(self.U[i, j], 0)
                 ):
                     self.buttonsMatrix[i][j].disabled = False
-                    self.buttonsMatrix[i][j].button_style = "success"
-                else:
+                    self.buttonsMatrix[i][j].style.button_color = "LightGreen"
+                    self.buttonsMatrix[i][j].style.font_weight = "normal"
+
+                elif (
+                    self.step == self.A.shape[1] - 1
+                ):  # if the step is the last one, then all the buttons are disabled and the color is gray
                     self.buttonsMatrix[i][j].disabled = True
+                    self.buttonsMatrix[i][j].style.button_color = "Gainsboro"
+                    self.buttonsMatrix[i][j].style.font_weight = "1000"
+                else:  # If they are not the pivot buttons, then they are disabled and the color is LightCoral
                     self.buttonsMatrix[i][j].button_style = ""
+                    self.buttonsMatrix[i][j].style.button_color = None
+                    if j <= self.step:
+                        self.buttonsMatrix[i][j].style.button_color = "LightCoral"
+                    self.buttonsMatrix[i][j].disabled = True
+                    self.buttonsMatrix[i][j].style.font_weight = "normal"
 
                 self.buttonsMatrix[i][j].description = f"{self.U[i,j]:.2f}"
 
@@ -225,7 +216,6 @@ class LUVisualizer:
         self.outU.value = prettyPrintMatrix(self.U, True)
         self.outPLU.value = prettyPrintMatrix(self.L @ self.U, True)
         self.outA.value = prettyPrintMatrix(self.P @ self.A, True)
-        # self.outChecker.value = str(np.allclose(self.P@self.A,self.L@self.U))
 
     def previousStep(self, b):
         """

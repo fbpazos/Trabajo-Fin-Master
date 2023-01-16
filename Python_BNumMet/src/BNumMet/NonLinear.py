@@ -36,7 +36,6 @@ def bisect(f, interval, stopIters=100, iters=False, *args):
         faux = f(x, *args)
         if faux * f1 < 0:
             x0 = x
-            f0 = faux
         else:
             x1 = x
             f1 = faux
@@ -153,7 +152,7 @@ def IQI(f, xVals, stopIters=100, iters=False, *args):
     return x0
 
 
-def fZero(f, interval, stopIters=100, iters=False, *args):
+def zBrentDekker(f, interval, stopIters=100, iters=False, *args):
     """
     Finds a zeros over the given interval using a combination of Bisection and secant method
 

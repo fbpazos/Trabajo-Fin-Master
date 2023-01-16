@@ -84,7 +84,6 @@ class NonLinearVisualizer:
             marks=[],
             axes=[ax_x, ax_y],
             title="Zeros of a Function",
-            # legend_location="top-right",
             animation_duration=1000,
         )
 

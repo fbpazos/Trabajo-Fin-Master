@@ -274,16 +274,17 @@ class test_InterpolationVisualizer(TestCase):
         old_x_sc = self.interpolVisualizer.x_sc.min
         old_y_sc = self.interpolVisualizer.y_sc.min
 
-        self.assertTrue(old_x_sc is None and old_y_sc is None)
+        self.assertTrue(
+            old_x_sc is not None and old_y_sc is not None
+        )  # The values for SC are set from the begining
 
-        # Modify the mesh should modify sc_x and sc_y
+        # Modify the mesh should NOT modify sc_x and sc_y
         self.interpolVisualizer.slider.value = [-8.0, 20]
 
-        self.assertTrue(
-            self.interpolVisualizer.x_sc.min != old_x_sc
-            and self.interpolVisualizer.y_sc.min != old_y_sc
-        )
+        self.assertTrue(self.interpolVisualizer.x_sc.min == old_x_sc)
+        self.assertTrue(self.interpolVisualizer.y_sc.min == old_y_sc)
 
+        # Modify the mesh should modify u
         self.assertTrue(
             self.interpolVisualizer.u[0] == self.interpolVisualizer.slider.min
             and self.interpolVisualizer.u[-1] == self.interpolVisualizer.slider.max

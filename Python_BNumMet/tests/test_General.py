@@ -35,4 +35,4 @@ class General(TestCase):
         assert NonLinear.secant
         assert NonLinear.newton
         assert NonLinear.IQI
-        assert NonLinear.fZero
+        assert NonLinear.zBrentDekker

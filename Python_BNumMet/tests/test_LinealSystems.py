@@ -279,3 +279,8 @@ class Test_LUVisualizer(TestCase):
                 ),
                 msg=f"P@A != L@U\n{P@A} != {L@U}",
             )
+
+        endButtons = self.luVisualizer.buttonsMatrix
+        for row in endButtons:
+            for button in row:
+                self.assertTrue(button.disabled)

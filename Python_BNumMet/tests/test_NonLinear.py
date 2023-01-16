@@ -31,12 +31,12 @@ class test_Roots(TestCase):
         x = newton(f, fprime, 3)
         self.assertTrue(np.isclose(x, 1))
 
-    def test_fZero(self):
+    def test_zBrentDekker(self):
         """
-        Test the fZero method
+        Test the zBrentDekker method
         """
         f = lambda x: x**2 - 1
-        x = fZero(f, [0, 2])
+        x = zBrentDekker(f, [0, 2])
         self.assertTrue(np.isclose(x, 1))
 
     def test_IQI(self):
@@ -53,7 +53,7 @@ class test_Roots(TestCase):
 
         """
         f = lambda x: x**2 - 1
-        methods = [bisect, secant, fZero]
+        methods = [bisect, secant, zBrentDekker]
         for method in methods:
             with self.assertRaises(ValueError):
                 method(f, [-2, 2])
