@@ -33,33 +33,33 @@ def lu_timing(Matrix, mode):  # LU decomposition with np subarrays
 
             pivot = A[col, col]
 
-            match mode:
-                case "Submatrices":  # Using list indexing twice
-                    A[col + 1 :, col] = A[col + 1 :, col] / pivot
-                    A[col + 1 :, col + 1 :] = A[col + 1 :, col + 1 :] - (
-                        A[col + 1 :, :][:, [col]] @ A[[col], :][:, col + 1 :]
-                    )
-                case "New Axis":  # Using np.newaxis
-                    A[col + 1 :, col] = A[col + 1 :, col] / pivot
-                    A[col + 1 :, col + 1 :] = (
-                        A[col + 1 :, col][:, np.newaxis]
-                        @ A[col, col + 1 :][np.newaxis, :]
-                    )
-                case "Outer Product":  # Using np.outer
-                    A[col + 1 :, col] = A[col + 1 :, col] / pivot
-                    A[col + 1 :, col + 1 :] = np.outer(
-                        A[col + 1 :, col], A[col, col + 1 :]
-                    )
-                case "Loop":  # Gaussian elimination
-                    for row in range(col + 1, n):
-                        A[row, col] = (
-                            A[row, col] / A[col, col]
-                        )  # Calculate the multiplier and store in A for later use
-                        A[row, col + 1 :] = (
-                            A[row, col + 1 :] - A[row, col] * A[col, col + 1 :]
-                        )  # Update the remaining elements in the row using the multiplier
-                case _:
-                    raise ValueError("Invalid mode")
+           
+            if mode=="Submatrices":  # Using list indexing twice
+                A[col + 1 :, col] = A[col + 1 :, col] / pivot
+                A[col + 1 :, col + 1 :] = A[col + 1 :, col + 1 :] - (
+                    A[col + 1 :, :][:, [col]] @ A[[col], :][:, col + 1 :]
+                )
+            elif mode=="New Axis":  # Using np.newaxis
+                A[col + 1 :, col] = A[col + 1 :, col] / pivot
+                A[col + 1 :, col + 1 :] = (
+                    A[col + 1 :, col][:, np.newaxis]
+                    @ A[col, col + 1 :][np.newaxis, :]
+                )
+            elif mode=="Outer Product":  # Using np.outer
+                A[col + 1 :, col] = A[col + 1 :, col] / pivot
+                A[col + 1 :, col + 1 :] = np.outer(
+                    A[col + 1 :, col], A[col, col + 1 :]
+                )
+            elif mode=="Loop":  # Gaussian elimination
+                for row in range(col + 1, n):
+                    A[row, col] = (
+                        A[row, col] / A[col, col]
+                    )  # Calculate the multiplier and store in A for later use
+                    A[row, col + 1 :] = (
+                        A[row, col + 1 :] - A[row, col] * A[col, col + 1 :]
+                    )  # Update the remaining elements in the row using the multiplier
+            else:
+                raise ValueError("Invalid mode")
 
     L = np.tril(A, -1) + np.eye(
         n

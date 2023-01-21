@@ -76,36 +76,36 @@ def splines(x, y, u, sorted=False, mode=None):
     c = (3 * delta - 2 * d[:-1] - d[1:]) / (h)
     b = (d[:-1] - 2 * delta + d[1:]) / (h**2)
 
-    match mode:
-        case "Indexed List":
-            k = np.zeros(np.size(u), dtype=int)
-            for j in np.arange(1, n - 1):
+    
+    if mode=="Indexed List":
+        k = np.zeros(np.size(u), dtype=int)
+        for j in np.arange(1, n - 1):
 
-                k[x[j] <= u] = j
+            k[x[j] <= u] = j
 
-            s = u - x[k]
-            v = y[k] + s * (d[k] + s * (c[k] + s * b[k]))
-        case "List Compresion":
-            # Find the index of the points in u that are between x[i] and x[i+1]
-            k = np.ones(len(u)).astype(
-                int
-            )  # Create a vector of ones of the same size as u, to store the result
-            for i in range(1, n):
-                k[x[i - 1] <= u] = int(i)
+        s = u - x[k]
+        v = y[k] + s * (d[k] + s * (c[k] + s * b[k]))
+    elif mode=="List Compresion":
+        # Find the index of the points in u that are between x[i] and x[i+1]
+        k = np.ones(len(u)).astype(
+            int
+        )  # Create a vector of ones of the same size as u, to store the result
+        for i in range(1, n):
+            k[x[i - 1] <= u] = int(i)
 
-            s = [
-                u[i] - x[k[i] - 1] for i in range(len(u))
-            ]  # Compute the distance between the points in u and the points in x that are between x[i] and x[i+1]
+        s = [
+            u[i] - x[k[i] - 1] for i in range(len(u))
+        ]  # Compute the distance between the points in u and the points in x that are between x[i] and x[i+1]
 
-            v = [
-                y[k[i] - 1]
-                + s[i] * (d[k[i] - 1] + s[i] * (c[k[i] - 1] + s[i] * b[k[i] - 1]))
-                for i in range(len(u))
-            ]  # Compute the value of the interpolation at the points in u
+        v = [
+            y[k[i] - 1]
+            + s[i] * (d[k[i] - 1] + s[i] * (c[k[i] - 1] + s[i] * b[k[i] - 1]))
+            for i in range(len(u))
+        ]  # Compute the value of the interpolation at the points in u
 
-        case _:
-            print("Mode not recognized")
-            v = []
+    else:
+        print("Mode not recognized")
+        v = []
 
     return v
 
