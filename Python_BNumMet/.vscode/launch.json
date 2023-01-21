@@ -19,7 +19,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/tests/__init__.py",
             //"console": "externalTerminal",
-            "console": "internalConsole",
+            "console": "integratedTerminal",
             "justMyCode": true
         }, 
         
@@ -29,7 +29,7 @@
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/tests/__init__.py",
-            "console": "internalConsole",
+            "console": "integratedTerminal",
             "justMyCode": true,
             "postDebugTask": "Sonar",
         }

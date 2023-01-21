@@ -267,27 +267,60 @@ class test_InterpolationVisualizer(TestCase):
         )
         self.assertTrue(len(self.interpolVisualizer.ScatteredDots.y) == len(oldY) + 1)
 
-    def test_updateMesh(self):
+    def test_blockAdding(self):
         self.runtest_setup()
 
-        oldU = self.interpolVisualizer.u
-        old_x_sc = self.interpolVisualizer.x_sc.min
-        old_y_sc = self.interpolVisualizer.y_sc.min
+        oldX = self.interpolVisualizer.ScatteredDots.x
+        oldY = self.interpolVisualizer.ScatteredDots.y
 
+        # 1. Adding a point will correctly update the scattered dots
+        self.interpolVisualizer.ScatteredDots.x = np.append(
+            self.interpolVisualizer.ScatteredDots.x, 7
+        )
+        self.interpolVisualizer.ScatteredDots.y = np.append(
+            self.interpolVisualizer.ScatteredDots.y, 7
+        )
         self.assertTrue(
-            old_x_sc is not None and old_y_sc is not None
-        )  # The values for SC are set from the begining
+            len(self.interpolVisualizer.ScatteredDots.x) == len(oldX) + 1
+            and len(self.interpolVisualizer.ScatteredDots.y) == len(oldY) + 1
+        )
 
-        # Modify the mesh should NOT modify sc_x and sc_y
-        self.interpolVisualizer.slider.value = [-8.0, 20]
-
-        self.assertTrue(self.interpolVisualizer.x_sc.min == old_x_sc)
-        self.assertTrue(self.interpolVisualizer.y_sc.min == old_y_sc)
-
-        # Modify the mesh should modify u
+        # 2. Adding some points with "blockAdding" - checkbox - will not update the scattered dots
+        self.interpolVisualizer.blockAdding.value = True
+        self.interpolVisualizer.ScatteredDots.x = np.append(
+            self.interpolVisualizer.ScatteredDots.x, [8, 9, 10]
+        )
+        self.interpolVisualizer.ScatteredDots.y = np.append(
+            self.interpolVisualizer.ScatteredDots.y, [8, 9, 10]
+        )
         self.assertTrue(
-            self.interpolVisualizer.u[0] == self.interpolVisualizer.slider.min
-            and self.interpolVisualizer.u[-1] == self.interpolVisualizer.slider.max
+            len(self.interpolVisualizer.ScatteredDots.x) == len(oldX) + 1
+            and len(self.interpolVisualizer.ScatteredDots.y) == len(oldY) + 1
+        )
+
+    def test_extrapolationEffects(self):
+        self.runtest_setup()
+
+        # 1. Extrapolation checkbox is NOT checked by default
+        self.assertFalse(self.interpolVisualizer.extrapolation.value)
+
+        # 2. Extrapolation checkbox is checked - u is updated (different min and max)
+        minMaxX = [min(self.interpolVisualizer.x), max(self.interpolVisualizer.x)]
+        self.interpolVisualizer.extrapolation.value = True
+        self.assertTrue(self.interpolVisualizer.extrapolation.value)
+        self.assertTrue(
+            self.interpolVisualizer.u[0] < minMaxX[0]
+            and self.interpolVisualizer.u[-1] > minMaxX[1]
+        )
+
+        # 3. Extrapolation checkbox is NOT checked - u is updated (same min and max)
+        self.interpolVisualizer.extrapolation.value = False
+        self.assertFalse(self.interpolVisualizer.extrapolation.value)
+        print(min(self.interpolVisualizer.u), minMaxX[0])
+        print(max(self.interpolVisualizer.u), minMaxX[1])
+        self.assertTrue(
+            min(self.interpolVisualizer.u) == minMaxX[0]
+            and max(self.interpolVisualizer.u) == minMaxX[1]
         )
 
     def test_updateCheckboxes(self):
@@ -324,4 +357,22 @@ class test_InterpolationVisualizer(TestCase):
         self.assertTrue(
             (self.interpolVisualizer.ScatteredDots.x == oldX).all()
             and (self.interpolVisualizer.ScatteredDots.y == oldY).all()
+        )
+
+    def test_autoZoom(self):
+        self.runtest_setup()
+
+        # 1. AutoZoom button is clicked without Effects of Extrapolation - sc.x and sc.y limits are updated
+        self.interpolVisualizer.auto_zoom_button.click()
+        self.assertTrue(
+            self.interpolVisualizer.x_sc.min == min(self.interpolVisualizer.u)
+            and self.interpolVisualizer.x_sc.max == max(self.interpolVisualizer.u)
+        )
+
+        # 2. AutoZoom button is clicked with Effects of Extrapolation - sc.x and sc.y limits are updated
+        self.interpolVisualizer.extrapolation.value = True
+        self.interpolVisualizer.auto_zoom_button.click()
+        self.assertTrue(
+            self.interpolVisualizer.x_sc.min == min(self.interpolVisualizer.u)
+            and self.interpolVisualizer.x_sc.max == max(self.interpolVisualizer.u)
         )

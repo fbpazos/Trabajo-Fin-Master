@@ -44,31 +44,29 @@ class LUVisualizer:
         # ==========================================================================
         ## Output for the matrix P
         self.outP = widgets.HTMLMath(
-            value=prettyPrintMatrix(self.P, True), placeholder="$P$", description="$P:$"
+            value=prettyPrintMatrix(
+                self.P, simple=True, type="pMatrix", step=self.step
+            ),
+            placeholder="$P$",
+            description="$P:$",
         )
 
         ## Output for the matrix L
         self.outL = widgets.HTMLMath(
-            value=prettyPrintMatrix(self.L, True), placeholder="$L$", description="$L:$"
+            value=prettyPrintMatrix(
+                self.L, simple=True, type="lMatrix", step=self.step
+            ),
+            placeholder="$L$",
+            description="$\\tilde{L}:$",
         )
 
         ## Output for the matrix U
         self.outU = widgets.HTMLMath(
-            value=prettyPrintMatrix(self.U, True), placeholder="$U$", description="$U:$"
-        )
-
-        ## Output for the matrix L*U
-        self.outPLU = widgets.HTMLMath(
-            value=prettyPrintMatrix(self.L @ self.U, True),
-            placeholder="$LU$",
-            description="$LU:$",
-        )
-
-        ## Output for the matrix P*A
-        self.outA = widgets.HTMLMath(
-            value=prettyPrintMatrix(self.P @ self.A, True),
-            placeholder="$PA$",
-            description="$PA:$",
+            value=prettyPrintMatrix(
+                self.U, simple=True, type="uMatrix", step=self.step
+            ),
+            placeholder="$U$",
+            description="$\\tilde{U}:$",
         )
 
         ## Output for the checker(PA=LU)
@@ -129,9 +127,6 @@ class LUVisualizer:
         self.grid[3, 1] = self.outL
         self.grid[3, 2] = self.outU
 
-        self.grid[4, 0] = self.outPLU
-        self.grid[4, 1] = self.outA
-
     def matrixPivotButton(self, b):
         """
         Observer for the buttons in the matrix, when a button is clicked, the pivot is performed and the step is updated
@@ -155,14 +150,17 @@ class LUVisualizer:
             (self.P.copy(), self.L.copy(), self.U.copy(), self.step)
         )
         with self.grid.hold_sync():
-            # Apply the LU decomposition to the matrix
-            self.P, self.L, self.U, self.step, _ = interactive_lu(
-                self.P, self.L, self.U, self.step, b.index[0]
-            )
-            # Update the output
-            self.updateOutput()
+            self.oneStep(b.index[0])
             # Update the buttons
             self.updateButtons()
+
+    def oneStep(self, pivot):
+        # Apply the LU decomposition to the matrix
+        self.P, self.L, self.U, self.step, _ = interactive_lu(
+            self.P, self.L, self.U, self.step, pivot
+        )
+        # Update the output
+        self.updateOutput()
 
     def updateButtons(self):
         """
@@ -172,6 +170,10 @@ class LUVisualizer:
         -------
         None
         """
+        # If the all the pivots are 0, then increment the step and update the buttons
+        if np.allclose(self.U[self.step :, self.step], 0):
+            self.oneStep(-1)
+
         # Update the buttons
         for i in range(len(self.buttonsMatrix)):
             for j in range(len(self.buttonsMatrix[i])):
@@ -195,7 +197,7 @@ class LUVisualizer:
                 else:  # If they are not the pivot buttons, then they are disabled and the color is LightCoral
                     self.buttonsMatrix[i][j].button_style = ""
                     self.buttonsMatrix[i][j].style.button_color = None
-                    if j <= self.step:
+                    if j <= self.step or i <= self.step - 1:
                         self.buttonsMatrix[i][j].style.button_color = "LightCoral"
                     self.buttonsMatrix[i][j].disabled = True
                     self.buttonsMatrix[i][j].style.font_weight = "normal"
@@ -211,11 +213,15 @@ class LUVisualizer:
         None
         """
         # Update the outputs
-        self.outP.value = prettyPrintMatrix(self.P, True)
-        self.outL.value = prettyPrintMatrix(self.L, True)
-        self.outU.value = prettyPrintMatrix(self.U, True)
-        self.outPLU.value = prettyPrintMatrix(self.L @ self.U, True)
-        self.outA.value = prettyPrintMatrix(self.P @ self.A, True)
+        self.outP.value = prettyPrintMatrix(
+            self.P, simple=True, type="pMatrix", step=self.step
+        )
+        self.outL.value = prettyPrintMatrix(
+            self.L, simple=True, type="lMatrix", step=self.step
+        )
+        self.outU.value = prettyPrintMatrix(
+            self.U, simple=True, type="uMatrix", step=self.step
+        )
 
     def previousStep(self, b):
         """
@@ -279,10 +285,33 @@ class LUVisualizer:
         return self.grid
 
 
-def prettyPrintMatrix(matrix, simple=False):
+def prettyPrintMatrix(matrix, simple=False, type="normal", step=0):
     res = "  \\begin{pmatrix} \n"
-    for row in matrix:
-        res += " & ".join([str(round(x, 3)) for x in row]) + "\\\\ \n"
+
+    if type in ["normal", "pMatrix"]:
+        for (
+            row
+        ) in matrix:  # Corresponds to any matrix or the P matrix (Permutation matrix)
+            res += " & ".join([str(round(x, 3)) for x in row]) + "\\\\ \n"
+    elif type == "lMatrix":  # Corresponds to the L matrix (Lower triangular matrix)
+        # Write * everywhere except for the diagonal and the colums before the step
+        for i in range(len(matrix)):
+            for j in range(len(matrix[i])):
+                if (i <= j or j < step) or step == -1:
+                    res += str(round(matrix[i][j], 3)) + " & "
+                else:
+                    res += "* & "
+            res = res[:-2] + "\\\\ \n"
+    elif type == "uMatrix":  # Corresponds to the U matrix (Upper triangular matrix)
+        # Write * on the submatrix [step:, step:]
+        for i in range(len(matrix)):
+            for j in range(len(matrix[i])):
+                if i >= step and j >= step and step != -1:
+                    res += "* & "
+                else:
+                    res += str(round(matrix[i][j], 3)) + " & "
+            res = res[:-2] + "\\\\ \n"
+
     res += "\\end{pmatrix} "
 
     return Math(res) if not simple else res

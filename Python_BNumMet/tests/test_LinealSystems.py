@@ -162,7 +162,9 @@ class Test_LUVisualizer(TestCase):
         self.assertEqual(self.luVisualizer.step, 1)
 
         buttons2[0].click()
-        self.assertEqual(self.luVisualizer.step, 2)
+        self.assertEqual(
+            self.luVisualizer.step, -1
+        )  # The last is a Linear Combination --> Step +1 but it is the last step --> -1
 
     def test_previousStep(self):
         """

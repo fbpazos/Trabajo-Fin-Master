@@ -60,10 +60,8 @@ class InterpolVisualizer:
             checkbox = widgets.Checkbox(
                 description=key, value=True, style={"background-color": val[1]}
             )
-            checkbox.observe(self.update_checkboxes, "value")
             checkbox.background_color = val[1]
-            # Change background color
-            checkbox.style.handle_color = val[1]
+            checkbox.observe(self.update_checkboxes, "value")
 
             self.methods[key].append(checkbox)
             self.checkboxes.append(checkbox)
@@ -79,25 +77,23 @@ class InterpolVisualizer:
         self.reset_button.on_click(self.reset)
 
         """
-        Range slider
+        block adding points checkbox
         ======================
-        Slider to change the mesh size, linked to the method update_Mesh, with a default minimum of the minimum of the original points - 0.5*(max-min) 
-        and a default maximum of the maximum of the original points + 0.5*(max-min).
+        Checkbox to block adding points, linked to anything - it is just a boolean value that will be used in update_X and update_Y
         """
-        values = [min(self.x), max(self.x)]
-        self.slider = widgets.FloatRangeSlider(
-            value=values,
-            min=values[0] - (values[1] - values[0]) / 2,
-            max=values[1] + (values[1] - values[0]) / 2,
-            step=0.1,
-            description="Mesh:",
-            disabled=False,
-            continuous_update=False,
-            orientation="horizontal",
-            readout=True,
-            readout_format=".1f",
+        self.blockAdding = widgets.Checkbox(
+            description="Block adding points", value=False
         )
-        self.slider.observe(self.update_Mesh, "value")
+
+        """
+        Effects of Extrapolation checkbox
+        ======================
+        Checkbox to show the effects of extrapolation, linked to the method update_extrapolation
+        """
+        self.extrapolation = widgets.Checkbox(
+            description="Show effects of extrapolation", value=False
+        )
+        self.extrapolation.observe(self.update_extrapolation, "value")
 
         """
         Auto Zoom button
@@ -111,6 +107,20 @@ class InterpolVisualizer:
             icon="search-plus",
         )
         self.auto_zoom_button.on_click(self.auto_zoom)
+
+    def update_extrapolation(self, change):
+        """
+        Updates the plot according to the effects of extrapolation checkbox
+        """
+        minMax = [min(self.x), max(self.x)]
+        half = (minMax[1] - minMax[0]) / 4
+        if change["new"]:
+            self.u = np.linspace(minMax[0] - half, minMax[1] + half, 100, endpoint=True)
+        else:
+            self.u = np.linspace(minMax[0], minMax[1], 100, endpoint=True)
+
+        self.update_X(None)
+        self.update_Y(None)
 
     def auto_zoom(self, change):
         """
@@ -175,16 +185,21 @@ class InterpolVisualizer:
 
         This method will always be called when the x coordinates are changed and before the y coordinates are changed.
         """
-        self.x = (
-            change["new"]
-            if change is not None
+        if (
+            change is not None
             and change["name"] == "x"
             and len(list(change["new"])) == len(set(change["new"]))
-            else self.x
-        )
-
-        self.slider.min = min(self.x) - (max(self.x) - min(self.x)) / 2
-        self.slider.max = max(self.x) + (max(self.x) - min(self.x)) / 2
+        ):  # There are changes and there are no repetitions in the x coordinates
+            if (
+                len(list(change["new"])) > len(self.x) and not self.blockAdding.value
+            ):  # There are more points than before and the block adding points checkbox is not checked
+                self.x = change["new"]
+            elif len(list(change["new"])) <= len(
+                self.x
+            ):  # There are the same number of points as before - the points are moved
+                self.x = change["new"]
+            else:  # There are more points than before and the block adding points checkbox is checked
+                return  # Nothing to re-plot
 
     def update_Y(self, change):
         """
@@ -197,13 +212,20 @@ class InterpolVisualizer:
 
         with self.widgetsgrid.hold_sync():
 
-            self.y = (
-                change["new"]
-                if change is not None
+            if (
+                change is not None
                 and change["name"] == "y"
                 and len(list(change["new"])) == len(self.x)
-                else self.y
-            )
+            ):
+                if (
+                    len(list(change["new"])) > len(self.y)
+                    and not self.blockAdding.value
+                ):
+                    self.y = change["new"]
+                elif len(list(change["new"])) <= len(self.y):
+                    self.y = change["new"]
+                else:
+                    return  # Nothing to re-plot
 
             self.scatterDots()
             self.interpolLines()
@@ -211,32 +233,6 @@ class InterpolVisualizer:
             toUpdate = [*self.interpolationLines, self.ScatteredDots]
 
             self.Fig.marks = toUpdate
-
-            # Update Scales and Axes
-
-            # yVals = [j for line in self.interpolationLines for j in line.y]
-            # if len(yVals) != 0:
-            # self.y_sc.min = min(yVals)
-            # self.y_sc.max = max(yVals)
-
-    def update_Mesh(self, change):
-        """
-        Updates the mesh and the plot according to the new mesh
-        """
-        minX = min(self.x)
-        maxX = max(self.x)
-        leftX = change["new"][0] if (change["new"][0]) < minX else minX
-        rightX = change["new"][1] if (change["new"][1]) > maxX else maxX
-
-        self.u = np.linspace(leftX, rightX, 100)
-        self.slider.value = [leftX, rightX]
-
-        self.update_X(None)
-        self.update_Y(None)
-
-        # Reset X scale
-        # self.x_sc.min = min(self.u)
-        # self.x_sc.max = max(self.u)
 
     def update_checkboxes(self, change):
         """
@@ -253,8 +249,15 @@ class InterpolVisualizer:
         self.y = self.Originals[1]
         self.u = self.Originals[2]
 
+        # Reset checkboxes
+        for key, val in self.methods.items():
+            val[2].value = True
+
+        self.extrapolation.value = False
+        self.blockAdding.value = False
+
         values = [min(self.x), max(self.x)]
-        self.u = np.linspace(values[0], values[1], 100)
+        self.u = np.linspace(values[0], values[1], 100, endpoint=True)
 
         self.update_X(None)
         self.update_Y(None)
@@ -323,7 +326,8 @@ class InterpolVisualizer:
         tools = widgets.VBox(
             [
                 self.checkboxesVbox,
-                self.slider,
+                self.blockAdding,
+                self.extrapolation,
                 widgets.HBox([self.reset_button, self.auto_zoom_button]),
             ]
         )
