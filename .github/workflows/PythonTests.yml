@@ -7,6 +7,7 @@ on:
   push:
     paths:
       - 'Python_BNumMet/src/**'
+      - 'Python_BNumMet/Demos/**'
       - 'Python_BNumMet/tests/**'
       - '.github/workflows/PythonTests.yml'
       - 'Python_BNumMet/requirements.txt'
