@@ -76,8 +76,7 @@ def splines(x, y, u, sorted=False, mode=None):
     c = (3 * delta - 2 * d[:-1] - d[1:]) / (h)
     b = (d[:-1] - 2 * delta + d[1:]) / (h**2)
 
-    
-    if mode=="Indexed List":
+    if mode == "Indexed List":
         k = np.zeros(np.size(u), dtype=int)
         for j in np.arange(1, n - 1):
 
@@ -85,7 +84,7 @@ def splines(x, y, u, sorted=False, mode=None):
 
         s = u - x[k]
         v = y[k] + s * (d[k] + s * (c[k] + s * b[k]))
-    elif mode=="List Compresion":
+    elif mode == "List Compresion":
         # Find the index of the points in u that are between x[i] and x[i+1]
         k = np.ones(len(u)).astype(
             int
