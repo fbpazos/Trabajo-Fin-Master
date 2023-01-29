@@ -44,7 +44,7 @@ class LUVisualizer:
         # ==========================================================================
         ## Output for the matrix P
         self.outP = widgets.HTMLMath(
-            value=prettyPrintMatrix(
+            value=pretty_print_matrix(
                 self.P, simple=True, type="pMatrix", step=self.step
             ),
             placeholder="$P$",
@@ -53,7 +53,7 @@ class LUVisualizer:
 
         ## Output for the matrix L
         self.outL = widgets.HTMLMath(
-            value=prettyPrintMatrix(
+            value=pretty_print_matrix(
                 self.L, simple=True, type="lMatrix", step=self.step
             ),
             placeholder="$L$",
@@ -62,7 +62,7 @@ class LUVisualizer:
 
         ## Output for the matrix U
         self.outU = widgets.HTMLMath(
-            value=prettyPrintMatrix(
+            value=pretty_print_matrix(
                 self.U, simple=True, type="uMatrix", step=self.step
             ),
             placeholder="$U$",
@@ -213,13 +213,13 @@ class LUVisualizer:
         None
         """
         # Update the outputs
-        self.outP.value = prettyPrintMatrix(
+        self.outP.value = pretty_print_matrix(
             self.P, simple=True, type="pMatrix", step=self.step
         )
-        self.outL.value = prettyPrintMatrix(
+        self.outL.value = pretty_print_matrix(
             self.L, simple=True, type="lMatrix", step=self.step
         )
-        self.outU.value = prettyPrintMatrix(
+        self.outU.value = pretty_print_matrix(
             self.U, simple=True, type="uMatrix", step=self.step
         )
 
@@ -285,7 +285,7 @@ class LUVisualizer:
         return self.grid
 
 
-def prettyPrintMatrix(matrix, simple=False, type="normal", step=0):
+def pretty_print_matrix(matrix, simple=False, type="normal", step=0):
     res = "  \\begin{pmatrix} \n"
 
     if type in ["normal", "pMatrix"]:

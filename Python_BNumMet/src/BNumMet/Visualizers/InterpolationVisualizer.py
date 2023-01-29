@@ -81,7 +81,7 @@ class InterpolVisualizer:
         ======================
         Checkbox to block adding points, linked to anything - it is just a boolean value that will be used in update_X and update_Y
         """
-        self.blockAdding = widgets.Checkbox(
+        self.block_adding = widgets.Checkbox(
             description="Block adding points", value=False
         )
 
@@ -191,7 +191,7 @@ class InterpolVisualizer:
             and len(list(change["new"])) == len(set(change["new"]))
         ):  # There are changes and there are no repetitions in the x coordinates
             if (
-                len(list(change["new"])) > len(self.x) and not self.blockAdding.value
+                len(list(change["new"])) > len(self.x) and not self.block_adding.value
             ):  # There are more points than before and the block adding points checkbox is not checked
                 self.x = change["new"]
             elif len(list(change["new"])) <= len(
@@ -219,7 +219,7 @@ class InterpolVisualizer:
             ):
                 if (
                     len(list(change["new"])) > len(self.y)
-                    and not self.blockAdding.value
+                    and not self.block_adding.value
                 ):
                     self.y = change["new"]
                 elif len(list(change["new"])) <= len(self.y):
@@ -254,7 +254,7 @@ class InterpolVisualizer:
             val[2].value = True
 
         self.extrapolation.value = False
-        self.blockAdding.value = False
+        self.block_adding.value = False
 
         values = [min(self.x), max(self.x)]
         self.u = np.linspace(values[0], values[1], 100, endpoint=True)
@@ -326,7 +326,7 @@ class InterpolVisualizer:
         tools = widgets.VBox(
             [
                 self.checkboxesVbox,
-                self.blockAdding,
+                self.block_adding,
                 self.extrapolation,
                 widgets.HBox([self.reset_button, self.auto_zoom_button]),
             ]

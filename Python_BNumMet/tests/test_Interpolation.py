@@ -267,7 +267,7 @@ class test_InterpolationVisualizer(TestCase):
         )
         self.assertTrue(len(self.interpolVisualizer.ScatteredDots.y) == len(oldY) + 1)
 
-    def test_blockAdding(self):
+    def test_block_adding(self):
         self.runtest_setup()
 
         oldX = self.interpolVisualizer.ScatteredDots.x
@@ -285,8 +285,8 @@ class test_InterpolationVisualizer(TestCase):
             and len(self.interpolVisualizer.ScatteredDots.y) == len(oldY) + 1
         )
 
-        # 2. Adding some points with "blockAdding" - checkbox - will not update the scattered dots
-        self.interpolVisualizer.blockAdding.value = True
+        # 2. Adding some points with "block_adding" - checkbox - will not update the scattered dots
+        self.interpolVisualizer.block_adding.value = True
         self.interpolVisualizer.ScatteredDots.x = np.append(
             self.interpolVisualizer.ScatteredDots.x, [8, 9, 10]
         )

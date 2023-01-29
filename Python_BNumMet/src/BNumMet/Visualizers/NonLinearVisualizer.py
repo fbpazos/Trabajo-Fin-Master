@@ -1,53 +1,93 @@
 import bqplot as bq
 import numpy as np
 from ipywidgets import widgets
+from BNumMet.NonLinear import zBrentDekker
 
 
 class NonLinearVisualizer:
-    def __init__(self, fun=lambda x: (x - 1) * (x - 4) * np.exp(-x), interval=(0, 3)):
-        """
-        Initializes the NonLinearVisualizer
+    def __init__(
+        self, fun=lambda x: (x - 1) * (x - 4) * np.exp(-x), interval=(0, 3), tol=1e-3
+    ):
 
-        Parameters
-        ----------
-        fun : function
-            The function whose zeros are to be found
-        interval : tuple
-            The interval in which the zeros are to be found
+        # Initialize basic Parameters
+        self.brentDekker = zBrentDekker(
+            fun, interval, tol, iters=True, steps=True
+        )  # Get the output of Brent Dekkers Alg --> (x, iters)
+        print(self.brentDekker[2])
 
-        Returns
-        -------
-        None
-        """
         self.f = fun
-        self.x0, self.x1 = interval
-        self.xn = self.x0
+        self.a, self.b = interval
+        self.fa, self.fb = self.f(self.a), self.f(self.b)
 
-        self.f0 = self.f(self.x0)
-        self.f1 = self.f(self.x1)
-        self.fn = self.f(self.xn)
-
-        if self.f0 * self.f1 > 0:
+        if self.f(self.a) * self.f(self.b) > 0:
             raise ValueError("The function has no zeros in the given interval")
 
-        self.e = self.x1 - self.x0
+        self.t = tol
 
+        self.original_data = (self.a, self.b)
         self.iterations = 0
 
-        self.previousPoints = []
-        self.OrignalPoints = (self.x0, self.x1, self.xn)
+        # First Step of the Algorithm
+        # ==========================================================================
+        ## Section: INT
+        self.c, self.fc, self.e = self.a, self.fa, self.b - self.a
+        ## Section: EXT
+        self.sectionEXT()
+
+        # Current Step Save Values
+        # ==========================================================================
+        self.currentStep = (self.a, self.b, self.c, self.e)
+
+        # Revert Stack
+        # ==========================================================================
+        self.revertStack = []
+
+        # Draw mesh
+        # ==========================================================================
+        self.x = np.linspace(self.a, self.b, 1000)
+        self.widen = False
+
+    def checkBoxChanged(self, change):
+        with self.Fig.hold_sync():
+            self.drawFigures()
+
+    def sectionINT(self):
+        if np.sign(self.fb) == np.sign(self.fc) != 0:
+            self.c, self.fc, self.e = self.a, self.fa, self.b - self.a
+
+    def sectionEXT(self):
+        if abs(self.fc) < abs(self.fb):
+            self.a, self.b, self.c, self.fa, self.fb, self.fc = (
+                self.b,
+                self.c,
+                self.b,
+                self.fb,
+                self.fc,
+                self.fb,
+            )
 
     def initializeComponents(self):
-        # WIDGETS
+
+        # Current Solution Text
         # ==========================================================================
-        ## Output Widgets
-        ### Current Solution Text
+        # Current Solution: (b, f(b))
+        # Iterations: N
         self.currentSolOut = widgets.Output()
+
         # Helper Text
+        # ==========================================================================
+        # Next Step suggestion: <Bisect/IQI/Secant>
         self.helperOut = widgets.Output()  # Next Possible Step: <Bisect/IQI/None>
 
-        ## Button Widgets
-        ### Reset Button
+        # Brent-Dekker Solution
+        # ==========================================================================
+        # Brent-Dekker Solution: (x^, f(x^)) in N^ iterations
+        self.brentDekkerOut = widgets.HTML(
+            value=f"<blockquote> Brent-Dekker Solution: <b>({self.brentDekker[0]:.4e}, {self.f(self.brentDekker[0]):.4e})</b> in <b>{self.brentDekker[1]}</b> iterations"
+        )
+
+        # Reset Button
+        # ==========================================================================
         self.resetButton = widgets.Button(
             description="Reset",
             disabled=False,
@@ -57,7 +97,8 @@ class NonLinearVisualizer:
         )
         self.resetButton.on_click(self.reset)
 
-        ### Revert Button
+        # Revert Button
+        # ==========================================================================
         self.revertButton = widgets.Button(
             description="Revert",
             disable=False,
@@ -75,7 +116,7 @@ class NonLinearVisualizer:
         ax_y = bq.Axis(
             scale=self.y_sc,
             orientation="vertical",
-            tick_format="0.2f",
+            tick_format="0.4e",
             grid_lines="solid",
             label="Y",
         )
@@ -84,384 +125,374 @@ class NonLinearVisualizer:
             marks=[],
             axes=[ax_x, ax_y],
             title="Zeros of a Function",
-            animation_duration=1000,
         )
+
+        # Essential figure components
+        # ==========================================================================
+        self.defaultLines()
+
+        # FUNCTION BUTTONS
+        # ==========================================================================
+        # Each button has a pointIndex attribute that is used to identify the point in the points array
+        # 0: Bisect  1: Secant  2: IQI
+
+        # Bisect Button
+        self.bisectButton = widgets.Button(
+            description="Bisect",
+            disabled=False,
+            tooltip="Bisect",
+        )
+        self.bisectButton.pointIndex = 0
+        self.bisectButton.on_click(self.next_step)
+
+        # Secant Button
+        self.secantButton = widgets.Button(
+            description="Secant",
+            disabled=False,
+            tooltip="Secant",
+        )
+        self.secantButton.pointIndex = 1
+        self.secantButton.on_click(self.next_step)
+
+        # IQI Button
+        self.IQIButton = widgets.Button(
+            description="IQI",
+            disabled=False,
+            tooltip="IQI",
+        )
+        self.IQIButton.pointIndex = 2
+        self.IQIButton.on_click(self.next_step)
+
+        # CHECKBOXES FOR FUNCTION BUTTONS
+        # ==========================================================================
+        self.bisectCheckbox = widgets.Checkbox(
+            value=False,
+            description="Bisect",
+            disabled=False,
+            indent=False,
+        )
+        # On change of checkbox, function checkBoxChanged
+        self.bisectCheckbox.observe(self.checkBoxChanged, names="value")
+
+        self.secantCheckbox = widgets.Checkbox(
+            value=False,
+            description="Secant",
+            disabled=False,
+            indent=False,
+        )
+        self.secantCheckbox.observe(self.checkBoxChanged, names="value")
+
+        self.IQICheckbox = widgets.Checkbox(
+            value=False,
+            description="IQI",
+            disabled=False,
+            indent=False,
+        )
+        self.IQICheckbox.observe(self.checkBoxChanged, names="value")
 
         # GRID
         # ==========================================================================
-        self.grid = widgets.GridspecLayout(3, 3)
-        self.grid[:2, :2] = self.Fig
-        self.grid[0, 2] = self.currentSolOut
-        self.grid[1, 2] = self.helperOut
-        self.grid[2, 2] = widgets.HBox([self.resetButton, self.revertButton])
+        self.grid = widgets.GridspecLayout(2, 2)
+        self.grid[0, 0] = self.Fig
 
-    def reset(self, *args):
-        """
-        Resets the visualizer to its initial state
+        # Text Outputs Group
+        textGroup = widgets.VBox(
+            [self.currentSolOut, self.helperOut, self.brentDekkerOut]
+        )
+        self.grid[1, 0] = textGroup
 
-        Parameters
-        ----------
-        *args : tuple
-            Arguments passed by the button widget (not used)
+        # Buttons Group
+        text1 = widgets.HTML(value="<b>Next Step Selector</b>")
+        text2 = widgets.HTML(value="<b>Draw Step?</b>")
+        selectors = widgets.VBox(
+            [text1, self.bisectButton, self.secantButton, self.IQIButton]
+        )
+        checkboxes = widgets.VBox(
+            [text2, self.bisectCheckbox, self.secantCheckbox, self.IQICheckbox]
+        )
+        buttonsGroup = widgets.HBox([selectors, checkboxes])
 
-        Returns
-        -------
-        None
-        """
-        self.x0, self.x1 = self.OrignalPoints[:2]
-        self.xn = self.OrignalPoints[2]
-        self.f0 = self.f(self.x0)
-        self.f1 = self.f(self.x1)
-        self.fn = self.f(self.xn)
-        self.e = self.x1 - self.x0
-        self.iterations = 0
-        self.previousPoints = []
-        self.newPoints()
-        with self.grid.hold_sync():
-            self.updateOutputWidgets()
-            self.update()
+        self.grid[0, 1] = buttonsGroup
 
-    def revert(self, *args):
-        """
-        Reverts the visualizer to the previous state (if possible)
+        # Reset and Revert Buttons Group
+        buttonsGroup2 = widgets.HBox(
+            [
+                self.revertButton,
+                self.resetButton,
+            ]
+        )
+        self.grid[1, 1] = buttonsGroup2
 
-        Parameters
-        ----------
-        *args : tuple
-            Arguments passed by the button widget (not used)
-
-        Returns
-        -------
-        None
-        """
-        if len(self.previousPoints) > 0:
-            self.x0, self.x1, self.xn = self.previousPoints.pop()
-            self.xn = self.x0
-            self.f0 = self.f(self.x0)
-            self.f1 = self.f(self.x1)
-            self.fn = self.f(self.xn)
-            self.e = self.x1 - self.x0
-            self.iterations -= 1
-            self.newPoints()
-            with self.grid.hold_sync():
-                self.updateOutputWidgets()
-                self.update()
-
-    def fixPoints(self):
-        """
-        Corrects the points to be plotted, this is done as part of the Algorithm of Zeroin/fZeros
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        None
-        """
-        if np.sign(self.f0) == np.sign(self.f1):
-            self.x0 = self.xn
-            self.f0 = self.fn
-            self.e = self.x1 - self.xn
-        elif np.sign(self.f0) < np.sign(self.f1):
-            self.x0, self.x1, self.xn = self.x1, self.x0, self.x1
-            self.f0, self.f1, self.fn = self.f1, self.f0, self.f1
-
-    def newPoints(self) -> list:
-        """
-        Calculates the new points (using bisection and Inverse Quadratic Interpolation) to be plotted and returns them
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        list
-            A list of the new points to be plotted
-            if the algorithm has converged, it returns a List with 2xNone
-        """
-        self.nextPoints = [None, None]
-
-        m = 0.5 * (self.x0 - self.x1)
-        self.tol = 2 * np.finfo(float).eps * max(abs(self.x1), 1)
-        if abs(m) < self.tol or np.isclose(self.f1, 0):
-            return self.nextPoints
-
-        # BISECTION
-        self.nextPoints[0] = self.x1 + m
-
-        # IQI
-        self.nextPoints[1] = self.x1 + self.IQI_Step()
-
-        return self.nextPoints
-
-    def nextStep(self):
-        """
-        Gives the next step as a string for the helper text (This is done as part of the Algorithm of Zeroin/fZeros) so the user can know what to do next
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        str
-            The next step as a string
-        """
-        return "Bisect" if self.e < self.tol or abs(self.fn) < abs(self.f1) else "IQI"
-
-    def updateOutputWidgets(self):
-        """
-        Updates the Output Widgets, for the current solution and the helper text
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        None
-        """
-        self.currentSolOut.clear_output()
-        with self.currentSolOut:
-            # Current Solution: <x1>
-            ##Iterations: <iterations>
-            # Value: <f1>
-            print(
-                f"Curent Solution: {self.x1}\nValue: {self.f1}\nIterations: {self.iterations}"
-            )
-        self.helperOut.clear_output()
-        with self.helperOut:
-            # Next Step: [<nextStep> | None - Already at a Solution]
-            if all(v is not None for v in self.nextPoints):
-                print(f"Next Possible Step: {self.nextStep()}")
-            else:
-                print("Next Possible Step: None - Already at a Solution")
-
-    def functionPlot(self, x, y, name, color, line_style, display_legend=True):
-        """
-        Plots a function on the Figure
-
-        Parameters
-        ----------
-        x : np.ndarray
-            The x values of the function
-        y : np.ndarray
-            The y values of the function
-        name : str
-            The name of the function
-        color : str
-            The color of the function
-        line_style : str
-            The line style of the function
-        display_legend : bool, optional
-            Whether to display the legend or not, by default True
-
-        Returns
-        -------
-        bqplot.Lines
-            The function as a bqplot.Lines object
-        """
-        return bq.Lines(
-            x=x,
-            y=y,
+    def defaultLines(self):
+        # 0. Horizontal Line f(x)=0
+        self.hLine = bq.Lines(
+            x=self.x,
+            y=[0] * len(self.x),
             scales={"x": self.x_sc, "y": self.y_sc},
-            colors=[color],
-            display_legend=display_legend,
-            labels=[name],
             enable_move=False,
             enable_add=False,
-            line_style=line_style,
+            colors=["Black"],
         )
-
-    def dotsPlot(
-        self, x, y, name, color, marker, clicker=False, val=None, display_legend=True
-    ):
-        """
-        Plots set of dots on the Figure
-
-        Parameters
-        ----------
-        x : np.ndarray
-            The x values of the dots
-        y : np.ndarray
-            The y values of the dots
-        name : str
-            The name of the dots
-        color : str
-            The color of the dots
-        marker : str
-            The marker of the dots
-        clicker : bool, optional
-            Whether to make the dots clickable or not, by default False
-        val : int, optional
-            The value of the dots (For use in combination with clicker), by default None
-        display_legend : bool, optional
-            Whether to display the legend or not, by default True
-
-        Returns
-        -------
-        bqplot.Scatter
-            The dots as a bqplot.Scatter object
-        """
-        dots = bq.Scatter(
-            x=x,
-            y=y,
+        # 1. Function Line f(x)
+        self.functionLine = bq.Lines(
+            x=self.x,
+            y=self.f(self.x),
             scales={"x": self.x_sc, "y": self.y_sc},
-            colors=[color],
-            display_legend=display_legend,
-            labels=name,
+            labels=["f(x)"],
+            display_legend=False,
             enable_move=False,
             enable_add=False,
-            marker=marker,
+            colors=["Gray"],
+            line_style="dashed",
         )
-        if clicker:
-            dots.val = val
-            dots.on_element_click(self.selectPoint)
-        return dots
 
-    def selectPoint(self, b, *args):
+    def next_step(self, b):
+        if self.hintStep is None:
+
+            return
+        self.revertStack.append([self.a, self.b, self.c, self.e, self.iterations])
+
+        self.a = self.b
+        self.fa = self.fb
+
+        newB = self.nextPoints_addition[b.pointIndex]
+        self.b = (
+            newB
+            if abs(self.b - newB) > self.tolerance
+            else self.b + np.sign(0.5 * (self.c - self.b)) * self.tolerance
+        )
+        self.fb = self.f(self.b)
+        self.e = self.errs[b.pointIndex]
+
+        self.iterations += 1
+
+        # Section: Ext
+        self.sectionEXT()
+        # Section: Int
+        self.sectionINT()
+
+        self.oneStep()
+
+    def reset(self, b):
         """
-        Method to be called when a point is clicked, this method will update the current solution and the helper text
-
-        Parameters
-        ----------
-        b : bqplot.Scatter
-            The Scatter object that was clicked on, this contains the value of the point (0 - Bisection / 1 - IQI)
-        *args
-            The arguments passed by the event
-
-        Returns
-        -------
-        None
+        Reset everything to the initial state, this can be understood as reverting all the steps
         """
-        if self.nextPoints[b.val] is None:
+        if len(self.revertStack) == 0:
             return
 
-        self.previousPoints.append((self.x0, self.x1, self.xn))
-        self.xn = self.x1
-        self.fn = self.f1
-        self.x1 = self.nextPoints[b.val]
-        self.f1 = self.f(self.x1)
-        self.fixPoints()
-        self.iterations += 1
-        newPoints = self.newPoints()
+        self.a, self.b, self.c, self.e, self.iterations = self.revertStack[0]
+        self.fb = self.f(self.b)
+        self.fa = self.f(self.a)
+        self.fc = self.f(self.c)
+
+        self.revertStack = []
+        self.oneStep()
+
+    def revert(self, b):
+        """
+        This method reverts the last step
+        """
+        if len(self.revertStack) == 0:
+            return
+
+        self.a, self.b, self.c, self.e, self.iterations = self.revertStack.pop()
+        self.fb = self.f(self.b)
+        self.fa = self.f(self.a)
+        self.fc = self.f(self.c)
+
+        self.oneStep()
+
+    def oneStep(self):
         with self.grid.hold_sync():
-            self.updateOutputWidgets()
-            self.update()
 
-    def update(self):
+            self.brentDekker_Step()
+            print(self.hintStep)
+            self.IQIButton.disabled = self.nextPoints_addition[2] is None
+            self.IQICheckbox.disabled = self.nextPoints_addition[2] is None
+
+            self.updateOuputs()
+            with self.Fig.hold_sync():
+                self.drawFigures()
+            # self.drawFigures()
+
+    def drawFigures(self):
         """
-        This function plots everything accordingly to the values inside this class (it does not generate any more points)
-
-        Considerations
-            1. If the difference between self.x0 and self.x1 is smaller than 1, we "zoom in" the plot (Original Points not to be plotted)
-            2. Else we plot also de original Points and zoom out (X Axis) according to the min/max of all posible points (even the new ones)
-
+        This method draws the figures
+        1. The function
+        2. Dot for the current solution
+        3. The next step suggestions
+        4. if checkboxes are checked, the steps are drawn
         """
-        toPlot = []
 
-        # ADJUST AXES
-        # ==========================================================================
-        toCheck = (
-            [self.x0, self.x1] + [self.nextPoints[0], self.nextPoints[1]]
-            if all(v is not None for v in self.nextPoints)
-            else [self.OrignalPoints[0], self.OrignalPoints[1]]
+        def draw_point(point, value, color, label, marker, legend=True):
+            return bq.Scatter(
+                x=[point],
+                y=[value],
+                scales={"x": self.x_sc, "y": self.y_sc},
+                colors=[color],
+                default_size=100,
+                stroke="black",
+                display_legend=legend,
+                labels=[label],
+                marker=marker,
+            )
+
+        def secant_draw(a, b):
+            secant = bq.Lines(
+                x=[a, b],
+                y=[self.f(a), self.f(b)],
+                scales={"x": self.x_sc, "y": self.y_sc},
+                colors=["red"],
+                display_legend=True,
+                labels=["Secant Line"],
+                line_style="dashed",
+            )
+
+            return secant
+
+        def bisect_draw(m, minY, maxY):
+            # m = (a + b) / 2
+            # draw a vertical line at m
+            bisect = bq.Lines(
+                x=[m, m],
+                y=[minY, maxY],
+                scales={"x": self.x_sc, "y": self.y_sc},
+                colors=["green"],
+                display_legend=True,
+                labels=["Bisect Line"],
+                line_style="dashed",
+            )
+            return bisect
+
+        def iqi_draw(a, b, c, minY, maxY):
+            # draw a vertical line at m
+            interpolY = [self.f(a), self.f(b), self.f(c)]
+            interpolX = [a, b, c]
+            yMesh = np.linspace(minY, maxY, 1000)
+            # Lagrange interpolation with (Y,X)
+            q_y = (
+                lambda y: ((y - interpolY[1]) * (y - interpolY[2]))
+                / ((interpolY[0] - interpolY[1]) * (interpolY[0] - interpolY[2]))
+                * interpolX[0]
+                + ((y - interpolY[0]) * (y - interpolY[2]))
+                / ((interpolY[1] - interpolY[0]) * (interpolY[1] - interpolY[2]))
+                * interpolX[1]
+                + ((y - interpolY[0]) * (y - interpolY[1]))
+                / ((interpolY[2] - interpolY[0]) * (interpolY[2] - interpolY[1]))
+                * interpolX[2]
+            )
+            xMesh = q_y(yMesh)
+            IQILine = bq.Lines(
+                x=xMesh,
+                y=yMesh,
+                scales={"x": self.x_sc, "y": self.y_sc},
+                colors=["blue"],
+                display_legend=True,
+                labels=["IQI Line"],
+                line_style="dashed",
+            )
+            return IQILine
+
+        points2check = [
+            self.a,
+            self.b,
+            self.c,
+            self.nextPoints_addition[0],
+            self.nextPoints_addition[1],
+        ] + (
+            [] if self.nextPoints_addition[2] is None else [self.nextPoints_addition[2]]
         )
-        self.x_sc.min = min(toCheck)
-        self.x_sc.max = max(toCheck)
-        if abs(self.x0 - self.x1) > 1:
-            self.x_sc.min = min(
-                self.x_sc.min, self.OrignalPoints[0], self.OrignalPoints[1]
+
+        if self.hintStep is None:
+            self.Fig.marks = [self.hLine, self.functionLine]
+            return
+
+        minMax = [min(points2check), max(points2check)]
+
+        if minMax[0] < min(self.original_data) or minMax[1] > max(self.original_data):
+            self.x = np.linspace(
+                min(min(self.original_data), minMax[0]),
+                max(max(self.original_data), minMax[1]),
+                1000,
             )
-            self.x_sc.max = max(
-                self.x_sc.min, self.OrignalPoints[0], self.OrignalPoints[1]
+            self.defaultLines()
+            self.widen = True
+        elif self.widen:
+            self.x = np.linspace(min(self.original_data), max(self.original_data), 1000)
+            self.defaultLines()
+            self.widen = False
+
+        marks2plot = [self.hLine, self.functionLine]
+
+        # 1. The Current Points (a,b,c)
+        marks2plot.append(
+            draw_point(self.a, self.fa, "red", "a", "circle", legend=False)
+        )
+        marks2plot.append(
+            draw_point(
+                self.b, self.fb, "Black", "Current Solution", "cross", legend=True
+            )
+        )
+        marks2plot.append(
+            draw_point(self.c, self.fc, "green", "c", "circle", legend=False)
+        )
+
+        # 2. The next step suggestions
+        marks2plot.append(
+            draw_point(
+                self.nextPoints_addition[0], 0, "green", "Bisection", "rectangle"
+            )
+        )
+        marks2plot.append(
+            draw_point(self.nextPoints_addition[1], 0, "red", "Secant", "triangle-up")
+        )
+        if self.nextPoints_addition[2] is not None:
+            marks2plot.append(
+                draw_point(
+                    self.nextPoints_addition[2], 0, "blue", "IQI", "triangle-down"
+                )
             )
 
-        # Horizontal Line
-        # ==========================================================================
-        x = [self.x_sc.min, self.x_sc.max]
-        y = [0, 0]
-        toPlot.append(self.functionPlot(x, y, "Horizontal Line", "#808080", "solid"))
+        # FIX THE VIEW
+        self.x_sc.min = minMax[0]
+        self.x_sc.max = minMax[1]
 
-        # PLOT FUNCTION
-        # ==========================================================================
-        x = np.linspace(self.x_sc.min, self.x_sc.max, 100)
-        y = self.f(x)
-        toPlot += [self.functionPlot(x, y, "Real Function", "#808080", "dashed")]
-        self.y_sc.min = min(y)
-        self.y_sc.max = max(y)
+        self.y_sc.min = min(self.f(minMax[0]), self.f(minMax[1]))
+        self.y_sc.max = max(self.f(minMax[0]), self.f(minMax[1]))
 
-        # PLOT ORIGINAL POINTS
-        # ==========================================================================
-        x = [self.OrignalPoints[0], self.OrignalPoints[1]]
-        y = [self.f(x[0]), self.f(x[1])]
-        toPlot += [
-            self.dotsPlot(x=x, y=y, name="OriginalPoints", color="red", marker="circle")
-        ]
+        yminMax = (min(self.f(self.x)), max(self.f(self.x)))
 
-        if all(
-            v is not None for v in self.nextPoints
-        ):  # If there are new points to plot
+        # 3. The steps
+        if self.secantCheckbox.value:
+            marks2plot.append(
+                secant_draw(min(self.a, self.b, self.c), max(self.a, self.b, self.c))
+            )
+        if self.bisectCheckbox.value:
+            marks2plot.append(
+                bisect_draw(self.nextPoints_addition[0], yminMax[0], yminMax[1])
+            )
+        if self.IQICheckbox.value and self.nextPoints_addition[2] is not None:
+            marks2plot.append(iqi_draw(self.a, self.b, self.c, yminMax[0], yminMax[1]))
 
-            # PLOT CURRENT POINTS
-            # ==========================================================================
-            x = [self.x0, self.x1]
-            y = [self.f0, self.f1]
-            toPlot += [
-                self.dotsPlot(
-                    x=x, y=y, name="Current Points", color="black", marker="cross"
-                )
-            ]
-            # PLOT NEW POINTS
-            # ==========================================================================
-            ## BISECTION
-            x = [self.nextPoints[0]]
-            y = [0]
-            toPlot += [
-                self.dotsPlot(
-                    x=x,
-                    y=y,
-                    name="Bisection",
-                    color="blue",
-                    marker="diamond",
-                    clicker=True,
-                    val=0,
-                )
-            ]
-            ## IQI
-            x = [self.nextPoints[1]]
-            y = [0]
-            toPlot += [
-                self.dotsPlot(
-                    x=x,
-                    y=y,
-                    name="IQI",
-                    color="green",
-                    marker="rectangle",
-                    clicker=True,
-                    val=1,
-                )
-            ]
-        else:
-            # PLOT SOLUTION
-            # ==========================================================================
-            x = [self.x1]
-            y = [0]
-            toPlot += [
-                self.dotsPlot(
-                    x=x,
-                    y=y,
-                    name="Solution",
-                    color="black",
-                    marker="circle",
-                    display_legend=True,
-                )
-            ]
+        self.Fig.marks = marks2plot
 
-        # PLOT CURRENT POINTS
-        self.Fig.marks = toPlot
+    def updateOuputs(self):
+        """
+        This method updates the outputs of the app
+            > current solution
+            > helper text
+        The next step must be calculated before calling this method
+        """
+        self.currentSolOut.clear_output()
+        self.helperOut.clear_output()
+
+        with self.currentSolOut:
+            print(f"Current Solution: ({self.b:.4e}, {self.f(self.b):.4e})")
+            print(f"Iterations: {self.iterations}")
+        with self.helperOut:
+            print(
+                f"Next Step suggestion: {self.hintStep if self.hintStep is not None else 'FINISHED'}"
+            )
 
     def run(self):
         """
@@ -472,36 +503,103 @@ class NonLinearVisualizer:
         Widgets.GridBox
             The GridBox containing all the widgets
         """
-        self.fixPoints()
         self.initializeComponents()
-        aux = self.newPoints()
-        with self.grid.hold_sync():
-            self.updateOutputWidgets()
-            self.update()
+        self.oneStep()
 
         return self.grid
 
-    def IQI_Step(self):
-        # Interpolation
-        m = 0.5 * (self.x0 - self.x1)
-        s = self.f1 / self.fn
-        if self.x0 == self.xn:
-            # Linear interpolation
-            p = 2.0 * m * s
-            q = 1.0 - s
+    def brentDekker_Step(self):
+        """
+        This method imitates the Brent-Dekker in one step, instead of giving the result point, this method returns the 3 available points for the next step as well as the next possible step
+
+        Returns
+        -------
+        - next_step: str
+            The next possible step
+        - nextPoints_addition: list
+            The 3 available quantity to add to b for the next step (midpoint, secant, IQI)
+        - errs: list
+            The errors of the 3 available points for the next step
+        """
+        self.tolerance = 2 * np.finfo(float).eps * abs(self.b) + self.t
+        ## Midpoint error
+        m = 0.5 * (self.c - self.b)
+
+        if abs(m) <= self.tolerance or self.f(self.b) == 0 or self.f(self.a) == 0:
+
+            self.hintStep = None
+            self.nextPoints_addition = [None, None, None]
+            self.errs = [None, None, None]
+            self.updateOuputs()
+            return
+
+        next_step = None
+        nextPoints_addition = [None, None, None]
+        errs = [None, None, None]
+
+        nextPoints_addition[0] = self.b + m  # Always exists
+        errs[0] = m  # Always exists
+
+        # See if Bisection is possible
+        if abs(self.e) < self.tolerance or abs(self.fa) <= abs(self.fb):
+            ...  # Here we do nothing because it is the midpoint - only thing next_step is Bisection (which will be default if secant/iqi fails)
+
+        s = self.fb / self.fa
+        pqPair = None
+        if self.a == self.c:
+            # Linear Interpolation (Secant)
+            p1 = 2 * m * s
+            q1 = 1 - s
+
         else:
-            # Inverse quadratic interpolation
-            q = self.fn / self.f0
-            r = self.f1 / self.f0
-            p = s * (2.0 * m * q * (q - r) - (self.x1 - self.xn) * (r - 1.0))
-            q = (q - 1.0) * (r - 1.0) * (s - 1.0)
+            # Linear Interpolation (Secant)
+            p1 = 2 * m * s
+            q1 = 1 - s
 
-        if p > 0.0:
-            q = -q
+            # Inverse Quadratic Interpolation (IQI)
+            q = self.fa / self.fc
+            r = self.fb / self.fc
+            p2 = s * (2 * m * q * (q - r) - (self.b - self.a) * (r - 1))
+            q2 = (q - 1) * (r - 1) * (s - 1)
+
+            # Correct signs of IQI
+            if p2 > 0:
+                q2 = -q2
+            else:
+                p2 = -p2
+
+            pqPair = (p2, q2)
+
+        if p1 > 0:
+            q1 = -q1
         else:
-            p = -p
-        # Is interpolated point acceptable?
+            p1 = -p1
 
-        d = p / q if not np.isclose(q, 0) else m
+        # Store e-Values for next step
+        errs[1] = abs(p1 / q1)  # Secant always exists
+        errs[2] = (
+            None if pqPair is None else abs(pqPair[0] / pqPair[1])
+        )  # IQI may not exist if a==c if it does, it is stored in pqPair
 
-        return d
+        # Store next points (Quantity to add) for next step
+        nextPoints_addition[1] = self.b + p1 / q1  # Secant always exists
+        nextPoints_addition[2] = (
+            None if pqPair is None else self.b + pqPair[0] / pqPair[1]
+        )  # IQI may not exist if a==c if it does, it is stored in pqPair
+        pqPair = (
+            (p1, q1) if pqPair is None else pqPair
+        )  # If IQI does not exist, use Secant instead (pqPair is None if IQI does not exist), otherwise use IQI (pqPair is not None if IQI exists)
+
+        # Choose the best interpolation
+        if 2 * pqPair[0] < 3 * m * pqPair[1] - abs(
+            self.tolerance * pqPair[1]
+        ) and pqPair[0] < abs(0.5 * self.e * pqPair[1]):
+            next_step = "IQI" if self.a != self.c else "Secant"
+        else:
+            next_step = "Bisection"
+
+        self.hintStep = next_step
+        self.nextPoints_addition = nextPoints_addition
+        self.errs = errs
+
+        return next_step, nextPoints_addition, errs
