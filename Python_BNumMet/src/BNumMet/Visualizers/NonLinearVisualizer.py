@@ -13,7 +13,6 @@ class NonLinearVisualizer:
         self.brentDekker = zBrentDekker(
             fun, interval, tol, iters=True, steps=True
         )  # Get the output of Brent Dekkers Alg --> (x, iters)
-        print(self.brentDekker[2])
 
         self.f = fun
         self.a, self.b = interval
@@ -44,7 +43,7 @@ class NonLinearVisualizer:
 
         # Draw mesh
         # ==========================================================================
-        self.x = np.linspace(self.a, self.b, 1000)
+        self.x = np.linspace(min(self.a, self.b), max(self.a, self.b), 1000)
         self.widen = False
 
     def checkBoxChanged(self, change):
@@ -126,7 +125,7 @@ class NonLinearVisualizer:
             axes=[ax_x, ax_y],
             title="Zeros of a Function",
         )
-
+        self.Toolbar = bq.Toolbar(figure=self.Fig)
         # Essential figure components
         # ==========================================================================
         self.defaultLines()
@@ -193,7 +192,7 @@ class NonLinearVisualizer:
         # GRID
         # ==========================================================================
         self.grid = widgets.GridspecLayout(2, 2)
-        self.grid[0, 0] = self.Fig
+        self.grid[0, 0] = widgets.VBox([self.Toolbar, self.Fig])
 
         # Text Outputs Group
         textGroup = widgets.VBox(
@@ -236,7 +235,7 @@ class NonLinearVisualizer:
         # 1. Function Line f(x)
         self.functionLine = bq.Lines(
             x=self.x,
-            y=self.f(self.x),
+            y=list(map(self.f, self.x)),
             scales={"x": self.x_sc, "y": self.y_sc},
             labels=["f(x)"],
             display_legend=False,
@@ -306,7 +305,6 @@ class NonLinearVisualizer:
         with self.grid.hold_sync():
 
             self.brentDekker_Step()
-            print(self.hintStep)
             self.IQIButton.disabled = self.nextPoints_addition[2] is None
             self.IQICheckbox.disabled = self.nextPoints_addition[2] is None
 
@@ -337,17 +335,23 @@ class NonLinearVisualizer:
                 marker=marker,
             )
 
-        def secant_draw(a, b):
+        def secant_draw():
+            # Draws a line on whole self.x range with the secant equation on the points (b, fb) and (self.nextPoints_addition[1], self.f(self.nextPoints_addition[1]))
             secant = bq.Lines(
-                x=[a, b],
-                y=[self.f(a), self.f(b)],
+                x=self.x,
+                y=[
+                    self.fb
+                    + (self.f(self.nextPoints_addition[1]) - self.fb)
+                    / (self.nextPoints_addition[1] - self.b)
+                    * (x - self.b)
+                    for x in self.x
+                ],
                 scales={"x": self.x_sc, "y": self.y_sc},
                 colors=["red"],
                 display_legend=True,
                 labels=["Secant Line"],
                 line_style="dashed",
             )
-
             return secant
 
         def bisect_draw(m, minY, maxY):
@@ -382,6 +386,7 @@ class NonLinearVisualizer:
                 * interpolX[2]
             )
             xMesh = q_y(yMesh)
+            xMesh = np.where((xMesh < self.x[0]) | (xMesh > self.x[-1]), np.nan, xMesh)
             IQILine = bq.Lines(
                 x=xMesh,
                 y=yMesh,
@@ -440,16 +445,30 @@ class NonLinearVisualizer:
         # 2. The next step suggestions
         marks2plot.append(
             draw_point(
-                self.nextPoints_addition[0], 0, "green", "Bisection", "rectangle"
+                self.nextPoints_addition[0],
+                self.f(self.nextPoints_addition[0]),
+                "green",
+                "Bisection",
+                "rectangle",
             )
         )
         marks2plot.append(
-            draw_point(self.nextPoints_addition[1], 0, "red", "Secant", "triangle-up")
+            draw_point(
+                self.nextPoints_addition[1],
+                self.f(self.nextPoints_addition[1]),
+                "red",
+                "Secant",
+                "triangle-up",
+            )
         )
         if self.nextPoints_addition[2] is not None:
             marks2plot.append(
                 draw_point(
-                    self.nextPoints_addition[2], 0, "blue", "IQI", "triangle-down"
+                    self.nextPoints_addition[2],
+                    self.f(self.nextPoints_addition[2]),
+                    "blue",
+                    "IQI",
+                    "triangle-down",
                 )
             )
 
@@ -460,13 +479,13 @@ class NonLinearVisualizer:
         self.y_sc.min = min(self.f(minMax[0]), self.f(minMax[1]))
         self.y_sc.max = max(self.f(minMax[0]), self.f(minMax[1]))
 
-        yminMax = (min(self.f(self.x)), max(self.f(self.x)))
+        fX = list(map(self.f, self.x))
+        yminMax = (min(fX), max(fX))
 
         # 3. The steps
         if self.secantCheckbox.value:
-            marks2plot.append(
-                secant_draw(min(self.a, self.b, self.c), max(self.a, self.b, self.c))
-            )
+            marks2plot.append(secant_draw())
+
         if self.bisectCheckbox.value:
             marks2plot.append(
                 bisect_draw(self.nextPoints_addition[0], yminMax[0], yminMax[1])
@@ -553,8 +572,8 @@ class NonLinearVisualizer:
 
         else:
             # Linear Interpolation (Secant)
-            p1 = 2 * m * s
-            q1 = 1 - s
+            p1 = self.fb * (self.b - self.a)
+            q1 = self.fb - self.fa
 
             # Inverse Quadratic Interpolation (IQI)
             q = self.fa / self.fc
@@ -571,6 +590,7 @@ class NonLinearVisualizer:
             pqPair = (p2, q2)
 
         if p1 > 0:
+            print("FUCKED")
             q1 = -q1
         else:
             p1 = -p1

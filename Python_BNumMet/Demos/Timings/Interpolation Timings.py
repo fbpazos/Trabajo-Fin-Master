@@ -132,49 +132,22 @@ n_iters = 100
 recalc = False
 file = "./Demos/Timings/Results/Interpolation/Interpolation_Timings.json"
 
-if recalc:
-    results = {"Indexed List": {}, "List Compresion": {}}
 
-    for size in sizes:
-        print(f"{size:_^50}")
-        for mode in results.keys():
-            times = []
-            for _ in range(n_iters):
-                times.append(time_Interpolation(mode, size))
-            results[mode][size] = times
+results = {"Indexed List": {}, "List Compresion": {}}
 
-            print(
-                f"\t{mode} :\n\t\t {np.mean(results[mode][size]):.4f}s",
-                f"± {np.std(results[mode][size]):.4f}s",
-            )  # Print the average time for the current mode
+for size in sizes:
+    print(f"{size:_^50}")
+    for mode in results.keys():
+        times = []
+        for _ in range(n_iters):
+            times.append(time_Interpolation(mode, size))
+        results[mode][size] = times
 
-            # Save the results to a json file, for later use (if needed)
-            with open(file, "w+") as f:
-                json.dump(results, f, indent=4)
-else:
-    with open(file, "r") as f:
-        results = json.load(f)
+        print(
+            f"\t{mode} :\n\t\t {np.mean(results[mode][size]):.4f}s",
+            f"± {np.std(results[mode][size]):.4f}s",
+        )  # Print the average time for the current mode
 
-# %%
-# Plot the results
-df = pd.DataFrame(results)
-# map the values to np.mean
-df = df.applymap(lambda x: np.mean(x))
-
-
-# Plot the results using matplotlib
-plt.figure()
-for mode in results.keys():
-    plt.plot(df.index, df[mode], "-", label=mode)
-plt.title(f"Timings Interpolation Implementations ")
-plt.xlabel("Size")
-plt.ylabel("Time (s)")
-plt.legend()
-# Rotate the xticks
-plt.xticks(rotation=90)
-# Smaller font on the xticks
-plt.xticks(fontsize=4)
-
-# %%
-# Save figure high resolution
-plt.savefig("./Demos/Timings/Results/Interpolation/Interpolation_Timings.png", dpi=1000)
+        # Save the results to a json file, for later use (if needed)
+        with open(file, "w+") as f:
+            json.dump(results, f, indent=4)

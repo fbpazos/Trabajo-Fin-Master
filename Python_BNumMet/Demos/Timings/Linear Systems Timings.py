@@ -4,8 +4,9 @@ import json
 import pandas as pd
 from matplotlib import pyplot as plt
 import matplotlib
+import scipy.linalg
 
-recalc = False  # Set to True to recalculate the timings
+
 sizes = np.arange(500, 4001, 500)  # Matrix sizes to test
 n_iter = 100  # Number of iterations to average over for each matrix size
 # file = "./Demos/Timings/Results/Linear Systems/LU_Timings.json"  # File to save/load the results from
@@ -13,8 +14,12 @@ file = "./Demos/Timings/Results/Linear Systems/LU_Timings.json"  # File to save/
 
 
 def lu_timing(Matrix, mode):  # LU decomposition with np subarrays
+
     if Matrix.shape[0] != Matrix.shape[1]:
         raise ValueError("Matrix must be square")
+
+    if mode == "scipy":
+        return scipy.linalg.lu(Matrix)
 
     n = Matrix.shape[0]  # number of rows/columns
     A = Matrix.copy().astype(float)  # Make a copy of A and convert to float
@@ -65,48 +70,24 @@ def lu_timing(Matrix, mode):  # LU decomposition with np subarrays
     return P, L, U
 
 
-if recalc:
-    results = {"Submatrices": {}, "New Axis": {}, "Outer Product": {}, "Loop": {}}
-    sizes = [int(size) for size in sizes]  # Convert to int
+results = {"Submatrices": {}, "New Axis": {}, "Outer Product": {}, "Loop": {}}
+sizes = [int(size) for size in sizes]  # Convert to int
 
-    for size in sizes:
-        print(f"{size:_^50}")
-        for mode in results.keys():
-            times = []
-            for _ in range(n_iter):
-                A = np.random.rand(size, size)
-                start = time()
-                lu_timing(A, mode)
-                times.append(time() - start)
-            results[mode][size] = times  # Store the times for each iteration
+for size in sizes:
+    print(f"{size:_^50}")
+    for mode in results.keys():
+        times = []
+        for _ in range(n_iter):
+            A = np.random.rand(size, size)
+            start = time()
+            lu_timing(A, mode)
+            times.append(time() - start)
+        results[mode][size] = times  # Store the times for each iteration
 
-            print(
-                f"/t{mode} : {np.mean(results[mode][size]):.4f}s"
-            )  # Print the average time for the current mode
+        print(
+            f"/t{mode} : {np.mean(results[mode][size]):.4f}s"
+        )  # Print the average time for the current mode
 
-        # Save the results to a json file, for later use (if needed)
-        with open(file, "w+") as f:
-            json.dump(results, f, indent=4)
-else:
-    # Load the results from the json file
-    with open(file, "r") as f:
-        results = json.load(f)
-
-
-# Plot the results
-df = pd.DataFrame(results)
-# map the values to np.mean
-df = df.applymap(lambda x: np.mean(x))
-
-
-# Plot the results using matplotlib
-plt.figure()
-for mode in results.keys():
-    plt.plot(df.index, df[mode], "o-", label=mode)
-plt.title("Timings for LU Decomposition Methods")
-plt.xlabel("Size")
-plt.ylabel("Time (s)")
-plt.legend()
-
-# Save the plot to a file with high resolution
-plt.savefig("./Demos/Timings/Results/Linear Systems/LU_Timings.png", dpi=1000)
+    # Save the results to a json file, for later use (if needed)
+    with open(file, "w+") as f:
+        json.dump(results, f, indent=4)
