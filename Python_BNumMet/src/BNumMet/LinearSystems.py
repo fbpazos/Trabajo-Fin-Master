@@ -317,7 +317,7 @@ def qr_factorization(A):
 
         # Update the k-th column and the columns below it of Q
         Q[k:, k:] = Q[k:, k:] - 2 * np.dot(qk, np.dot(qk.T, Q[k:, k:]))
-
+    R = np.triu(R)  # Make R upper triangular
     return Q, R  # Return the matrices Q and R
 
 

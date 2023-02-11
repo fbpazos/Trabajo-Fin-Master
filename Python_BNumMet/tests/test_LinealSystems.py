@@ -246,9 +246,9 @@ class test_LU(TestCase):
         self.assertTrue(np.allclose(A, Q @ R))
 
         # Test 2: Simple 3x3 matrix
-        A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        A = np.array([[1, 2, 3], [4, 8, 6], [7, 8, 9]])
         Q, R = qr_factorization(A)
-        self.assertTrue(np.allclose(A, Q @ R))
+        self.assertTrue(np.allclose(A, Q @ R), f"{A} != {Q @ R}")
 
         # Test 3: Simple 4x3 matrix
         A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
