@@ -55,7 +55,6 @@ def piecewise_linear(x, y, u, sorted=False):
 
     k = np.zeros(np.size(u), dtype=int)
     for j in np.arange(1, n - 1):
-
         k[x[j] <= u] = j
 
     s = u - x[k]
@@ -160,7 +159,6 @@ def pchip(x, y, u, sorted=False):
 
     k = np.zeros(np.size(u), dtype=int)
     for j in np.arange(1, n - 1):
-
         k[x[j] <= u] = j
 
     s = u - x[k]
@@ -240,7 +238,6 @@ def splines(x, y, u, sorted=False):
 
     k = np.zeros(np.size(u), dtype=int)
     for j in np.arange(1, n - 1):
-
         k[x[j] <= u] = j
 
     s = u - x[k]

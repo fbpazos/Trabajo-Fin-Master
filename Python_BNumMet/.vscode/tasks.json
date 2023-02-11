@@ -6,7 +6,7 @@
         {
             "label": "Sonar",
             "type": "shell",
-            "command": "SonarScanner.bat",
+            "command": ".\\Utilities\\SonarScanner.bat && java -jar .\\Utilities\\ReportGenerator.jar -p BNumMet -o ./Report/%date:~-4,4%-%date:~-10,2%-%date:~7,2% && explorer \"http://localhost:9000/dashboard?id=BNumMet\" ",
             "group": {
                 "kind": "build",
                 "isDefault": true

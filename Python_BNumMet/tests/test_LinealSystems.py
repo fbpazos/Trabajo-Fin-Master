@@ -5,7 +5,16 @@ import unittest
 import numpy as np
 from random import randint
 
-from BNumMet.LinearSystems import lu, permute, interactive_lu
+from BNumMet.LinearSystems import (
+    lu,
+    permute,
+    interactive_lu,
+    forward_substitution,
+    backward_substitution,
+    lu_solve,
+    qr_factorization,
+    qr_solve,
+)
 from BNumMet.Visualizers.LUVisualizer import LUVisualizer
 
 
@@ -84,6 +93,201 @@ class test_LU(TestCase):
         while lastColumn > A.shape[1]:
             P, L, U, lastColumn, iMax = interactive_lu(P, L, U, lastColumn, -1)
             self.assertTrue(np.allclose(P @ A, L @ U))
+
+    def test_forwardSubstitution(self):
+        """
+        Test the forward substitution algorithm by running it on a fixed matrix and checking that the result is correct, testing BNumMet.forwardSubstitution
+        """
+        L = np.array([[1, 0, 0], [0.5, 1, 0], [0.5, 0.5, 1]])
+        b = np.array([1, 2, 3])
+        x = np.array([1, 1.5, 1.75])
+
+        self.assertTrue(np.allclose(forward_substitution(L, b), x))
+
+    def test_backwardSubstitution(self):
+        """
+        Test the backward substitution algorithm by running it on a fixed matrix and checking that the result is correct, testing BNumMet.backwardSubstitution
+        """
+        U = np.array([[1, 2, 3], [0, 1, 2], [0, 0, 1]])
+        b = np.array([1, 2, 3])
+        x = np.array([0, -4, 3])
+
+        self.assertTrue(np.allclose(backward_substitution(U, b), x))
+
+    def test_forwardSubstitution_expceptions(self):
+        """
+        Test the forward substitution algorithm by running it on a fixed matrix and checking that the result is correct, testing BNumMet.forwardSubstitution
+        """
+        L = np.array([[1, 0, 0], [0.5, 1, 0], [0.5, 0.5, 1]])
+        b = np.array([1, 2, 3, 4])
+        x = np.array([1, 1.5, 2])
+        # 1. The left hand side has more rows than the right hand side
+        with self.assertRaises(ValueError, msg="b has more elements than L"):
+            forward_substitution(L, b)  # b has more elements than L
+
+        # 2. The left hand side has less rows than the right hand side
+        L = np.array([[1, 0, 0], [0.5, 1, 0], [0.5, 0.5, 1]])
+        b = np.array([1, 2])
+        x = np.array([1, 1.5, 2])
+
+        with self.assertRaises(ValueError, msg="L has more rows than b"):
+            forward_substitution(L, b)
+
+        # 3. L is not lower triangular
+        L = np.array([[1, 1, 0], [0.5, 1, 0], [0.5, 0.5, 1]])
+        b = np.array([1, 2, 3])
+        x = np.array([1, 1.5, 2])
+
+        with self.assertRaises(ValueError, msg="L is not lower triangular"):
+            forward_substitution(L, b)
+
+        # 4. L has a zero diagonal element
+        L = np.array([[1, 0, 0], [0.5, 0, 0], [0.5, 0.5, 1]])
+        b = np.array([1, 2, 3])
+        x = np.array([1, 1.5, 2])
+        with self.assertRaises(ValueError, msg="L has a zero diagonal element"):
+            forward_substitution(L, b)
+
+        # 5. L is not a square matrix
+        L = np.array([[1, 0, 0], [0.5, 1, 0], [0.5, 0.5, 1], [0.5, 0.5, 1]])
+        b = np.array([1, 2, 3, 4])
+        x = np.array([1, 1.5, 2])
+        with self.assertRaises(ValueError, msg="U is not a square matrix") as e:
+            forward_substitution(L, b)
+        # Check if e message is correct
+        self.assertEqual(
+            str(e.exception),
+            "A is not a square matrix",
+            msg="The error message is not correct",
+        )
+
+    def test_backwardSubstitution_expceptions(self):
+        """
+        Test the backward substitution algorithm by running it on a fixed matrix and checking that the result is correct, testing BNumMet.backwardSubstitution
+        """
+        U = np.array([[1, 2, 3], [0, 1, 2], [0, 0, 1]])
+        b = np.array([1, 2, 3, 4])
+        x = np.array([1, 1.5, 2])
+        # 1. The left hand side has more rows than the right hand side
+        with self.assertRaises(ValueError, msg="b has more elements than U"):
+            backward_substitution(U, b)  # b has more elements than L
+
+        # 2. The left hand side has less rows than the right hand side
+        U = np.array([[1, 2, 3], [0, 1, 2], [0, 0, 1]])
+        b = np.array([1, 2])
+        x = np.array([1, 1.5, 2])
+
+        with self.assertRaises(ValueError, msg="U has more rows than b"):
+            backward_substitution(U, b)
+
+        # 3. U is not upper triangular
+        U = np.array([[1, 2, 3], [0, 1, 2], [0, 1, 1]])
+        b = np.array([1, 2, 3])
+        x = np.array([1, 1.5, 2])
+
+        with self.assertRaises(ValueError, msg="U is not upper triangular"):
+            backward_substitution(U, b)
+
+        # 4. U has a zero diagonal element
+        U = np.array([[1, 2, 3], [0, 0, 2], [0, 0, 1]])
+        b = np.array([1, 2, 3])
+        x = np.array([1, 1.5, 2])
+
+        with self.assertRaises(ValueError, msg="U has a zero diagonal element"):
+            backward_substitution(U, b)
+
+        # 5. U is not a square matrix
+        U = np.array([[1, 2, 3], [0, 1, 2], [0, 0, 1], [0, 0, 0]])
+        b = np.array([1, 2, 3, 4])
+        x = np.array([1, 1.5, 2])
+
+        with self.assertRaises(ValueError, msg="U is not a square matrix") as e:
+            backward_substitution(U, b)
+        # Check if e message is correct
+        self.assertEqual(
+            str(e.exception),
+            "A is not a square matrix",
+            msg="The error message is not correct",
+        )
+
+    def test_luSolve(self):
+        """
+        Test the LU decomposition algorithm by running it on a fixed matrix and checking that the result is correct, testing BNumMet.luSolve
+        """
+        A = np.array([[1, 1], [1, -1]])
+        b = np.array([10, 4])
+        x = np.array([7, 3])
+
+        solution = lu_solve(A, b)
+
+        self.assertTrue(
+            np.allclose(solution, x),
+            msg=f"The solution is not correct {solution} != {x}",
+        )
+
+        A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        b = np.array([1, 2, 3])
+
+        with self.assertRaises(
+            ValueError, msg="A is Singular but it does not detect it!"
+        ):
+            lu_solve(A, b)
+
+    def test_qrFactorization(self):
+        """
+        Test the QR decomposition algorithm by running it on a fixed matrix and checking that the result is correct, testing BNumMet.qr_factorization
+        """
+        # Test 1: Simple 2x2 matrix
+        A = np.array([[1, 2], [3, 4]])
+        Q, R = qr_factorization(A)
+        self.assertTrue(
+            np.all(np.tril(R, -1) < 1e-15), f"R is not upper triangular {np.tril(R,-1)}"
+        )
+        self.assertTrue(np.allclose(A, Q @ R))
+
+        # Test 2: Simple 3x3 matrix
+        A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        Q, R = qr_factorization(A)
+        self.assertTrue(np.allclose(A, Q @ R))
+
+        # Test 3: Simple 4x3 matrix
+        A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
+        Q, R = qr_factorization(A)
+        self.assertTrue(np.allclose(A, Q @ R))
+
+    def test_qrSolve(self):
+        # Test case 1: Solve a 2x2 system
+        A = np.array([[1, 1], [1, -1]])
+        b = np.array([10, 4])
+        x = np.array([7, 3])
+
+        self.assertTrue(np.allclose(qr_solve(A, b.T), x), f"{x} != {qr_solve(A, b)}")
+
+        # Test case 2: Solve a 3x3 system
+        A = np.array([[2, -1, 0], [1, 2, -1], [0, 1, 2]])
+        b = np.array([0, 2, 8])
+        x = np.array([1, 2, 3])
+
+        self.assertTrue(np.allclose(qr_solve(A, b), x), f"{x} != {qr_solve(A, b)}")
+
+        # Test case 3: Solve a 4x4 system
+        A = np.array([[2, 3, -1, 1], [1, -2, 0, -1], [2, -1, 3, -2], [1, 1, 1, 2]])
+        x = np.array([2, -1, 3, 1])
+        b = A @ x
+
+        self.assertTrue(np.allclose(qr_solve(A, b), x), f"{x} != {qr_solve(A, b)}")
+
+    def test_qrSolve_random(self):
+        """
+        Test the QR decomposition algorithm by running it on a random matrix and checking that the result is correct, testing BNumMet.qrSolve
+        """
+        for i in range(10):
+            size = np.random.randint(2, 15)
+            A = np.random.rand(size, size)
+            x = np.ones(size)
+            b = A @ x
+
+            self.assertTrue(np.allclose(qr_solve(A, b), x), f"{x} != {qr_solve(A, b)}")
 
 
 class Test_LUVisualizer(TestCase):

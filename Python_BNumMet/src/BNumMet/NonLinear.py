@@ -170,43 +170,49 @@ def zBrentDekker(
         ValueError: if the function has no zeros in the given interval
 
     """
-
+    # Split the interval into a and b
     a, b = interval
+    # Evaluate the function at a and b
     fa = f(a, *args)
     fb = f(b, *args)
 
+    # Check if there are no zeros in the interval
     if fa * fb > 0:  # No zeros guaranteed in the interval
         raise exceptions[0]
 
-    # Section: int
+    # Initialize the variables for the internal section
     c, fc, d, e = a, fa, b - a, b - a
 
-    # Section: ext
+    # Check if fc is smaller than fb, if so swap the values
     if abs(fc) < abs(fb):
         a, b, c, fa, fb, fc = b, c, b, fb, fc, fb
 
+    # Calculate the tolerance level
     tolerance = 2 * np.finfo(float).eps * abs(b) + tol
     m = 0.5 * (c - b)
 
+    # Initialize iteration and procedure stack
     iterations = 0
     procedure_stack = []
+
+    # Repeat until the tolerance level is met or max iterations is reached
     while abs(m) > tolerance and fb and iterations < stop_iters:
         # Calculate next step
         # =============================================================================================================
-        # See if bisection is forced
+        # Check if bisection is forced
         if abs(e) < tolerance or abs(fa) <= abs(fb):
             d = m
             e = m
             procedure_stack.append("Bisection")
-
         else:
+            # Calculate the ratio of fb and fa
             s = fb / fa
             if a == c:
-                # Linear interpolation
+                # Use linear interpolation
                 p = 2 * m * s
                 q = 1 - s
             else:
-                # Inverse quadratic interpolation
+                # Use inverse quadratic interpolation
                 q = fa / fc
                 r = fb / fc
                 p = s * (2 * m * q * (q - r) - (b - a) * (r - 1))

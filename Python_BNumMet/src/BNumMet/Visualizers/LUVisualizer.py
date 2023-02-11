@@ -177,7 +177,6 @@ class LUVisualizer:
         # Update the buttons
         for i in range(len(self.buttonsMatrix)):
             for j in range(len(self.buttonsMatrix[i])):
-
                 if (  # if the step is 0, then the buttons are disabled except for the first column
                     j == self.step
                     and i >= self.step

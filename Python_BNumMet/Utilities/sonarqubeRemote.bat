@@ -1,0 +1,1 @@
+docker start sonarqube && ./Utilities/ngrok http 9000

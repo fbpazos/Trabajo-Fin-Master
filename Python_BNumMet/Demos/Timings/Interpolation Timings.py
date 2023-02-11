@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 
+
 # %%
 def splines(x, y, u, sorted=False, mode=None):
     """
@@ -79,7 +80,6 @@ def splines(x, y, u, sorted=False, mode=None):
     if mode == "Indexed List":
         k = np.zeros(np.size(u), dtype=int)
         for j in np.arange(1, n - 1):
-
             k[x[j] <= u] = j
 
         s = u - x[k]

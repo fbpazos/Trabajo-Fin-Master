@@ -1,0 +1,2 @@
+
+docker run --rm -ti -v "%cd%":"/usr/src" --link sonarqube newtmitch/sonar-scanner sonar-scanner -Dsonar.login="admin" -Dsonar.password="1234" -Dsonar.projectName="BNumMet" -Dsonar.projectKey="BNumMet" -Dsonar.sources="src/BNumMet/" -Dsonar.python.version=3 -Dsonar.python.xunit.reportPath="tests/Reports/testsReport.xml"  -Dsonar.python.coverage.reportPaths="tests/Reports/Coverage/xml/coverage.xml" -Dsonar.scm.disabled=true -Dsonar.tests="tests" -Dsonar.test.inclusions="tests/**" -Dsonar.test.exclusions="tests/Reports/Coverage/**"

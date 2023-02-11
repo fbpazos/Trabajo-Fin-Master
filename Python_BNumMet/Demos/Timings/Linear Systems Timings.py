@@ -14,7 +14,6 @@ file = "./Demos/Timings/Results/Linear Systems/LU_Timings.json"  # File to save/
 
 
 def lu_timing(Matrix, mode):  # LU decomposition with np subarrays
-
     if Matrix.shape[0] != Matrix.shape[1]:
         raise ValueError("Matrix must be square")
 

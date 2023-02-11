@@ -1,5 +1,5 @@
 from unittest import TestCase
-from BNumMet.module import prettyPrintMatrix, sortInterpolVals
+from BNumMet.module import pretty_print_matrix, sort_interpolation_values
 
 
 class test_module(TestCase):
@@ -7,13 +7,13 @@ class test_module(TestCase):
         matrix = [[1, 2], [3, 4]]
         stringRes = """ \\begin\\{pmatrix\\}1 & 2\\\\3 & 4\\\\\\end\\{pmatrix\\}"""
 
-        self.assertTrue(prettyPrintMatrix(matrix).replace("\n", "") == stringRes)
+        self.assertTrue(pretty_print_matrix(matrix).replace("\n", "") == stringRes)
 
     def test_SortInterpolVals(self):
         x = [1, 3, 2]
         y = [4, 3, 2]
         xRes = [1, 2, 3]
         yRes = [4, 2, 3]
-        x, y = sortInterpolVals(x, y)
+        x, y = sort_interpolation_values(x, y)
 
         self.assertTrue((x == xRes).all() and (y == yRes).all())

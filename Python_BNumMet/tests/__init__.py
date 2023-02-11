@@ -7,7 +7,6 @@ import black
 
 
 def main():
-
     print(f"Python version: {sys.version}")
     print(f"NumPy version: {np.__version__}")
     print(f"Pytest version: {pytest.__version__}")

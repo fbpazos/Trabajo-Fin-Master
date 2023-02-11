@@ -3,6 +3,7 @@ from BNumMet.NonLinear import zBrentDekker
 import numpy as np
 import json
 
+
 # Matlabs Brent's method
 def zBrentDekkerMAT(f, interval, stopIters=1000, iters=False, *args):
     """
@@ -132,7 +133,6 @@ def experiment(scipyTol, bnmTol):
         results["BNM"][order] = []
         results["Matlab"][order] = []
         for i in intervalsWidthIncrease:
-
             iterScipy, iterBNM, iterMatlab = 0, 0, 0
 
             scipyFun = lambda x: f_scipy(x, f)

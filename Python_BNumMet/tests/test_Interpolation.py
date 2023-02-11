@@ -46,7 +46,6 @@ class test_piecewise_linearInterpolation(TestCase):
         v = piecewise_linear(x, y, u)
 
         for i in range(len(x)):
-
             index = np.where(np.isclose(u, x[i]))[0][0]
             print(index, v[index], x[i], y[i])
             self.assertTrue(np.isclose(v[index], y[i]))
@@ -97,7 +96,6 @@ class test_pchip(TestCase):
         v = pchip(x, y, u)
 
         for i in range(len(x)):
-
             index = np.where(np.isclose(u, x[i]))[0][0]
             print(index, v[index], x[i], y[i])
             self.assertTrue(np.isclose(v[index], y[i]))
@@ -148,7 +146,6 @@ class test_splines(TestCase):
         v = splines(x, y, u)
 
         for i in range(len(x)):
-
             index = np.where(np.isclose(u, x[i]))[0][0]
             print(index, v[index], x[i], y[i])
             self.assertTrue(np.isclose(v[index], y[i]))

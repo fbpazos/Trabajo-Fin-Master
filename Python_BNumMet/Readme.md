@@ -70,7 +70,7 @@ Start the SonarQube server (Docker Version)
 docker run -d --name sonarqube -p 9000:9000 sonarqube
 ```
 Since its running locally, you can access the server at http://localhost:9000, and the default credentials are admin/admin. 
-Additionally, for simplicity with login go to Administration -> Security -> Disable "Force User Authentication". ()
+Additionally, for simplicity with login go to Administration -> Security -> Disable "Force User Authentication". (This is not recommended for production environments)
 
 
 Run the analysis

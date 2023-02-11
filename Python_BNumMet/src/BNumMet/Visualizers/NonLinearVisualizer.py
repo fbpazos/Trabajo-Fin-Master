@@ -8,7 +8,6 @@ class NonLinearVisualizer:
     def __init__(
         self, fun=lambda x: (x - 1) * (x - 4) * np.exp(-x), interval=(0, 3), tol=1e-3
     ):
-
         # Initialize basic Parameters
         self.brentDekker = zBrentDekker(
             fun, interval, tol, iters=True, steps=True
@@ -66,7 +65,6 @@ class NonLinearVisualizer:
             )
 
     def initializeComponents(self):
-
         # Current Solution Text
         # ==========================================================================
         # Current Solution: (b, f(b))
@@ -247,7 +245,6 @@ class NonLinearVisualizer:
 
     def next_step(self, b):
         if self.hintStep is None:
-
             return
         self.revertStack.append([self.a, self.b, self.c, self.e, self.iterations])
 
@@ -303,7 +300,6 @@ class NonLinearVisualizer:
 
     def oneStep(self):
         with self.grid.hold_sync():
-
             self.brentDekker_Step()
             self.IQIButton.disabled = self.nextPoints_addition[2] is None
             self.IQICheckbox.disabled = self.nextPoints_addition[2] is None
@@ -545,7 +541,6 @@ class NonLinearVisualizer:
         m = 0.5 * (self.c - self.b)
 
         if abs(m) <= self.tolerance or self.f(self.b) == 0 or self.f(self.a) == 0:
-
             self.hintStep = None
             self.nextPoints_addition = [None, None, None]
             self.errs = [None, None, None]

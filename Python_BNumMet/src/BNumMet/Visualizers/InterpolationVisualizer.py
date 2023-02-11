@@ -211,7 +211,6 @@ class InterpolVisualizer:
         """
 
         with self.widgetsgrid.hold_sync():
-
             if (
                 change is not None
                 and change["name"] == "y"
