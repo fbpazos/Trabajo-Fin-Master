@@ -2,6 +2,19 @@ import numpy as np
 
 
 def pretty_print_matrix(matrix):
+    """
+    Prints a matrix in a pretty format
+
+    Parameters
+    ----------
+    matrix : list
+        The matrix to print
+
+    Returns
+    -------
+    res : str
+        The string representation of the matrix in a pretty format for LaTeX
+    """
     # Initialize the string to represent the matrix
     res = " \\begin\{pmatrix\}\n"
 
@@ -18,14 +31,27 @@ def pretty_print_matrix(matrix):
 
 
 def sort_interpolation_values(x, y):
-    x = np.array(x)
-    y = np.array(y)
+    """
+    Sorts the interpolation values by the x coordinates
+
+    Parameters
+    ----------
+    x : list
+        The x coordinates of the interpolation values
+    y : list
+        The y coordinates of the interpolation values
+
+    Returns
+    -------
+    x : list
+        The sorted x coordinates of the interpolation values
+    y : list
+        The sorted y coordinates of the interpolation values
+    """
+    x = np.array(x)  # Convert the x coordinates to a numpy array
+    y = np.array(y)  # Convert the y coordinates to a numpy array
     ind = np.argsort(x)  # Get the indices of the sorted array
     x = x[ind]  # Sort the x coordinates
     y = y[ind]  # Sort the y coordinates
 
     return x, y
-
-
-if __name__ == "__main__":
-    print("Module")

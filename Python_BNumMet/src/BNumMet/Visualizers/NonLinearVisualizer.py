@@ -555,8 +555,8 @@ class NonLinearVisualizer:
         errs[0] = m  # Always exists
 
         # See if Bisection is possible
-        if abs(self.e) < self.tolerance or abs(self.fa) <= abs(self.fb):
-            ...  # Here we do nothing because it is the midpoint - only thing next_step is Bisection (which will be default if secant/iqi fails)
+        # CHECK abs(self.e) < self.tolerance or abs(self.fa) <= abs(self.fb) in the original code
+        # Here we do nothing because it is the midpoint - only thing next_step is Bisection (which will be default if secant/iqi fails)
 
         s = self.fb / self.fa
         pqPair = None

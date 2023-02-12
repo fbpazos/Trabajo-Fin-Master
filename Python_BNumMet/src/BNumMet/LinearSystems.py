@@ -64,7 +64,7 @@ def lu(Matrix):
     return P, L, U
 
 
-def interactive_lu(P, L, U, col, pivotRow):
+def interactive_lu(P, L, U, col, pivot_row):
     """
     Makes only one step of the LU factorization, updates P,L,U and takes the pivot row to do the Gaussian Elimination
 
@@ -78,7 +78,7 @@ def interactive_lu(P, L, U, col, pivotRow):
         A lower triangular matrix.
     U : np.array
         An upper triangular matrix.
-    pivotRow : int
+    pivot_row : int
         The index of the pivot row.
 
     Returns
@@ -92,40 +92,46 @@ def interactive_lu(P, L, U, col, pivotRow):
 
     """
 
+    # Check if the column index is out of bounds, if so return the original P,L,U and -1,-1 as the next column and pivot row
     if col + 1 >= U.shape[1] or col <= -1:
         return P, L, U, -1, -1
 
+    # Convert the L and U matrices to float data type
     U = U.astype(float)
     L = L.astype(float)
 
-    iMax = (
-        np.argmax(np.abs(U[col:, col])) + col if pivotRow < col else pivotRow
-    )  # Find the index of the row with the largest pivot element or use the pivot row if it is already found
+    # Find the index of the row with the largest pivot element or use the pivot row if it is already found
+    index_maximum = (
+        np.argmax(np.abs(U[col:, col])) + col if pivot_row < col else pivot_row
+    )
 
     # Skip if the pivot is zero
-    if U[iMax, col] != 0:
+    if U[index_maximum, col] != 0:
         # Swap the rows of A and P for those with the largest pivot element
-        U = permute(U, iMax, col)
-        P = permute(P, iMax, col)
-        L = permute(L - np.eye(L.shape[0]), iMax, col) + np.eye(L.shape[0])
+        U = permute(U, index_maximum, col)
+        P = permute(P, index_maximum, col)
+        L = permute(L - np.eye(L.shape[0]), index_maximum, col) + np.eye(L.shape[0])
 
         # Gaussian elimination using NumPy's broadcasting
-        factors = U[col + 1 :, col] / U[col, col]
-        L[col + 1 :, col] = U[col + 1 :, col] / U[col, col]
-        for i in range(col + 1, U.shape[0]):
+        factors = U[col + 1 :, col] / U[col, col]  # Calculate the multipliers
+        L[col + 1 :, col] = U[col + 1 :, col] / U[col, col]  # Update the L matrix
+        for i in range(
+            col + 1, U.shape[0]
+        ):  # Update the remaining elements in the row using the multipliers
             U[i, col + 1 :] = U[i, col + 1 :] - factors[i - col - 1] * U[col, col + 1 :]
-        U[col + 1 :, col] = 0
+        U[col + 1 :, col] = 0  # Set the elements below the pivot to zero
 
-    return P, L, U, (col + 1), iMax
+    # Return the updated P,L,U matrices, as well as the next column and pivot row
+    return P, L, U, (col + 1), index_maximum
 
 
-def permute(A, i: int, j: int):
+def permute(matrix_to_permute, i: int, j: int):
     """
     Permute the rows of a matrix.
 
     Parameters
     ----------
-    A : np.array
+    matrix_to_permute : np.array
         A matrix.
     i : int
         The index of the first row.
@@ -134,13 +140,15 @@ def permute(A, i: int, j: int):
 
     Returns
     -------
-    A : np.array
+    matrix_to_permute : np.array
         The permuted matrix.
 
     """
 
-    A[[i, j], :] = A[[j, i], :]  # Swap the rows of A using fancy indexing
-    return A
+    matrix_to_permute[[i, j], :] = matrix_to_permute[
+        [j, i], :
+    ]  # Swap the rows of matrix_to_permute using fancy indexing
+    return matrix_to_permute
 
 
 def forward_substitution(A, b):
@@ -160,48 +168,51 @@ def forward_substitution(A, b):
         A vector.
 
     """
-    A = A.astype(float)  # Convert A to float
+    A = A.astype(float)  # Convert A to float data type
     b = np.copy(b).astype(
         float
-    )  # Make a copy of b (We do not want to update the argument while making our calculations) and convert to float
+    )  # Make a copy of b and convert it to float data type to avoid modifying the argument
 
-    n = A.shape[0]  # number of rows/columns
-    x = np.zeros(n)  # Initialize the solution vector, x, allocate memory
+    n = A.shape[0]  # Get the number of rows/columns in A
+    x = np.zeros(n)  # Initialize the solution vector, x, with zeros and allocate memory
 
-    if np.any(
-        np.isclose(np.diag(A), 0, atol=1e-15)
-    ):  # Check if the diagonal is zero (singular matrix)
+    if np.any(np.isclose(np.diag(A), 0, atol=1e-15)):
+        # Check if the diagonal elements of A are close to zero, indicating a singular matrix
         raise ValueError("Matrix is singular")
 
-    if np.any(
-        np.triu(A, 1) != 0
-    ):  # Since it is forward, we check if the upper triangular part is zero
+    if np.any(np.triu(A, 1) != 0):
+        # Check if the upper triangular part of A is not equal to zero
         raise ValueError("Matrix is not lower triangular")
 
     if b.shape[0] != n:
+        # Check if the size of b is not equal to the number of rows/columns of A
         raise ValueError(
             "The size of b is not equal to the number of rows/columns of A"
         )
     if A.shape[0] != A.shape[1]:
+        # Check if A is not a square matrix
         raise ValueError("A is not a square matrix")
 
-    for row in range(n):  # Loop over the rows starting from the first
+    for row in range(n):
+        # Loop over the rows starting from the first
         b[row] = b[row] - np.dot(
             A[row, :row], x[:row]
-        )  # Calculate the value of b with <A[row, :row], x[:row]> subtracted (b-<A[row, :row], x[:row]>)
-        x[row] = b[row] / A[row, row]  # x = b'/A[row, row]
+        )  # Subtract the dot product of the row in A and the current solution vector from the value of b
+        x[row] = (
+            b[row] / A[row, row]
+        )  # Divide the updated b value by the diagonal element in A to get the solution for x
 
-    return x
+    return x  # Return the solution vector, x
 
 
 def backward_substitution(A, b):
     """
-    Solves the system Ax = b using forward substitution.
+    Solves the system Ax = b using backward substitution.
 
     Parameters
     ----------
     A : np.array
-        A lower triangular matrix.
+        An upper triangular matrix.
     b : np.array
         A vector.
 
@@ -216,13 +227,13 @@ def backward_substitution(A, b):
         float
     )  # Make a copy of b (We do not want to update the argument while making our calculations) and convert to float
 
-    n = A.shape[0]  # number of rows/columns
-    x = np.zeros(n)  # Initialize the solution vector, x, allocate memory
+    n = A.shape[0]  # Get the number of rows/columns in the matrix
+    x = np.zeros(n)  # Initialize the solution vector, x, with zeros and allocate memory
 
     if np.any(
         np.isclose(np.diag(A), 0, atol=1e-15)
-    ):  # Check if the diagonal is zero (singular matrix)
-        raise ValueError(f"Matrix is singular {np.diag(A)}")
+    ):  # Check if the diagonal elements are close to zero (singular matrix)
+        raise ValueError(f"Matrix is singular. The diagonal elements are {np.diag(A)}")
 
     if np.any(
         np.tril(A, -1) != 0

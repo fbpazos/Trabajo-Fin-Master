@@ -1,1 +1,0 @@
-On Visual Studio Code ipywidgets > 8.0.0 does not work, use 7.7.2

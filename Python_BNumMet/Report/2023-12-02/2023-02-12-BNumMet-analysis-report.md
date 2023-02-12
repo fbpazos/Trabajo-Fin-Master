@@ -4,7 +4,7 @@
 
 **By: default**
 
-*Date: 2023-02-11*
+*Date: 2023-02-12*
 
 ## Introduction
 This document contains results of the code analysis of BNumMet
@@ -15,7 +15,7 @@ This document contains results of the code analysis of BNumMet
 
 - Quality Profiles
     - Names: Sonar way [Python]; Sonar way [XML]; 
-    - Files: AYZBMw64a-vbeyS_HRwm.json; AYZBMxa7a-vbeyS_HSdh.json; 
+    - Files: AYZE7i3U2dITZFwgEli2.json; AYZE7jaV2dITZFwgEmPx.json; 
 
 
  - Quality Gate
@@ -35,40 +35,47 @@ A | A | A | A |
 | Quality Gate Status | OK |
 |-|-|
 
+Metric|Value
+---|---
+Reliability Rating on New Code|OK
+Security Rating on New Code|OK
+Maintainability Rating on New Code|OK
+Coverage on New Code|OK
+Duplicated Lines (%) on New Code|OK
 
 
 ### Metrics
 
 Coverage | Duplications | Comment density | Median number of lines of code per file | Adherence to coding standard |
 :---:|:---:|:---:|:---:|:---:
-96.8 % | 0.0 % | 36.7 % | 156.0 | 99.8 %
+98.1 % | 0.0 % | 40.7 % | 160.5 | 99.8 %
 
 ### Tests
 
 Total | Success Rate | Skipped | Errors | Failures |
 :---:|:---:|:---:|:---:|:---:
-65 | 100.0 % | 0 | 0 | 0
+67 | 100.0 % | 0 | 0 | 0
 
 ### Detailed technical debt
 
 Reliability|Security|Maintainability|Total
 ---|---|---|---
--|-|0d 5h 22min|0d 5h 22min
+-|-|0d 5h 14min|0d 5h 14min
 
 
 ### Metrics Range
 
 \ | Cyclomatic Complexity | Cognitive Complexity | Lines of code per file | Coverage | Comment density (%) | Duplication (%)
 :---|:---:|:---:|:---:|:---:|:---:|:---:
-Min | 0.0 | 0.0 | 0.0 | 93.5 | 19.2 | 0.0
-Max | 207.0 | 202.0 | 1240.0 | 100.0 | 60.4 | 0.0
+Min | 0.0 | 0.0 | 0.0 | 95.5 | 19.4 | 0.0
+Max | 204.0 | 199.0 | 1278.0 | 100.0 | 74.1 | 0.0
 
 ### Volume
 
 Language|Number
 ---|---
-Python|1240
-Total|1240
+Python|1278
+Total|1278
 
 
 ## Issues
@@ -79,7 +86,7 @@ Type / Severity|INFO|MINOR|MAJOR|CRITICAL|BLOCKER
 ---|---|---|---|---|---
 BUG|0|0|0|0|0
 VULNERABILITY|0|0|0|0|0
-CODE_SMELL|0|95|2|3|0
+CODE_SMELL|0|92|2|3|0
 
 
 ### Issues List
@@ -90,7 +97,7 @@ Cognitive Complexity of functions should not be too high|Cognitive Complexity is
 Function names should comply with a naming convention|Shared coding conventions allow teams to collaborate efficiently. This rule checks that all function names match a provided regular expression. <br /> Noncompliant Code Example <br /> With the default provided regular expression: ^[a-z_][a-z0-9_]*$ <br />  <br /> def MyFunction(a,b): <br />     ... <br />  <br /> Compliant Solution <br />  <br /> def my_function(a,b): <br />     ... <br /> |CODE_SMELL|MAJOR|2
 Method names should comply with a naming convention|Sharing some naming conventions is a key point to make it possible for a team to efficiently collaborate. This rule allows to check that all method <br /> names match a provided regular expression. <br /> Noncompliant Code Example <br /> With default provided regular expression: ^[a-z_][a-z0-9_]*$ <br />  <br /> class MyClass: <br />     def MyMethod(a,b): <br />         ... <br />  <br /> Compliant Solution <br />  <br /> class MyClass: <br />     def my_method(a,b): <br />         ... <br /> |CODE_SMELL|MINOR|20
 Field names should comply with a naming convention|Sharing some naming conventions is a key point to make it possible for a team to efficiently collaborate. This rule allows to check that field <br /> names match a provided regular expression. <br /> Noncompliant Code Example <br /> With the default regular expression ^[_a-z][_a-z0-9]*$: <br />  <br /> class MyClass: <br />   myField = 1 <br />  <br /> Compliant Solution <br />  <br /> class MyClass: <br />   my_field = 1 <br /> |CODE_SMELL|MINOR|34
-Local variable and function parameter names should comply with a naming convention|Shared naming conventions allow teams to collaborate effectively. This rule raises an issue when a local variable or function parameter name does <br /> not match the provided regular expression. <br /> Exceptions <br /> Loop counters are ignored by this rule. <br />  <br /> for i in range(limit):  # Compliant <br />     print(i) <br /> |CODE_SMELL|MINOR|41
+Local variable and function parameter names should comply with a naming convention|Shared naming conventions allow teams to collaborate effectively. This rule raises an issue when a local variable or function parameter name does <br /> not match the provided regular expression. <br /> Exceptions <br /> Loop counters are ignored by this rule. <br />  <br /> for i in range(limit):  # Compliant <br />     print(i) <br /> |CODE_SMELL|MINOR|38
 
 
 ## Security Hotspots

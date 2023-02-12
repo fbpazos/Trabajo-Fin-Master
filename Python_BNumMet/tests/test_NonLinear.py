@@ -11,7 +11,9 @@ class test_Roots(TestCase):
         """
         f = lambda x: x**2 - 1
         x = bisect(f, [0, 2])
+        x1, iters = bisect(f, [0, 2], iters=True)
         self.assertTrue(np.isclose(x, 1))
+        self.assertTrue(np.isclose(x1, 1))
 
     def test_secant(self):
         """
@@ -19,8 +21,9 @@ class test_Roots(TestCase):
         """
         f = lambda x: x**2 - 1
         x = secant(f, [0, 2])
-
+        x1, iters = secant(f, [0, 2], iters=True)
         self.assertTrue(np.isclose(x, 1))
+        self.assertTrue(np.isclose(x1, 1))
 
     def test_newton(self):
         """
@@ -29,16 +32,25 @@ class test_Roots(TestCase):
         f = lambda x: x**2 - 1
         fprime = lambda x: 2 * x
         x = newton(f, fprime, 3)
+        x1, iters = newton(f, fprime, 3, iters=True)
         self.assertTrue(np.isclose(x, 1))
+        self.assertTrue(np.isclose(x1, 1))
 
     def test_zBrentDekker(self):
         """
         Test the zBrentDekker method
         """
         f = lambda x: x**2 - 1
+        x0 = zBrentDekker(f, [0, 2])
         x, iters = zBrentDekker(f, [0, 2], iters=True)
+        x1, iters1, steps = zBrentDekker(f, [0, 2], iters=True, steps=True)
+        x2, steps = zBrentDekker(f, [0, 2], iters=False, steps=True)
         print(x, iters)
+        self.assertTrue(np.isclose(x0, 1))
         self.assertTrue(np.isclose(x, 1))
+        self.assertTrue(np.isclose(x1, 1))
+        self.assertTrue(iters == iters1)
+        self.assertTrue(np.isclose(x2, 1))
 
     def test_IQI(self):
         """
@@ -46,7 +58,9 @@ class test_Roots(TestCase):
         """
         f = lambda x: x**2 - 1
         x = IQI(f, [0, 2 / 3, 2])
+        x1, iters = IQI(f, [0, 2 / 3, 2], iters=True)
         self.assertTrue(np.isclose(x, 1))
+        self.assertTrue(np.isclose(x1, 1))
 
     def test_SameSign(self):
         """
@@ -301,3 +315,29 @@ class Test_NonLinearVisualizer(TestCase):
         self.assertEqual(stack, [])
 
         self.assertEqual(nonLinearVisualizer.b, 1)
+
+    def test_reset_emptyStack(self):
+        """
+        Test if reset works when the stack is empty (i.e. no steps have been taken)
+        """
+        f = lambda x: x**2 - 1
+        interval = (0, 2)
+        tol = 1e-20
+        x, iters, stack = zBrentDekker(f, interval, iters=True, steps=True, tol=tol)
+        nonLinearVisualizer = NonLinearVisualizer(f, interval, tol=tol)
+        nonLinearVisualizer.run()
+
+        # A Reset should revert all steps and set the hintStep to the first step in the stack
+        nonLinearVisualizer.resetButton.click()
+        self.assertEqual(nonLinearVisualizer.revertStack, [])
+        self.assertTrue(nonLinearVisualizer.hintStep == stack[0])
+
+    def test_exception_wrongSign(self):
+        """
+        Tests if the exception is raised when the signs are NOT different
+        """
+        f = lambda x: x**2 - 1
+        interval = (2, 4)
+        tol = 1e-20
+        with self.assertRaises(Exception):
+            zBrentDekker(f, interval, tol=tol)

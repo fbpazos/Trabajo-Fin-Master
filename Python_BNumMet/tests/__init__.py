@@ -13,6 +13,9 @@ def main():
     print(f"OS: {os.name}")
     print(f"Platform: {sys.platform}")
 
+    # os run black
+    os.system("black src/BNumMet/ tests Demos")
+
     # Initialize the test suite with coverage
     res = pytest.main(
         [
@@ -26,9 +29,6 @@ def main():
             "tests",
         ]
     )
-
-    # Black formatting of the code
-    black.main(["src/BNumMet/", "tests", "Demos"])
 
 
 if __name__ == "__main__":
