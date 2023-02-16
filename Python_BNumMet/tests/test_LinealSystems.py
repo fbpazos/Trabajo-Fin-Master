@@ -1,17 +1,18 @@
-import sys
 import os
-from unittest import TestCase
+import sys
 import unittest
-import numpy as np
 from random import randint
+from unittest import TestCase
+
+import numpy as np
 
 from BNumMet.LinearSystems import (
-    lu,
-    permute,
-    interactive_lu,
-    forward_substitution,
     backward_substitution,
+    forward_substitution,
+    interactive_lu,
+    lu,
     lu_solve,
+    permute,
     qr_factorization,
     qr_solve,
 )
@@ -90,9 +91,64 @@ class test_LU(TestCase):
         P = np.eye(A.shape[0])
 
         lastColumn = 0
-        while lastColumn > A.shape[1]:
-            P, L, U, lastColumn, iMax = interactive_lu(P, L, U, lastColumn, -1)
+        rank = 0
+        while lastColumn != -1:
+            P, L, U, lastColumn, rank, msg = interactive_lu(
+                P, L, U, lastColumn, rank, -1
+            )
             self.assertTrue(np.allclose(P @ A, L @ U))
+        print(rank)
+        assert rank == A.shape[0]
+
+    def test_interactive_lu_ranks(self):
+        """
+        Test the interactive LU decomposition by running it on a fixed matrix and checking that the result is correct
+        we do not test the visualizer here, just the algorithm, with automated pivoting (i.e. iMax = -1)
+        """
+        A = np.array([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
+        L = np.eye(A.shape[0])
+        U = A.copy()
+        P = np.eye(A.shape[0])
+
+        _, _, _, _, rank, _ = interactive_lu(P, L, U, 0, 0, -1)
+        self.assertTrue(rank == 0)
+
+        A = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        L = np.eye(A.shape[0])
+        U = A.copy()
+        P = np.eye(A.shape[0])
+
+        _, _, _, _, rank, _ = interactive_lu(P, L, U, 0, 0, -1)
+        col = 0
+        rank = 0
+        while col != -1:
+            P, L, U, col, rank, msg = interactive_lu(P, L, U, col, rank, -1)
+            self.assertTrue(np.allclose(P @ A, L @ U))
+        self.assertTrue(rank == A.shape[0])
+
+        A = np.array([[1, 4, 7], [1, 5, 7], [1, 4, 7]])  # rank 2 on the second column
+        L = np.eye(A.shape[0])
+        U = A.copy()
+        P = np.eye(A.shape[0])
+        col = 0
+        rank = 0
+        while col != -1:
+            P, L, U, col, rank, msg = interactive_lu(P, L, U, col, rank, -1)
+            self.assertTrue(np.allclose(P @ A, L @ U))
+
+        self.assertTrue(rank == 2)
+
+        A = np.array([[1, 4, 7], [1, 4, 7], [1, 4, 9]])  # rank 2 on the third column
+        L = np.eye(A.shape[0])
+        U = A.copy()
+        P = np.eye(A.shape[0])
+        col = 0
+        rank = 0
+        while col != -1:
+            P, L, U, col, rank, msg = interactive_lu(P, L, U, col, rank, -1)
+            self.assertTrue(np.allclose(P @ A, L @ U))
+
+        self.assertTrue(rank == 2)  #
 
     def test_forwardSubstitution(self):
         """
@@ -233,6 +289,8 @@ class test_LU(TestCase):
         ):
             lu_solve(A, b)
 
+
+class Test_LinearSystems(TestCase):
     def test_qrFactorization(self):
         """
         Test the QR decomposition algorithm by running it on a fixed matrix and checking that the result is correct, testing BNumMet.qr_factorization
@@ -288,6 +346,17 @@ class test_LU(TestCase):
             b = A @ x
 
             self.assertTrue(np.allclose(qr_solve(A, b), x), f"{x} != {qr_solve(A, b)}")
+
+    def test_qr_lsp(self):
+        """
+        Test the QR solver for an mxn matrix where m > n
+        """
+        A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
+        b = np.array([1, 2, 3, 4])
+        x = np.array([1, 1, 1])
+
+        # no exception should be raised
+        qr_solve(A, b)
 
 
 class Test_LUVisualizer(TestCase):

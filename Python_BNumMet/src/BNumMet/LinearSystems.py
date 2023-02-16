@@ -64,7 +64,7 @@ def lu(Matrix):
     return P, L, U
 
 
-def interactive_lu(P, L, U, col, pivot_row):
+def interactive_lu(P, L, U, col, row, pivot_row):
     """
     Makes only one step of the LU factorization, updates P,L,U and takes the pivot row to do the Gaussian Elimination
 
@@ -93,36 +93,48 @@ def interactive_lu(P, L, U, col, pivot_row):
     """
 
     # Check if the column index is out of bounds, if so return the original P,L,U and -1,-1 as the next column and pivot row
-    if col + 1 >= U.shape[1] or col <= -1:
-        return P, L, U, -1, -1
+
+    # Check if the column index is out of bounds, if so return the original P,L,U and -1,-1 as the next column and pivot row
+    if col >= U.shape[1] or col <= -1:
+        return P, L, U, -1, row, "Finished with the LU factorization"
 
     # Convert the L and U matrices to float data type
     U = U.astype(float)
     L = L.astype(float)
 
-    # Find the index of the row with the largest pivot element or use the pivot row if it is already found
+    # Find the index of the row with the largest pivot element or use the pivot row if it is already found and the row index is greater than the pivot row
     index_maximum = (
-        np.argmax(np.abs(U[col:, col])) + col if pivot_row < col else pivot_row
+        int(np.argmax(np.abs(U[row:, col])) + row) if row > pivot_row else pivot_row
     )
-
     # Skip if the pivot is zero
     if U[index_maximum, col] != 0:
         # Swap the rows of A and P for those with the largest pivot element
-        U = permute(U, index_maximum, col)
-        P = permute(P, index_maximum, col)
-        L = permute(L - np.eye(L.shape[0]), index_maximum, col) + np.eye(L.shape[0])
+        U = permute(U, index_maximum, row)
+        P = permute(P, index_maximum, row)
+        L = permute(L - np.eye(L.shape[0]), index_maximum, row) + np.eye(L.shape[0])
 
         # Gaussian elimination using NumPy's broadcasting
-        factors = U[col + 1 :, col] / U[col, col]  # Calculate the multipliers
-        L[col + 1 :, col] = U[col + 1 :, col] / U[col, col]  # Update the L matrix
+        factors = U[row + 1 :, col] / U[row, col]  # Calculate the multipliers
+        L[row + 1 :, col] = U[row + 1 :, col] / U[row, col]  # Update the L matrix
         for i in range(
-            col + 1, U.shape[0]
+            row + 1, U.shape[0]
         ):  # Update the remaining elements in the row using the multipliers
             U[i, col + 1 :] = U[i, col + 1 :] - factors[i - col - 1] * U[col, col + 1 :]
-        U[col + 1 :, col] = 0  # Set the elements below the pivot to zero
+        U[row + 1 :, col] = 0  # Set the elements below the pivot to zero
+        row += 1  # Increment the row index
+    msg = ""
+    while row < U.shape[0] and col + 1 < U.shape[1] and all(U[row:, col + 1] == 0):
+        msg = "The matrix is singular, the next column is all zeros, so we skip it and move to the next row if and repeat until we find a non-zero element or reach the end of the matrix."
+        col += 1
 
-    # Return the updated P,L,U matrices, as well as the next column and pivot row
-    return P, L, U, (col + 1), index_maximum
+    return (
+        P,
+        L,
+        U,
+        col + 1 if col + 1 < U.shape[1] else -1,
+        row,
+        msg + ("" if col + 1 < U.shape[1] else "\nWe have finished"),
+    )
 
 
 def permute(matrix_to_permute, i: int, j: int):
@@ -349,7 +361,8 @@ def qr_solve(A, b):
         A vector.
 
     """
-    n = A.shape[0]  # Get the number of rows in A
+    n = A.shape[1]  # Get the number of rows in A
+
     R = A.copy().astype(float)  # Create a copy of A and cast it as a float
     b = b.copy().astype(float)  # Create a copy of b and cast it as a float
 
@@ -369,7 +382,7 @@ def qr_solve(A, b):
         R
     )  # Make the lower triangular part of R zero, since it may contain small values due to numerical errors
     x = backward_substitution(
-        R, b
+        R[:n, :n], b[:n]
     )  # Solve the system R*x = b using backward substitution
 
     return x  # Return the solution x

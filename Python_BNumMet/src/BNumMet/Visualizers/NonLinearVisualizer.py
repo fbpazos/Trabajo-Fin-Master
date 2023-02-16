@@ -13,35 +13,44 @@ class NonLinearVisualizer:
             fun, interval, tol, iters=True, steps=True
         )  # Get the output of Brent Dekkers Alg --> (x, iters)
 
+        # Set the input function, the interval for the function evaluation,
+        # and the tolerance for the algorithm
         self.f = fun
         self.a, self.b = interval
         self.fa, self.fb = self.f(self.a), self.f(self.b)
 
+        # Check that the function has a zero in the interval
         if self.f(self.a) * self.f(self.b) > 0:
             raise ValueError("The function has no zeros in the given interval")
 
+        # Set the tolerance and initial values for data variables
         self.t = tol
-
         self.original_data = (self.a, self.b)
         self.iterations = 0
 
         # First Step of the Algorithm
         # ==========================================================================
         ## Section: INT
+        # Set the initial values for internal variables
         self.c, self.fc, self.e = self.a, self.fa, self.b - self.a
         ## Section: EXT
+        # Call the sectionEXT() function to perform the first external section of the algorithm
         self.sectionEXT()
 
         # Current Step Save Values
         # ==========================================================================
+        # Save the current state of the algorithm in a tuple
         self.currentStep = (self.a, self.b, self.c, self.e)
 
         # Revert Stack
         # ==========================================================================
+        # Create an empty stack to keep track of previous states of the algorithm
         self.revertStack = []
 
         # Draw mesh
         # ==========================================================================
+        # Create a numpy array of 1000 evenly spaced values between the minimum and maximum
+        # values of the function interval to use for plotting the function
         self.x = np.linspace(min(self.a, self.b), max(self.a, self.b), 1000)
         self.widen = False
 
@@ -50,11 +59,16 @@ class NonLinearVisualizer:
             self.drawFigures()
 
     def sectionINT(self):
+        # Check if the function evaluates with the same sign on both sides of c
         if np.sign(self.fb) == np.sign(self.fc) != 0:
+            # If the condition is met, update the values of c, fc and e
             self.c, self.fc, self.e = self.a, self.fa, self.b - self.a
 
     def sectionEXT(self):
+        # Check which of the endpoints has the smaller absolute value of f
         if abs(self.fc) < abs(self.fb):
+            # If the condition is met, swap the values of a, b and c with b, c and b respectively,
+            # and update the values of fa, fb and fc accordingly
             self.a, self.b, self.c, self.fa, self.fb, self.fc = (
                 self.b,
                 self.c,
@@ -67,17 +81,20 @@ class NonLinearVisualizer:
     def initializeComponents(self):
         # Current Solution Text
         # ==========================================================================
+        # Widget for displaying current solution output
         # Current Solution: (b, f(b))
         # Iterations: N
         self.currentSolOut = widgets.Output()
 
         # Helper Text
         # ==========================================================================
-        # Next Step suggestion: <Bisect/IQI/Secant>
+        # Widget for displaying helper output
+        # Suggestion for next step: <Bisect/IQI/Secant>
         self.helperOut = widgets.Output()  # Next Possible Step: <Bisect/IQI/None>
 
         # Brent-Dekker Solution
         # ==========================================================================
+        # Widget for displaying Brent-Dekker solution output
         # Brent-Dekker Solution: (x^, f(x^)) in N^ iterations
         self.brentDekkerOut = widgets.HTML(
             value=f"<blockquote> Brent-Dekker Solution: <b>({self.brentDekker[0]:.4e}, {self.f(self.brentDekker[0]):.4e})</b> in <b>{self.brentDekker[1]}</b> iterations"
@@ -85,6 +102,7 @@ class NonLinearVisualizer:
 
         # Reset Button
         # ==========================================================================
+        # Widget for reset button
         self.resetButton = widgets.Button(
             description="Reset",
             disabled=False,
@@ -96,6 +114,7 @@ class NonLinearVisualizer:
 
         # Revert Button
         # ==========================================================================
+        # Widget for revert button
         self.revertButton = widgets.Button(
             description="Revert",
             disable=False,
@@ -107,6 +126,8 @@ class NonLinearVisualizer:
 
         # FIGURE
         # ==========================================================================
+        # Widget for plotting the function and its zeros
+        # Set up axes and scales for the plot
         self.x_sc = bq.LinearScale()
         self.y_sc = bq.LinearScale()
         ax_x = bq.Axis(scale=self.x_sc, grid_lines="solid", label="X")
@@ -117,22 +138,22 @@ class NonLinearVisualizer:
             grid_lines="solid",
             label="Y",
         )
-
+        # Set up the plot figure
         self.Fig = bq.Figure(
             marks=[],
             axes=[ax_x, ax_y],
             title="Zeros of a Function",
         )
+        # Set up the plot figure toolbar
         self.Toolbar = bq.Toolbar(figure=self.Fig)
-        # Essential figure components
-        # ==========================================================================
+        # Add default lines to the plot figure
         self.defaultLines()
 
         # FUNCTION BUTTONS
         # ==========================================================================
+        # Widgets for buttons for selecting the next function to perform
         # Each button has a pointIndex attribute that is used to identify the point in the points array
         # 0: Bisect  1: Secant  2: IQI
-
         # Bisect Button
         self.bisectButton = widgets.Button(
             description="Bisect",
@@ -442,7 +463,7 @@ class NonLinearVisualizer:
         marks2plot.append(
             draw_point(
                 self.nextPoints_addition[0],
-                self.f(self.nextPoints_addition[0]),
+                0,
                 "green",
                 "Bisection",
                 "rectangle",
@@ -451,7 +472,7 @@ class NonLinearVisualizer:
         marks2plot.append(
             draw_point(
                 self.nextPoints_addition[1],
-                self.f(self.nextPoints_addition[1]),
+                0,
                 "red",
                 "Secant",
                 "triangle-up",
@@ -461,7 +482,7 @@ class NonLinearVisualizer:
             marks2plot.append(
                 draw_point(
                     self.nextPoints_addition[2],
-                    self.f(self.nextPoints_addition[2]),
+                    0,
                     "blue",
                     "IQI",
                     "triangle-down",

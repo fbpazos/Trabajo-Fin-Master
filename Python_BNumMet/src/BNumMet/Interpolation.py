@@ -1,4 +1,5 @@
 import numpy as np
+from BNumMet.LinearSystems import lu_solve
 
 
 def polinomial(x, y, u):
@@ -239,7 +240,7 @@ def splines(x, y, u, sorted=False):
         )
 
         # Solve the system of equations defined by the tridiagonal matrix and the right-hand side
-        res = np.linalg.solve(np.diag(a, -1) + np.diag(b) + np.diag(c, 1), r)
+        res = lu_solve(np.diag(a, -1) + np.diag(b) + np.diag(c, 1), r)
 
         # Return the solution with type `float`
         return res.astype(float)

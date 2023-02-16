@@ -5,6 +5,7 @@ import json
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
+from BNumMet.LinearSystems import lu_solve
 
 
 # %%
@@ -54,8 +55,8 @@ def splines(x, y, u, sorted=False, mode=None):
             r,
             (h[-1] ** 2 * delta[-2] + (2 * a[-1] + h[-1]) * h[-2] * delta[-1]) / a[-1],
         )
-
-        res = np.linalg.solve(np.diag(a, -1) + np.diag(b) + np.diag(c, 1), r)
+        res = lu_solve(np.diag(a, -1) + np.diag(b) + np.diag(c, 1), r)
+        # res = np.linalg.solve(np.diag(a, -1) + np.diag(b) + np.diag(c, 1), r)
 
         return res.astype(float)
 

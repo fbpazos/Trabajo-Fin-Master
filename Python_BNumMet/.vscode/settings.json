@@ -4,5 +4,9 @@
     "python.testing.unittestEnabled": false,
    
     "python.analysis.typeCheckingMode": "basic",
-    "python.formatting.provider": "black"
+    "python.formatting.provider": "black",
+    "sonarlint.connectedMode.project": {
+        "connectionId": "Sonarqube-Localhost",
+        "projectKey": "BNumMet"
+    }
 }

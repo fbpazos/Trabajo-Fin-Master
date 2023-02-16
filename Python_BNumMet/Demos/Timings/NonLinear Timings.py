@@ -123,7 +123,11 @@ def experiment(scipyTol, bnmTol):
     global iterScipy, iterBNM, iterMatlab
 
     intervalsWidthIncrease = [i for i in range(1, 10000)]
-    functions = [(i, lambda x: x**i) for i in range(2, 10)]
+
+    def create_function(i):
+        return lambda x: x**i
+
+    functions = [(i, create_function(i)) for i in range(3, 10, 2)]
 
     results = {"Scipy": {}, "BNM": {}, "Matlab": {}}
 

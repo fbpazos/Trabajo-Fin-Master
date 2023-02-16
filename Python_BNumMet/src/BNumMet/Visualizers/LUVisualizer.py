@@ -1,6 +1,6 @@
 import numpy as np
 import ipywidgets as widgets
-from IPython.display import display, Math
+from IPython.display import display
 from ..LinearSystems import interactive_lu
 
 
@@ -28,6 +28,7 @@ class LUVisualizer:
         self.L = np.eye(self.A.shape[0])
         self.U = self.A.copy()
         self.P = np.eye(self.A.shape[0])
+        self.rank = 0
 
         # Stack for previous steps
         self.previousSteps = []
@@ -74,6 +75,17 @@ class LUVisualizer:
             value=str(np.allclose(self.L @ self.U, self.P @ self.A)),
             placeholder="$PA=?LU$",
             description="$PA=?LU$",
+        )
+        ## Output for the message of step skipped normal text
+        self.outMsg = widgets.Output(
+            value="",
+            placeholder="Message:",
+            description="Message:",
+        )
+        self.rankResult = widgets.HTMLMath(
+            value=f"{self.rank}",
+            placeholder="Rank",
+            description="Rank:",
         )
 
         # BUTTONS
@@ -122,10 +134,12 @@ class LUVisualizer:
         )
         self.grid[0, 3] = self.previousButton
         self.grid[1, 3] = self.resetButton
+        self.grid[3, 3] = self.rankResult
 
         self.grid[3, 0] = self.outP
         self.grid[3, 1] = self.outL
         self.grid[3, 2] = self.outU
+        self.grid[4, :] = self.outMsg
 
     def matrixPivotButton(self, b):
         """
@@ -147,7 +161,7 @@ class LUVisualizer:
         if b.disabled:
             return  # do nothing if the button is disabled
         self.previousSteps.append(
-            (self.P.copy(), self.L.copy(), self.U.copy(), self.step)
+            (self.P.copy(), self.L.copy(), self.U.copy(), self.step, self.rank)
         )
         with self.grid.hold_sync():
             self.oneStep(b.index[0])
@@ -156,11 +170,12 @@ class LUVisualizer:
 
     def oneStep(self, pivot):
         # Apply the LU decomposition to the matrix
-        self.P, self.L, self.U, self.step, _ = interactive_lu(
-            self.P, self.L, self.U, self.step, pivot
+        self.P, self.L, self.U, self.step, self.rank, msg = interactive_lu(
+            self.P, self.L, self.U, self.step, self.rank, pivot
         )
         # Update the output
-        self.updateOutput()
+        self.updateOutput(msg)
+        self.updateButtons()
 
     def updateButtons(self):
         """
@@ -170,40 +185,40 @@ class LUVisualizer:
         -------
         None
         """
-        # If the all the pivots are 0, then increment the step and update the buttons
-        if np.allclose(self.U[self.step :, self.step], 0):
-            self.oneStep(-1)
 
         # Update the buttons
         for i in range(len(self.buttonsMatrix)):
-            for j in range(len(self.buttonsMatrix[i])):
-                if (  # if the step is 0, then the buttons are disabled except for the first column
-                    j == self.step
-                    and i >= self.step
-                    and self.step != self.A.shape[1] - 1
-                    and not np.isclose(self.U[i, j], 0)
-                ):
+            for j in range(
+                len(self.buttonsMatrix[i])
+            ):  # (i,j) is the index of the button
+                if self.step == -1:  # The end
+                    self.buttonsMatrix[i][j].disabled = True
+                    self.buttonsMatrix[i][j].style.button_color = "white"
+                    self.buttonsMatrix[i][j].style.button_color = None
+
+                # Color Green and enable if the button is on the col self.step, the row is greater or eq than the rank and it is not 0
+                elif j == self.step and i >= self.rank and self.U[i, j] != 0:
                     self.buttonsMatrix[i][j].disabled = False
                     self.buttonsMatrix[i][j].style.button_color = "LightGreen"
                     self.buttonsMatrix[i][j].style.font_weight = "normal"
-
-                elif (
-                    self.step == self.A.shape[1] - 1
-                ):  # if the step is the last one, then all the buttons are disabled and the color is gray
+                # Color Red and disable if the button is on the col self.step, the row is greater or eq than the rank and it is 0
+                elif j == self.step and i >= self.rank and self.U[i, j] == 0:
                     self.buttonsMatrix[i][j].disabled = True
-                    self.buttonsMatrix[i][j].style.button_color = "Gainsboro"
-                    self.buttonsMatrix[i][j].style.font_weight = "1000"
-                else:  # If they are not the pivot buttons, then they are disabled and the color is LightCoral
-                    self.buttonsMatrix[i][j].button_style = ""
-                    self.buttonsMatrix[i][j].style.button_color = None
-                    if j <= self.step or i <= self.step - 1:
-                        self.buttonsMatrix[i][j].style.button_color = "LightCoral"
-                    self.buttonsMatrix[i][j].disabled = True
+                    self.buttonsMatrix[i][j].style.button_color = "LightCoral"
                     self.buttonsMatrix[i][j].style.font_weight = "normal"
+                # Color white and disable if the button is on the col smaller than the step and the row is smaller than the rank
+                elif j < self.step or i < self.rank:
+                    self.buttonsMatrix[i][j].disabled = True
+                    self.buttonsMatrix[i][j].style.button_color = "white"
+                    self.buttonsMatrix[i][j].style.font_weight = "normal"
+                else:
+                    self.buttonsMatrix[i][j].disabled = True
+                    self.buttonsMatrix[i][j].style.button_color = "white"
+                    self.buttonsMatrix[i][j].style.button_color = None
 
                 self.buttonsMatrix[i][j].description = f"{self.U[i,j]:.2f}"
 
-    def updateOutput(self):
+    def updateOutput(self, msg):
         """
         Update the output widgets
 
@@ -221,6 +236,18 @@ class LUVisualizer:
         self.outU.value = pretty_print_matrix(
             self.U, simple=True, type="uMatrix", step=self.step
         )
+        self.rankResult.value = (
+            f"${self.rank}$ "
+            if self.step != -1
+            else f"$\\underline{{\\textbf{{{self.rank}}}}}$"
+        )
+
+        self.outMsg.clear_output()
+        with self.outMsg:
+            if msg != "":
+                print("Messages from system: " + msg)
+            else:
+                print(" ")
 
     def previousStep(self, b):
         """
@@ -237,9 +264,9 @@ class LUVisualizer:
         """
         # If there are previous steps, then go back to the previous step
         if len(self.previousSteps) > 0:
-            self.P, self.L, self.U, self.step = self.previousSteps.pop()
+            self.P, self.L, self.U, self.step, self.rank = self.previousSteps.pop()
             with self.grid.hold_sync():
-                self.updateOutput()
+                self.updateOutput("")
                 # Update the buttons
                 self.updateButtons()
 
@@ -259,6 +286,7 @@ class LUVisualizer:
 
         # Reset the LU decomposition Visualizer to the initial state
         self.step = 0
+        self.rank = 0
         self.L = np.eye(self.A.shape[0])
         self.U = self.A.copy()
         self.P = np.eye(self.A.shape[0])
@@ -267,7 +295,7 @@ class LUVisualizer:
         self.previousSteps = []
         with self.grid.hold_sync():
             # Update the output
-            self.updateOutput()
+            self.updateOutput("")
             # Update the buttons
             self.updateButtons()
 
@@ -281,6 +309,12 @@ class LUVisualizer:
         """
         # Run the visualizer
         self.initializeComponents()
+        # if the first column is all 0, then automatically perform the first step
+        if np.all(self.U[:, 0] == 0):
+            # print("First column is all 0, automatically performing the first step")
+            with self.grid.hold_sync():
+                self.oneStep(0)
+
         return self.grid
 
 
@@ -302,15 +336,15 @@ def pretty_print_matrix(matrix, simple=False, type="normal", step=0):
                     res += "* & "
             res = res[:-2] + "\\\\ \n"
     elif type == "uMatrix":  # Corresponds to the U matrix (Upper triangular matrix)
-        # Write * on the submatrix [step:, step:]
+        # Write * on the submatrix [row:, step:]
         for i in range(len(matrix)):
             for j in range(len(matrix[i])):
-                if i >= step and j >= step and step != -1:
-                    res += "* & "
-                else:
+                if i < step or j < step or step == -1:
                     res += str(round(matrix[i][j], 3)) + " & "
+                else:
+                    res += "* & "
             res = res[:-2] + "\\\\ \n"
 
     res += "\\end{pmatrix} "
 
-    return Math(res) if not simple else res
+    return display.Math(res) if not simple else res
