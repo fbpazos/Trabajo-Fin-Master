@@ -55,8 +55,8 @@ class NonLinearVisualizer:
         self.widen = False
 
     def checkBoxChanged(self, change):
-        with self.Fig.hold_sync():
-            self.drawFigures()
+        with self.Fig.hold_sync():  # Hold the figure syncronized
+            self.draw_figures()  # Draw the figures
 
     def sectionINT(self):
         # Check if the function evaluates with the same sign on both sides of c
@@ -220,9 +220,9 @@ class NonLinearVisualizer:
         self.grid[1, 0] = textGroup
 
         # Buttons Group
-        text1 = widgets.HTML(value="<b>Next Step Selector</b>")
-        text2 = widgets.HTML(value="<b>Draw Step?</b>")
-        selectors = widgets.VBox(
+        text1 = widgets.HTML(value="<b>Next Step Selector</b>")  # Next Step Selector
+        text2 = widgets.HTML(value="<b>Draw Step?</b>")  # Draw Step?
+        selectors = widgets.VBox(  # Next Step Selectors
             [text1, self.bisectButton, self.secantButton, self.IQIButton]
         )
         checkboxes = widgets.VBox(
@@ -243,7 +243,7 @@ class NonLinearVisualizer:
 
     def defaultLines(self):
         # 0. Horizontal Line f(x)=0
-        self.hLine = bq.Lines(
+        self.hLine = bq.Lines(  # Horizontal Line f(x)=0
             x=self.x,
             y=[0] * len(self.x),
             scales={"x": self.x_sc, "y": self.y_sc},
@@ -252,7 +252,7 @@ class NonLinearVisualizer:
             colors=["Black"],
         )
         # 1. Function Line f(x)
-        self.functionLine = bq.Lines(
+        self.functionLine = bq.Lines(  # Function Line f(x)
             x=self.x,
             y=list(map(self.f, self.x)),
             scales={"x": self.x_sc, "y": self.y_sc},
@@ -265,30 +265,45 @@ class NonLinearVisualizer:
         )
 
     def next_step(self, b):
+        """
+        This function is called when a button is clicked
+
+        Parameters
+        ----------
+        b : Button
+            The button that was clicked
+
+        Returns
+        -------
+        None.
+        """
+
         if self.hintStep is None:
             return
-        self.revertStack.append([self.a, self.b, self.c, self.e, self.iterations])
+        self.revertStack.append(
+            [self.a, self.b, self.c, self.e, self.iterations]
+        )  # Add the current state to the revert stack
 
-        self.a = self.b
-        self.fa = self.fb
+        self.a = self.b  # Set a = b
+        self.fa = self.fb  # Set f(a) = f(b)
 
-        newB = self.nextPoints_addition[b.pointIndex]
+        newB = self.nextPoints_addition[b.pointIndex]  # Get the next point
         self.b = (
             newB
             if abs(self.b - newB) > self.tolerance
             else self.b + np.sign(0.5 * (self.c - self.b)) * self.tolerance
-        )
-        self.fb = self.f(self.b)
-        self.e = self.errs[b.pointIndex]
+        )  # If the new point is too close to the current point, move it a little bit
+        self.fb = self.f(self.b)  # Set f(b) = f(newB)
+        self.e = self.errs[b.pointIndex]  # Set e = error
 
-        self.iterations += 1
+        self.iterations += 1  # Increment the number of iterations
 
         # Section: Ext
-        self.sectionEXT()
+        self.sectionEXT()  # Update the section
         # Section: Int
-        self.sectionINT()
+        self.sectionINT()  # Update the section
 
-        self.oneStep()
+        self.one_step()  # Update the plot
 
     def reset(self, b):
         """
@@ -297,40 +312,55 @@ class NonLinearVisualizer:
         if len(self.revertStack) == 0:
             return
 
-        self.a, self.b, self.c, self.e, self.iterations = self.revertStack[0]
-        self.fb = self.f(self.b)
-        self.fa = self.f(self.a)
-        self.fc = self.f(self.c)
+        self.a, self.b, self.c, self.e, self.iterations = self.revertStack[
+            0
+        ]  # Get the initial state
+        self.fb = self.f(self.b)  # Set f(b) = f(newB)
+        self.fa = self.f(self.a)  # Set f(a) = f(b)
+        self.fc = self.f(self.c)  # Set f(c) = f(newC)
 
-        self.revertStack = []
-        self.oneStep()
+        self.revertStack = []  # Clear the revert stack
+        self.one_step()  # Update the plot
 
     def revert(self, b):
         """
         This method reverts the last step
         """
-        if len(self.revertStack) == 0:
+        if len(self.revertStack) == 0:  # If there is no step to revert
             return
 
-        self.a, self.b, self.c, self.e, self.iterations = self.revertStack.pop()
-        self.fb = self.f(self.b)
-        self.fa = self.f(self.a)
-        self.fc = self.f(self.c)
+        (
+            self.a,
+            self.b,
+            self.c,
+            self.e,
+            self.iterations,
+        ) = self.revertStack.pop()  # Get the last state
+        self.fb = self.f(self.b)  # Set f(b) = f(newB)
+        self.fa = self.f(self.a)  # Set f(a) = f(b)
+        self.fc = self.f(self.c)  # Set f(c) = f(newC)
 
-        self.oneStep()
+        self.one_step()  # Update the plot
 
-    def oneStep(self):
-        with self.grid.hold_sync():
-            self.brentDekker_Step()
-            self.IQIButton.disabled = self.nextPoints_addition[2] is None
-            self.IQICheckbox.disabled = self.nextPoints_addition[2] is None
+    def one_step(self):
+        """
+        This method is called when a step is made
+        """
+        with self.grid.hold_sync():  # Hold the grid syncronized
+            self.brent_dekker_Step()  # Update the Brent-Dekker step
+            self.IQIButton.disabled = (
+                self.nextPoints_addition[2] is None
+            )  # Disable the IQI button if the IQI point is None
+            self.IQICheckbox.disabled = (
+                self.nextPoints_addition[2] is None
+            )  # Disable the IQI checkbox if the IQI point is None
 
-            self.updateOuputs()
-            with self.Fig.hold_sync():
-                self.drawFigures()
+            self.update_ouputs()  # Update the outputs
+            with self.Fig.hold_sync():  # Hold the figure syncronized
+                self.draw_figures()  # Draw the figures
             # self.drawFigures()
 
-    def drawFigures(self):
+    def draw_figures(self):
         """
         This method draws the figures
         1. The function
@@ -350,7 +380,7 @@ class NonLinearVisualizer:
                 display_legend=legend,
                 labels=[label],
                 marker=marker,
-            )
+            )  # Draw a point
 
         def secant_draw():
             # Draws a line on whole self.x range with the secant equation on the points (b, fb) and (self.nextPoints_addition[1], self.f(self.nextPoints_addition[1]))
@@ -368,7 +398,7 @@ class NonLinearVisualizer:
                 display_legend=True,
                 labels=["Secant Line"],
                 line_style="dashed",
-            )
+            )  # Draw a line
             return secant
 
         def bisect_draw(m, minY, maxY):
@@ -382,16 +412,16 @@ class NonLinearVisualizer:
                 display_legend=True,
                 labels=["Bisect Line"],
                 line_style="dashed",
-            )
+            )  # Draw a line
             return bisect
 
         def iqi_draw(a, b, c, minY, maxY):
             # draw a vertical line at m
-            interpolY = [self.f(a), self.f(b), self.f(c)]
-            interpolX = [a, b, c]
+            interpolY = [self.f(a), self.f(b), self.f(c)]  # [f(a), f(b), f(c)]
+            interpolX = [a, b, c]  # [a, b, c]
             yMesh = np.linspace(minY, maxY, 1000)
             # Lagrange interpolation with (Y,X)
-            q_y = (
+            q_y = (  # Lagrange interpolation
                 lambda y: ((y - interpolY[1]) * (y - interpolY[2]))
                 / ((interpolY[0] - interpolY[1]) * (interpolY[0] - interpolY[2]))
                 * interpolX[0]
@@ -402,9 +432,11 @@ class NonLinearVisualizer:
                 / ((interpolY[2] - interpolY[0]) * (interpolY[2] - interpolY[1]))
                 * interpolX[2]
             )
-            xMesh = q_y(yMesh)
-            xMesh = np.where((xMesh < self.x[0]) | (xMesh > self.x[-1]), np.nan, xMesh)
-            IQILine = bq.Lines(
+            xMesh = q_y(yMesh)  # Get the x values for the y values
+            xMesh = np.where(
+                (xMesh < self.x[0]) | (xMesh > self.x[-1]), np.nan, xMesh
+            )  # Set the x values outside the range to nan
+            IQILine = bq.Lines(  # Draw a line
                 x=xMesh,
                 y=yMesh,
                 scales={"x": self.x_sc, "y": self.y_sc},
@@ -415,52 +447,78 @@ class NonLinearVisualizer:
             )
             return IQILine
 
-        points2check = [
+        points2check = [  # Points to check
             self.a,
             self.b,
             self.c,
             self.nextPoints_addition[0],
             self.nextPoints_addition[1],
         ] + (
-            [] if self.nextPoints_addition[2] is None else [self.nextPoints_addition[2]]
+            []
+            if self.nextPoints_addition[2] is None
+            else [
+                self.nextPoints_addition[2]
+            ]  # If the IQI point is None, add it to the list
         )
 
-        if self.hintStep is None:
-            self.Fig.marks = [self.hLine, self.functionLine]
+        if self.hintStep is None:  # If the hint step is None
+            self.Fig.marks = [
+                self.hLine,
+                self.functionLine,
+            ]  # Set the marks to the function and the horizontal line
             return
 
-        minMax = [min(points2check), max(points2check)]
+        minMax = [
+            min(points2check),
+            max(points2check),
+        ]  # Get the min and max of the points to check
 
-        if minMax[0] < min(self.original_data) or minMax[1] > max(self.original_data):
-            self.x = np.linspace(
+        if minMax[0] < min(self.original_data) or minMax[1] > max(
+            self.original_data
+        ):  # If the min or max of the points to check is outside the range of the original data
+            self.x = np.linspace(  # Set the x values to the min and max of the points to check
                 min(min(self.original_data), minMax[0]),
                 max(max(self.original_data), minMax[1]),
                 1000,
             )
-            self.defaultLines()
-            self.widen = True
-        elif self.widen:
-            self.x = np.linspace(min(self.original_data), max(self.original_data), 1000)
-            self.defaultLines()
-            self.widen = False
+            self.defaultLines()  # Set the default lines
+            self.widen = True  # Set widen to True
+        elif self.widen:  # If widen is True
+            self.x = np.linspace(
+                min(self.original_data), max(self.original_data), 1000
+            )  # Set the x values to the min and max of the original data
+            self.defaultLines()  # Set the default lines
+            self.widen = False  # Set widen to False
 
-        marks2plot = [self.hLine, self.functionLine]
+        marks2plot = [
+            self.hLine,
+            self.functionLine,
+        ]  # Set the marks to the function and the horizontal line
 
         # 1. The Current Points (a,b,c)
         marks2plot.append(
-            draw_point(self.a, self.fa, "red", "a", "circle", legend=False)
+            draw_point(
+                self.a, self.fa, "red", "a", "circle", legend=False
+            )  # Draw a point
         )
         marks2plot.append(
             draw_point(
-                self.b, self.fb, "Black", "Current Solution", "cross", legend=True
+                self.b,
+                self.fb,
+                "Black",
+                "Current Solution",
+                "cross",
+                legend=True,  # Draw a point
             )
         )
         marks2plot.append(
-            draw_point(self.c, self.fc, "green", "c", "circle", legend=False)
+            draw_point(
+                self.c, self.fc, "green", "c", "circle", legend=False
+            )  # Draw a point
         )
 
         # 2. The next step suggestions
-        marks2plot.append(
+        marks2plot.append(  # Bisect
             draw_point(
                 self.nextPoints_addition[0],
                 0,
@@ -470,7 +528,7 @@ class NonLinearVisualizer:
             )
         )
         marks2plot.append(
-            draw_point(
+            draw_point(  # Secant
                 self.nextPoints_addition[1],
                 0,
                 "red",
@@ -480,7 +538,7 @@ class NonLinearVisualizer:
         )
         if self.nextPoints_addition[2] is not None:
             marks2plot.append(
-                draw_point(
+                draw_point(  # IQI
                     self.nextPoints_addition[2],
                     0,
                     "blue",
@@ -490,43 +548,59 @@ class NonLinearVisualizer:
             )
 
         # FIX THE VIEW
-        self.x_sc.min = minMax[0]
-        self.x_sc.max = minMax[1]
+        self.x_sc.min = minMax[
+            0
+        ]  # Set the x scale min to the min of the points to check
+        self.x_sc.max = minMax[
+            1
+        ]  # Set the x scale max to the max of the points to check
 
-        self.y_sc.min = min(self.f(minMax[0]), self.f(minMax[1]))
-        self.y_sc.max = max(self.f(minMax[0]), self.f(minMax[1]))
+        self.y_sc.min = min(
+            self.f(minMax[0]), self.f(minMax[1])
+        )  # Set the y scale min to the min of the function of the min and max of the points to check
+        self.y_sc.max = max(
+            self.f(minMax[0]), self.f(minMax[1])
+        )  # Set the y scale max to the max of the function of the min and max of the points to check
 
-        fX = list(map(self.f, self.x))
-        yminMax = (min(fX), max(fX))
+        fX = list(map(self.f, self.x))  # Get the function values for the x values
+        yminMax = (min(fX), max(fX))  # Get the min and max of the function values
 
         # 3. The steps
-        if self.secantCheckbox.value:
-            marks2plot.append(secant_draw())
+        if self.secantCheckbox.value:  # If the secant checkbox is checked
+            marks2plot.append(secant_draw())  # Draw the secant line
 
-        if self.bisectCheckbox.value:
-            marks2plot.append(
-                bisect_draw(self.nextPoints_addition[0], yminMax[0], yminMax[1])
+        if self.bisectCheckbox.value:  # If the bisect checkbox is checked
+            marks2plot.append(  # Draw the bisect line
+                bisect_draw(
+                    self.nextPoints_addition[0], yminMax[0], yminMax[1]
+                )  # Draw the bisect line
             )
-        if self.IQICheckbox.value and self.nextPoints_addition[2] is not None:
-            marks2plot.append(iqi_draw(self.a, self.b, self.c, yminMax[0], yminMax[1]))
+        if (
+            self.IQICheckbox.value and self.nextPoints_addition[2] is not None
+        ):  # If the IQI checkbox is checked and the IQI point is not None
+            marks2plot.append(
+                iqi_draw(self.a, self.b, self.c, yminMax[0], yminMax[1])
+            )  # Draw the IQI line
 
-        self.Fig.marks = marks2plot
+        self.Fig.marks = marks2plot  # Set the marks to the marks to plot
 
-    def updateOuputs(self):
+    def update_ouputs(self):
         """
         This method updates the outputs of the app
             > current solution
             > helper text
         The next step must be calculated before calling this method
         """
-        self.currentSolOut.clear_output()
-        self.helperOut.clear_output()
+        self.currentSolOut.clear_output()  # Clear the current solution output
+        self.helperOut.clear_output()  # Clear the helper output
 
-        with self.currentSolOut:
-            print(f"Current Solution: ({self.b:.4e}, {self.f(self.b):.4e})")
-            print(f"Iterations: {self.iterations}")
-        with self.helperOut:
+        with self.currentSolOut:  # Print the current solution
             print(
+                f"Current Solution: ({self.b:.4e}, {self.f(self.b):.4e})"
+            )  # Print the current solution
+            print(f"Iterations: {self.iterations}")  # Print the iterations
+        with self.helperOut:  # Print the helper text
+            print(  # Print the helper text
                 f"Next Step suggestion: {self.hintStep if self.hintStep is not None else 'FINISHED'}"
             )
 
@@ -539,12 +613,12 @@ class NonLinearVisualizer:
         Widgets.GridBox
             The GridBox containing all the widgets
         """
-        self.initializeComponents()
-        self.oneStep()
+        self.initializeComponents()  # Initialize the components
+        self.one_step()  # Run one step
 
         return self.grid
 
-    def brentDekker_Step(self):
+    def brent_dekker_Step(self):
         """
         This method imitates the Brent-Dekker in one step, instead of giving the result point, this method returns the 3 available points for the next step as well as the next possible step
 
@@ -565,7 +639,7 @@ class NonLinearVisualizer:
             self.hintStep = None
             self.nextPoints_addition = [None, None, None]
             self.errs = [None, None, None]
-            self.updateOuputs()
+            self.update_ouputs()
             return
 
         next_step = None

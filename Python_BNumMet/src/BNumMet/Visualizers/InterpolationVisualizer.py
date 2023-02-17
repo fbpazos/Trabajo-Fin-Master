@@ -36,7 +36,7 @@ class InterpolVisualizer:
             "Splines": [splines, "purple"],
         }
 
-    def initializeComponents(self):
+    def initialize_components(self):
         """
         Initializes the components of the GUI
         Components:
@@ -112,15 +112,17 @@ class InterpolVisualizer:
         """
         Updates the plot according to the effects of extrapolation checkbox
         """
-        minMax = [min(self.x), max(self.x)]
-        half = (minMax[1] - minMax[0]) / 4
+        min_max = [min(self.x), max(self.x)]
+        half = (min_max[1] - min_max[0]) / 4
         if change["new"]:
-            self.u = np.linspace(minMax[0] - half, minMax[1] + half, 100, endpoint=True)
+            self.u = np.linspace(
+                min_max[0] - half, min_max[1] + half, 100, endpoint=True
+            )
         else:
-            self.u = np.linspace(minMax[0], minMax[1], 100, endpoint=True)
+            self.u = np.linspace(min_max[0], min_max[1], 100, endpoint=True)
 
-        self.update_X(None)
-        self.update_Y(None)
+        self.update_x(None)
+        self.update_y(None)
 
     def auto_zoom(self, change):
         """
@@ -134,13 +136,13 @@ class InterpolVisualizer:
             self.y_sc.min = min(yVals)
             self.y_sc.max = max(yVals)
 
-    def scatterDots(self):
+    def scatter_dots(self):
         """
         Updates ScatteredDots - the scatter plot of the data - according to the new points
         It observers the changes in the x and y coordinates of the scatter plot and links them to the update_X and update_Y methods
         It also lets adding new points
         """
-        self.ScatteredDots = bq.Scatter(
+        self.scattered_dots = bq.Scatter(
             x=self.x,
             y=self.y,
             scales={"x": self.x_sc, "y": self.y_sc},
@@ -153,11 +155,11 @@ class InterpolVisualizer:
         )
 
         # observe change XY
-        self.ScatteredDots.observe(self.update_X, "x")
-        self.ScatteredDots.observe(self.update_Y, "y")
-        self.ScatteredDots.interactions = {"click": "add"}
+        self.scattered_dots.observe(self.update_x, "x")
+        self.scattered_dots.observe(self.update_y, "y")
+        self.scattered_dots.interactions = {"click": "add"}
 
-    def interpolLines(self):
+    def interpol_lines(self):
         """
         Updates the interpolation lines according to the new points
         It creates an array of Lines for every interpolation method that is checked in the checkboxes
@@ -178,7 +180,7 @@ class InterpolVisualizer:
             if val[2].value
         ]
 
-    def update_X(self, change):
+    def update_x(self, change):
         """
         Updates the x coordinates and the plot according to the new x coordinates if the change is not None and does not contain Repetitions (Definition of a function)
         It also updates the slider according to the new x coordinates
@@ -201,7 +203,7 @@ class InterpolVisualizer:
             else:  # There are more points than before and the block adding points checkbox is checked
                 return  # Nothing to re-plot
 
-    def update_Y(self, change):
+    def update_y(self, change):
         """
         Updates the y coordinates and the plot according to the new y coordinates if the change is not None and contains the same number of points as X
         It makes new scattering and inteprolation lines and updates the plot.
@@ -226,10 +228,10 @@ class InterpolVisualizer:
                 else:
                     return  # Nothing to re-plot
 
-            self.scatterDots()
-            self.interpolLines()
+            self.scatter_dots()
+            self.interpol_lines()
 
-            toUpdate = [*self.interpolationLines, self.ScatteredDots]
+            toUpdate = [*self.interpolationLines, self.scattered_dots]
 
             self.Fig.marks = toUpdate
 
@@ -237,8 +239,8 @@ class InterpolVisualizer:
         """
         Updates the plot according to the new checkboxes
         """
-        self.update_X(None)
-        self.update_Y(None)
+        self.update_x(None)
+        self.update_y(None)
 
     def reset(self, b):
         """
@@ -258,8 +260,8 @@ class InterpolVisualizer:
         values = [min(self.x), max(self.x)]
         self.u = np.linspace(values[0], values[1], 100, endpoint=True)
 
-        self.update_X(None)
-        self.update_Y(None)
+        self.update_x(None)
+        self.update_y(None)
 
         # Reset Y scale
         self.y_sc.min = min(self.y)
@@ -284,9 +286,9 @@ class InterpolVisualizer:
             label="Y",
         )
 
-        self.initializeComponents()
-        self.interpolLines()
-        self.scatterDots()
+        self.initialize_components()
+        self.interpol_lines()
+        self.scatter_dots()
 
         # Reset Y scale
         self.y_sc.min = min(self.y)
@@ -297,16 +299,16 @@ class InterpolVisualizer:
         self.x_sc.max = max(self.x)
 
         self.Fig = bq.Figure(
-            marks=[*self.interpolationLines, self.ScatteredDots],
+            marks=[*self.interpolationLines, self.scattered_dots],
             axes=[ax_x, ax_y],
             title="Interpolation Visualizer",
             legend_location="top-right",
             animation_duration=1000,
         )
 
-        self.Toolbar = bq.Toolbar(figure=self.Fig)
+        self.toolbar = bq.Toolbar(figure=self.Fig)
 
-        self.checkboxesVbox = widgets.VBox(
+        self.checkboxes_vbox = widgets.VBox(
             [
                 widgets.HBox(
                     [
@@ -324,7 +326,7 @@ class InterpolVisualizer:
         )
         tools = widgets.VBox(
             [
-                self.checkboxesVbox,
+                self.checkboxes_vbox,
                 self.block_adding,
                 self.extrapolation,
                 widgets.HBox([self.reset_button, self.auto_zoom_button]),
@@ -333,7 +335,7 @@ class InterpolVisualizer:
 
         self.widgetsgrid = widgets.GridspecLayout(11, 7)
 
-        self.widgetsgrid[0, :] = self.Toolbar
+        self.widgetsgrid[0, :] = self.toolbar
         self.widgetsgrid[1:, :4] = self.Fig
         self.widgetsgrid[1:, 4:] = tools
 

@@ -231,68 +231,68 @@ class test_InterpolationVisualizer(TestCase):
     def test_updatePoints(self):
         self.runtest_setup()
 
-        oldX = self.interpolVisualizer.ScatteredDots.x
-        oldY = self.interpolVisualizer.ScatteredDots.y
+        oldX = self.interpolVisualizer.scattered_dots.x
+        oldY = self.interpolVisualizer.scattered_dots.y
 
         # 1. Adding a point will correctly update the scattered dots
-        self.interpolVisualizer.ScatteredDots.x = np.append(
-            self.interpolVisualizer.ScatteredDots.x, 7
+        self.interpolVisualizer.scattered_dots.x = np.append(
+            self.interpolVisualizer.scattered_dots.x, 7
         )
-        self.interpolVisualizer.ScatteredDots.y = np.append(
-            self.interpolVisualizer.ScatteredDots.y, 7
+        self.interpolVisualizer.scattered_dots.y = np.append(
+            self.interpolVisualizer.scattered_dots.y, 7
         )
         self.assertTrue(
-            len(self.interpolVisualizer.ScatteredDots.x) == len(oldX) + 1
-            and len(self.interpolVisualizer.ScatteredDots.y) == len(oldY) + 1
+            len(self.interpolVisualizer.scattered_dots.x) == len(oldX) + 1
+            and len(self.interpolVisualizer.scattered_dots.y) == len(oldY) + 1
         )
 
         # 2. Adding same Val of X will not update the scattered dots
-        self.interpolVisualizer.ScatteredDots.x = np.append(
-            self.interpolVisualizer.ScatteredDots.x, 7
+        self.interpolVisualizer.scattered_dots.x = np.append(
+            self.interpolVisualizer.scattered_dots.x, 7
         )
-        self.interpolVisualizer.ScatteredDots.y = np.append(
-            self.interpolVisualizer.ScatteredDots.y, 7
+        self.interpolVisualizer.scattered_dots.y = np.append(
+            self.interpolVisualizer.scattered_dots.y, 7
         )
         self.assertTrue(
-            len(self.interpolVisualizer.ScatteredDots.x) == len(oldX) + 1
-            and len(self.interpolVisualizer.ScatteredDots.y) == len(oldY) + 1
+            len(self.interpolVisualizer.scattered_dots.x) == len(oldX) + 1
+            and len(self.interpolVisualizer.scattered_dots.y) == len(oldY) + 1
         )
 
         # 3. Adding Y without X will not update the scattered dots
-        self.interpolVisualizer.ScatteredDots.y = np.append(
-            self.interpolVisualizer.ScatteredDots.y, 7
+        self.interpolVisualizer.scattered_dots.y = np.append(
+            self.interpolVisualizer.scattered_dots.y, 7
         )
-        self.assertTrue(len(self.interpolVisualizer.ScatteredDots.y) == len(oldY) + 1)
+        self.assertTrue(len(self.interpolVisualizer.scattered_dots.y) == len(oldY) + 1)
 
     def test_block_adding(self):
         self.runtest_setup()
 
-        oldX = self.interpolVisualizer.ScatteredDots.x
-        oldY = self.interpolVisualizer.ScatteredDots.y
+        oldX = self.interpolVisualizer.scattered_dots.x
+        oldY = self.interpolVisualizer.scattered_dots.y
 
         # 1. Adding a point will correctly update the scattered dots
-        self.interpolVisualizer.ScatteredDots.x = np.append(
-            self.interpolVisualizer.ScatteredDots.x, 7
+        self.interpolVisualizer.scattered_dots.x = np.append(
+            self.interpolVisualizer.scattered_dots.x, 7
         )
-        self.interpolVisualizer.ScatteredDots.y = np.append(
-            self.interpolVisualizer.ScatteredDots.y, 7
+        self.interpolVisualizer.scattered_dots.y = np.append(
+            self.interpolVisualizer.scattered_dots.y, 7
         )
         self.assertTrue(
-            len(self.interpolVisualizer.ScatteredDots.x) == len(oldX) + 1
-            and len(self.interpolVisualizer.ScatteredDots.y) == len(oldY) + 1
+            len(self.interpolVisualizer.scattered_dots.x) == len(oldX) + 1
+            and len(self.interpolVisualizer.scattered_dots.y) == len(oldY) + 1
         )
 
         # 2. Adding some points with "block_adding" - checkbox - will not update the scattered dots
         self.interpolVisualizer.block_adding.value = True
-        self.interpolVisualizer.ScatteredDots.x = np.append(
-            self.interpolVisualizer.ScatteredDots.x, [8, 9, 10]
+        self.interpolVisualizer.scattered_dots.x = np.append(
+            self.interpolVisualizer.scattered_dots.x, [8, 9, 10]
         )
-        self.interpolVisualizer.ScatteredDots.y = np.append(
-            self.interpolVisualizer.ScatteredDots.y, [8, 9, 10]
+        self.interpolVisualizer.scattered_dots.y = np.append(
+            self.interpolVisualizer.scattered_dots.y, [8, 9, 10]
         )
         self.assertTrue(
-            len(self.interpolVisualizer.ScatteredDots.x) == len(oldX) + 1
-            and len(self.interpolVisualizer.ScatteredDots.y) == len(oldY) + 1
+            len(self.interpolVisualizer.scattered_dots.x) == len(oldX) + 1
+            and len(self.interpolVisualizer.scattered_dots.y) == len(oldY) + 1
         )
 
     def test_extrapolationEffects(self):
@@ -323,7 +323,7 @@ class test_InterpolationVisualizer(TestCase):
     def test_updateCheckboxes(self):
         self.runtest_setup()
 
-        self.interpolVisualizer.interpolLines()
+        self.interpolVisualizer.interpol_lines()
         self.assertTrue(
             len(self.interpolVisualizer.interpolationLines)
             == len(self.interpolVisualizer.methods)
@@ -338,22 +338,22 @@ class test_InterpolationVisualizer(TestCase):
     def test_reset(self):
         self.runtest_setup()
 
-        oldX = self.interpolVisualizer.ScatteredDots.x
-        oldY = self.interpolVisualizer.ScatteredDots.y
+        oldX = self.interpolVisualizer.scattered_dots.x
+        oldY = self.interpolVisualizer.scattered_dots.y
 
         # 1. Adding a point will correctly update the scattered dots
-        self.interpolVisualizer.ScatteredDots.x = np.append(
-            self.interpolVisualizer.ScatteredDots.x, 7
+        self.interpolVisualizer.scattered_dots.x = np.append(
+            self.interpolVisualizer.scattered_dots.x, 7
         )
-        self.interpolVisualizer.ScatteredDots.y = np.append(
-            self.interpolVisualizer.ScatteredDots.y, 7
+        self.interpolVisualizer.scattered_dots.y = np.append(
+            self.interpolVisualizer.scattered_dots.y, 7
         )
 
         self.interpolVisualizer.reset(None)
 
         self.assertTrue(
-            (self.interpolVisualizer.ScatteredDots.x == oldX).all()
-            and (self.interpolVisualizer.ScatteredDots.y == oldY).all()
+            (self.interpolVisualizer.scattered_dots.x == oldX).all()
+            and (self.interpolVisualizer.scattered_dots.y == oldY).all()
         )
 
     def test_autoZoom(self):

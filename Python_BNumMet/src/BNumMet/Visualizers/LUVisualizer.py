@@ -33,7 +33,7 @@ class LUVisualizer:
         # Stack for previous steps
         self.previousSteps = []
 
-    def initializeComponents(self):
+    def initialize_components(self):
         """
         Initialize the components of the visualizer (Output, Buttons, Grid)
 
@@ -98,7 +98,7 @@ class LUVisualizer:
             tooltip="Previous Step",
             icon="arrow-left",
         )
-        self.previousButton.on_click(self.previousStep)
+        self.previousButton.on_click(self.previous_step)
 
         ## Reset button
         self.resetButton = widgets.Button(
@@ -108,28 +108,30 @@ class LUVisualizer:
             tooltip="Reset",
             icon="undo",
         )
-        self.resetButton.on_click(self.reset)
+        self.resetButton.on_click(self.reset)  # Observer for the button
 
         # MATRIX
         # ==========================================================================
-        self.buttonsMatrix = []
-        for i in range(self.A.shape[0]):
-            row = []
-            for j in range(self.A.shape[1]):
-                row.append(widgets.Button(description=f"{self.A[i,j]:.2f}"))
+        self.buttonsMatrix = []  # List of lists of buttons
+        for i in range(self.A.shape[0]):  # For each row
+            row = []  # List of buttons
+            for j in range(self.A.shape[1]):  # For each column
+                row.append(
+                    widgets.Button(description=f"{self.A[i,j]:.2f}")
+                )  # Create a button with the value of the matrix
                 row[-1].index = (i, j)
                 # Observer for the button
-                row[-1].on_click(self.matrixPivotButton)
+                row[-1].on_click(self.matrix_pivot_button)
 
-            self.buttonsMatrix.append(row)
+            self.buttonsMatrix.append(row)  # Add the row to the list of rows
 
-        self.updateButtons()
+        self.update_buttons()  # Update the buttons
 
         # GRID
         # ==========================================================================
         self.grid = widgets.GridspecLayout(6, 5)
         # Add components to grid
-        self.grid[0:3, 0:3] = widgets.VBox(
+        self.grid[0:3, 0:3] = widgets.VBox(  # Add the matrix to the grid
             list(map(lambda x: widgets.HBox(x), self.buttonsMatrix))
         )
         self.grid[0, 3] = self.previousButton
@@ -141,7 +143,7 @@ class LUVisualizer:
         self.grid[3, 2] = self.outU
         self.grid[4, :] = self.outMsg
 
-    def matrixPivotButton(self, b):
+    def matrix_pivot_button(self, b):
         """
         Observer for the buttons in the matrix, when a button is clicked, the pivot is performed and the step is updated
 
@@ -163,21 +165,21 @@ class LUVisualizer:
         self.previousSteps.append(
             (self.P.copy(), self.L.copy(), self.U.copy(), self.step, self.rank)
         )
-        with self.grid.hold_sync():
-            self.oneStep(b.index[0])
+        with self.grid.hold_sync():  # Hold the sync of the grid
+            self.one_step(b.index[0])
             # Update the buttons
-            self.updateButtons()
+            self.update_buttons()
 
-    def oneStep(self, pivot):
+    def one_step(self, pivot):
         # Apply the LU decomposition to the matrix
         self.P, self.L, self.U, self.step, self.rank, msg = interactive_lu(
             self.P, self.L, self.U, self.step, self.rank, pivot
         )
         # Update the output
-        self.updateOutput(msg)
-        self.updateButtons()
+        self.update_output(msg)
+        self.update_buttons()
 
-    def updateButtons(self):
+    def update_buttons(self):
         """
         Update the buttons in the matrix, when a step is performed, blocks the buttons that are not available anymore
 
@@ -187,38 +189,42 @@ class LUVisualizer:
         """
 
         # Update the buttons
-        for i in range(len(self.buttonsMatrix)):
-            for j in range(
-                len(self.buttonsMatrix[i])
+        for i in range(len(self.buttonsMatrix)):  # For each row
+            for j in range(  # For each column
+                len(self.buttonsMatrix[i]) if self.step == -1 else self.step + 1
             ):  # (i,j) is the index of the button
                 if self.step == -1:  # The end
                     self.buttonsMatrix[i][j].disabled = True
                     self.buttonsMatrix[i][j].style.button_color = "white"
-                    self.buttonsMatrix[i][j].style.button_color = None
 
                 # Color Green and enable if the button is on the col self.step, the row is greater or eq than the rank and it is not 0
                 elif j == self.step and i >= self.rank and self.U[i, j] != 0:
                     self.buttonsMatrix[i][j].disabled = False
                     self.buttonsMatrix[i][j].style.button_color = "LightGreen"
-                    self.buttonsMatrix[i][j].style.font_weight = "normal"
                 # Color Red and disable if the button is on the col self.step, the row is greater or eq than the rank and it is 0
                 elif j == self.step and i >= self.rank and self.U[i, j] == 0:
                     self.buttonsMatrix[i][j].disabled = True
                     self.buttonsMatrix[i][j].style.button_color = "LightCoral"
-                    self.buttonsMatrix[i][j].style.font_weight = "normal"
                 # Color white and disable if the button is on the col smaller than the step and the row is smaller than the rank
                 elif j < self.step or i < self.rank:
                     self.buttonsMatrix[i][j].disabled = True
-                    self.buttonsMatrix[i][j].style.button_color = "white"
-                    self.buttonsMatrix[i][j].style.font_weight = "normal"
-                else:
+                    self.buttonsMatrix[i][j].style.button_color = "LightGray"
+
+                else:  # Color white and disable if the button is on the col greater than the step and the row is greater than the rank
                     self.buttonsMatrix[i][j].disabled = True
                     self.buttonsMatrix[i][j].style.button_color = "white"
-                    self.buttonsMatrix[i][j].style.button_color = None
 
-                self.buttonsMatrix[i][j].description = f"{self.U[i,j]:.2f}"
+                self.buttonsMatrix[i][
+                    j
+                ].style.font_weight = "normal"  # Remove bold from the buttons
 
-    def updateOutput(self, msg):
+                self.buttonsMatrix[i][
+                    j
+                ].description = (
+                    f"{self.U[i,j]:.2f}"  # Update the description of the button
+                )
+
+    def update_output(self, msg):
         """
         Update the output widgets
 
@@ -227,29 +233,31 @@ class LUVisualizer:
         None
         """
         # Update the outputs
-        self.outP.value = pretty_print_matrix(
+        self.outP.value = pretty_print_matrix(  # Update the output of P
             self.P, simple=True, type="pMatrix", step=self.step
         )
-        self.outL.value = pretty_print_matrix(
+        self.outL.value = pretty_print_matrix(  # Update the output of L
             self.L, simple=True, type="lMatrix", step=self.step
         )
-        self.outU.value = pretty_print_matrix(
+        self.outU.value = pretty_print_matrix(  # Update the output of U
             self.U, simple=True, type="uMatrix", step=self.step
         )
-        self.rankResult.value = (
+        self.rankResult.value = (  # Update the output of the rank
             f"${self.rank}$ "
             if self.step != -1
             else f"$\\underline{{\\textbf{{{self.rank}}}}}$"
         )
 
-        self.outMsg.clear_output()
-        with self.outMsg:
+        self.outMsg.clear_output()  # Clear the output of the messages
+        with self.outMsg:  # Print the messages
             if msg != "":
-                print("Messages from system: " + msg)
+                print(
+                    "Messages from system: " + msg
+                )  # Print the message if it is not empty
             else:
-                print(" ")
+                print("")  # Print an empty line if the message is empty
 
-    def previousStep(self, b):
+    def previous_step(self, b):
         """
         Observer for the previous step button, when clicked, it returns the state to the previous step
 
@@ -263,12 +271,18 @@ class LUVisualizer:
         None
         """
         # If there are previous steps, then go back to the previous step
-        if len(self.previousSteps) > 0:
-            self.P, self.L, self.U, self.step, self.rank = self.previousSteps.pop()
-            with self.grid.hold_sync():
-                self.updateOutput("")
+        if len(self.previousSteps) > 0:  # If there are previous steps in the stack
+            (
+                self.P,
+                self.L,
+                self.U,
+                self.step,
+                self.rank,
+            ) = self.previousSteps.pop()  # Pop the previous step from the stack
+            with self.grid.hold_sync():  # Hold the sync of the grid
+                self.update_output("")  # Update the output
                 # Update the buttons
-                self.updateButtons()
+                self.update_buttons()  # Update the buttons
 
     def reset(self, b):
         """
@@ -285,19 +299,19 @@ class LUVisualizer:
         """
 
         # Reset the LU decomposition Visualizer to the initial state
-        self.step = 0
-        self.rank = 0
-        self.L = np.eye(self.A.shape[0])
-        self.U = self.A.copy()
-        self.P = np.eye(self.A.shape[0])
+        self.step = 0  # Set the step to 0
+        self.rank = 0  # Set the rank to 0
+        self.L = np.eye(self.A.shape[0])  # Set L to the identity matrix
+        self.U = self.A.copy()  # Set U to the matrix A
+        self.P = np.eye(self.A.shape[0])  # Set P to the identity matrix
 
         # Stack for previous steps
-        self.previousSteps = []
-        with self.grid.hold_sync():
+        self.previousSteps = []  # Clear the stack of previous steps
+        with self.grid.hold_sync():  # Hold the sync of the grid
             # Update the output
-            self.updateOutput("")
+            self.update_output("")  # Update the output
             # Update the buttons
-            self.updateButtons()
+            self.update_buttons()  # Update the buttons
 
     def run(self):
         """
@@ -308,12 +322,12 @@ class LUVisualizer:
         None
         """
         # Run the visualizer
-        self.initializeComponents()
+        self.initialize_components()
         # if the first column is all 0, then automatically perform the first step
         if np.all(self.U[:, 0] == 0):
             # print("First column is all 0, automatically performing the first step")
             with self.grid.hold_sync():
-                self.oneStep(0)
+                self.one_step(0)
 
         return self.grid
 

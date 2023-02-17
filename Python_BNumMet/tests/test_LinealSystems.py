@@ -464,7 +464,7 @@ class Test_LUVisualizer(TestCase):
         buttons[0].click()
         self.assertTrue(len(self.luVisualizer.previousSteps) == 1)
 
-        self.luVisualizer.previousStep(None)
+        self.luVisualizer.previous_step(None)
         self.assertEqual(self.luVisualizer.step, oldStep[0])
         self.assertTrue(np.allclose(self.luVisualizer.L, oldStep[1]))
         self.assertTrue(np.allclose(self.luVisualizer.U, oldStep[2]))
