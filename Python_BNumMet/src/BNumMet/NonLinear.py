@@ -105,7 +105,7 @@ def secant(fun, interval, stop_iters=100, iters=False, *args):
     return x1
 
 
-def newton(fun, funPrime, startPoint, stop_iters=100, iters=False, *args):
+def newton(fun, derivative, start_point, stop_iters=100, iters=False, *args):
     """
     Finds a zeros over the given interval using the Newton-Raphson method
 
@@ -123,15 +123,15 @@ def newton(fun, funPrime, startPoint, stop_iters=100, iters=False, *args):
     """
     # initializing previousX with a value not equal to startPoint
     # and xn with the startPoint to allow for iteration
-    previousX = startPoint - 1
-    xn = startPoint
+    previous_x = start_point - 1
+    xn = start_point
 
     # evaluating the function at xn
     fn = fun(xn, *args)
 
     # checking if the derivative of the function at xn is zero
     # and raising an error if it is
-    if funPrime(xn, *args) == 0:
+    if derivative(xn, *args) == 0:
         raise ValueError("The derivative of the function is zero")
 
     # initializing iteration count to zero
@@ -143,18 +143,18 @@ def newton(fun, funPrime, startPoint, stop_iters=100, iters=False, *args):
     # the number of iterations is less than the stopping criteria
     while (
         fn != 0
-        and not np.isclose(xn - previousX, 0)
-        and funPrime(xn, *args) != 0
+        and not np.isclose(xn - previous_x, 0)
+        and derivative(xn, *args) != 0
         and iterations < stop_iters
     ):
         # incrementing iteration count by one
         iterations += 1
 
         # updating previousX with the current value of xn
-        previousX = xn
+        previous_x = xn
         # updating xn with the next iteration value
         # computed using the Newton-Raphson method
-        xn = xn - fn / funPrime(xn, *args)
+        xn = xn - fn / derivative(xn, *args)
         # evaluating the function at xn
         fn = fun(xn, *args)
 
@@ -165,7 +165,7 @@ def newton(fun, funPrime, startPoint, stop_iters=100, iters=False, *args):
     return xn
 
 
-def IQI(f, xVals, stop_iters=100, iters=False, *args):
+def IQI(f, x_values, stop_iters=100, iters=False, *args):
     """
     Finds a zeros over the given interval using the Inverse Quadratic Interpolation method
 
@@ -182,7 +182,7 @@ def IQI(f, xVals, stop_iters=100, iters=False, *args):
 
     """
     # Unpacking the initial values for x0, x1 and x2
-    x0, x1, x2 = xVals
+    x0, x1, x2 = x_values
     # Initializing the iteration counter to 0
     iterations = 0
     # The main loop, where the inverse quadratic interpolation is performed

@@ -325,13 +325,13 @@ class test_InterpolationVisualizer(TestCase):
 
         self.interpolVisualizer.interpol_lines()
         self.assertTrue(
-            len(self.interpolVisualizer.interpolationLines)
+            len(self.interpolVisualizer.interpolation_lines)
             == len(self.interpolVisualizer.methods)
         )
 
         self.interpolVisualizer.checkboxes[0].value = False
         self.assertTrue(
-            len(self.interpolVisualizer.interpolationLines)
+            len(self.interpolVisualizer.interpolation_lines)
             == len(self.interpolVisualizer.methods) - 1
         )
 

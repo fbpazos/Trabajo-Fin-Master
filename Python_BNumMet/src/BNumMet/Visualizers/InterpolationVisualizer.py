@@ -8,9 +8,9 @@ import bqplot as bq
 class InterpolVisualizer:
     def __init__(
         self,
-        xInitial=list(np.arange(1, 7, 1).astype(float)),
-        yInitial=[16, 18, 21, 17, 15, 12],
-        uInitial=list(np.arange(1, 6.1, 0.1)),
+        x_initial=list(np.arange(1, 7, 1).astype(float)),
+        y_initial=[16, 18, 21, 17, 15, 12],
+        u_initial=list(np.arange(1, 6.1, 0.1)),
     ) -> None:
         """
         Initializes the Class
@@ -20,14 +20,14 @@ class InterpolVisualizer:
             - yInitial: Initial y coordinates
             - uInitial: Initial mesh
         """
-        if len(xInitial) != len(yInitial):
+        if len(x_initial) != len(y_initial):
             raise ValueError("The length of the X and Y coordinates must be the same")
 
-        self.x = np.array(xInitial).astype(float)
-        self.y = np.array(yInitial).astype(float)
-        self.u = np.array(uInitial).astype(float)
+        self.x = np.array(x_initial).astype(float)
+        self.y = np.array(y_initial).astype(float)
+        self.u = np.array(u_initial).astype(float)
 
-        self.Originals = [self.x, self.y, self.u]
+        self.originals = [self.x, self.y, self.u]
 
         self.methods = {
             "InterPoly": [polinomial, "blue"],
@@ -131,10 +131,10 @@ class InterpolVisualizer:
 
         self.x_sc.min = min(self.u)
         self.x_sc.max = max(self.u)
-        yVals = [j for line in self.interpolationLines for j in line.y]
-        if len(yVals) != 0:
-            self.y_sc.min = min(yVals)
-            self.y_sc.max = max(yVals)
+        y_values = [j for line in self.interpolation_lines for j in line.y]
+        if len(y_values) != 0:
+            self.y_sc.min = min(y_values)
+            self.y_sc.max = max(y_values)
 
     def scatter_dots(self):
         """
@@ -164,7 +164,7 @@ class InterpolVisualizer:
         Updates the interpolation lines according to the new points
         It creates an array of Lines for every interpolation method that is checked in the checkboxes
         """
-        self.interpolationLines = [
+        self.interpolation_lines = [
             bq.Lines(
                 x=self.u,
                 y=val[0](self.x, self.y, self.u),
@@ -231,9 +231,9 @@ class InterpolVisualizer:
             self.scatter_dots()
             self.interpol_lines()
 
-            toUpdate = [*self.interpolationLines, self.scattered_dots]
+            to_update = [*self.interpolation_lines, self.scattered_dots]
 
-            self.Fig.marks = toUpdate
+            self.fig.marks = to_update
 
     def update_checkboxes(self, change):
         """
@@ -246,9 +246,9 @@ class InterpolVisualizer:
         """
         Resets everything to what it was at the beginning of the program
         """
-        self.x = self.Originals[0]
-        self.y = self.Originals[1]
-        self.u = self.Originals[2]
+        self.x = self.originals[0]
+        self.y = self.originals[1]
+        self.u = self.originals[2]
 
         # Reset checkboxes
         for key, val in self.methods.items():
@@ -298,15 +298,15 @@ class InterpolVisualizer:
         self.x_sc.min = min(self.x)
         self.x_sc.max = max(self.x)
 
-        self.Fig = bq.Figure(
-            marks=[*self.interpolationLines, self.scattered_dots],
+        self.fig = bq.Figure(
+            marks=[*self.interpolation_lines, self.scattered_dots],
             axes=[ax_x, ax_y],
             title="Interpolation Visualizer",
             legend_location="top-right",
             animation_duration=1000,
         )
 
-        self.toolbar = bq.Toolbar(figure=self.Fig)
+        self.toolbar = bq.Toolbar(figure=self.fig)
 
         self.checkboxes_vbox = widgets.VBox(
             [
@@ -336,7 +336,7 @@ class InterpolVisualizer:
         self.widgetsgrid = widgets.GridspecLayout(11, 7)
 
         self.widgetsgrid[0, :] = self.toolbar
-        self.widgetsgrid[1:, :4] = self.Fig
+        self.widgetsgrid[1:, :4] = self.fig
         self.widgetsgrid[1:, 4:] = tools
 
         return self.widgetsgrid

@@ -151,7 +151,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-/Python_BNumMet/venv
+/Python_BNumMet/venv*
+
 /Python_BNumMet/__pycache__
 /Python_BNumMet/venv_Linux
 /Python_BNumMet/venv_Xiaomi

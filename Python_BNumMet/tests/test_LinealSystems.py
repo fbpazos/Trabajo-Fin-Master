@@ -411,7 +411,7 @@ class Test_LUVisualizer(TestCase):
         # Get buttons which are not disabled
         buttons = [
             button
-            for row in self.luVisualizer.buttonsMatrix
+            for row in self.luVisualizer.buttons_matrix
             for button in row
             if not button.disabled
         ]
@@ -423,7 +423,7 @@ class Test_LUVisualizer(TestCase):
         self.assertEqual(self.luVisualizer.step, 1)
         buttons2 = [
             button
-            for row in self.luVisualizer.buttonsMatrix
+            for row in self.luVisualizer.buttons_matrix
             for button in row
             if not button.disabled
         ]
@@ -452,17 +452,17 @@ class Test_LUVisualizer(TestCase):
             self.luVisualizer.P,
         )
 
-        self.assertTrue(len(self.luVisualizer.previousSteps) == 0)
+        self.assertTrue(len(self.luVisualizer.previous_steps) == 0)
         # Get buttons which are not disabled
         buttons = [
             button
-            for row in self.luVisualizer.buttonsMatrix
+            for row in self.luVisualizer.buttons_matrix
             for button in row
             if not button.disabled
         ]
         # Simulate clicking one of the buttons
         buttons[0].click()
-        self.assertTrue(len(self.luVisualizer.previousSteps) == 1)
+        self.assertTrue(len(self.luVisualizer.previous_steps) == 1)
 
         self.luVisualizer.previous_step(None)
         self.assertEqual(self.luVisualizer.step, oldStep[0])
@@ -479,7 +479,7 @@ class Test_LUVisualizer(TestCase):
 
         buttons = [
             button
-            for row in self.luVisualizer.buttonsMatrix
+            for row in self.luVisualizer.buttons_matrix
             for button in row
             if not button.disabled
         ]
@@ -487,7 +487,7 @@ class Test_LUVisualizer(TestCase):
             buttons[0].click()
             buttons = [
                 button
-                for row in self.luVisualizer.buttonsMatrix
+                for row in self.luVisualizer.buttons_matrix
                 for button in row
                 if not button.disabled
             ]
@@ -497,7 +497,7 @@ class Test_LUVisualizer(TestCase):
             all(
                 [
                     button.disabled
-                    for row in self.luVisualizer.buttonsMatrix
+                    for row in self.luVisualizer.buttons_matrix
                     for button in row
                 ]
             )
@@ -512,7 +512,7 @@ class Test_LUVisualizer(TestCase):
             any(
                 [
                     not button.disabled
-                    for row in self.luVisualizer.buttonsMatrix
+                    for row in self.luVisualizer.buttons_matrix
                     for button in row
                 ]
             )
@@ -536,7 +536,7 @@ class Test_LUVisualizer(TestCase):
         for i in range(self.A.shape[0]):
             buttons = [
                 button
-                for row in self.luVisualizer.buttonsMatrix
+                for row in self.luVisualizer.buttons_matrix
                 for button in row
                 if not button.disabled
             ]
@@ -555,7 +555,7 @@ class Test_LUVisualizer(TestCase):
                 msg=f"P@A != L@U\n{P@A} != {L@U}",
             )
 
-        endButtons = self.luVisualizer.buttonsMatrix
+        endButtons = self.luVisualizer.buttons_matrix
         for row in endButtons:
             for button in row:
                 self.assertTrue(button.disabled)
