@@ -142,9 +142,12 @@ def marsaglia_init(base, lag_r, lag_s, carry, seed_tuple):
     """
 
     global marsaglia_vars
-
-    if len(seed_tuple) != 2:  # Check if the seed_tuple is of length 2
+    if (
+        type(seed_tuple) == tuple and len(list(seed_tuple)) != 2
+    ):  # Check if the seed_tuple is of length 2
         raise ValueError("seed_tuple must be a tuple of length 2")
+    elif type(seed_tuple) != tuple:  # Check if the seed_tuple is a tuple
+        raise ValueError("seed_tuple must be a tuple ")
     if lag_r < 1 or lag_s < 1:  # Check if lag_r and lag_s are greater than 0
         raise ValueError("lag_r and lag_s must be greater than 0")
     if lag_r < lag_s:  # Check if lag_r is greater than or equal to lag_s
@@ -228,3 +231,147 @@ def marsaglia_rand(base=None, lag_r=None, lag_s=None, carry=None, seed_tuple=Non
         new_random_number
     ]  # Set the values of x_1...x_r to x_2...x_r, x_1-x_{r-s} - c
     return new_random_number  # Return the random integer
+
+
+# Mersenne Twister Random Number Generator
+mt_vars = {
+    "N": None,  # N
+    "M": None,  # M
+    "MATRIX_A": None,  # MATRIX_A
+    "UPPER_MASK": None,  # UPPER_MASK
+    "LOWER_MASK": None,  # LOWER_MASK
+    "TEMPERING_MASK_B": None,  # TEMPERING_MASK_B
+    "TEMPERING_MASK_C": None,  # TEMPERING_MASK_C
+    "mt": None,  # mt
+    "mti": None,  # mti
+}
+
+
+def clear_mt_vars():
+    """
+    This function clears the global dictionary mtVars
+
+    Returns
+    -------
+    None
+    """
+    global mt_vars
+    mt_vars = {
+        "N": None,  # N
+        "M": None,  # M
+        "MATRIX_A": None,  # MATRIX_A
+        "UPPER_MASK": None,  # UPPER_MASK
+        "LOWER_MASK": None,  # LOWER_MASK
+        "TEMPERING_MASK_B": None,  # TEMPERING_MASK_B
+        "TEMPERING_MASK_C": None,  # TEMPERING_MASK_C
+        "mt": None,  # mt
+        "mti": None,  # mti
+    }
+
+
+def sgenrand(seed):
+    """
+    This function initializes the global dictionary mtVars
+
+    Parameters
+    ----------
+    seed : int
+        The seed
+
+    Returns
+    -------
+    None
+    """
+    global mt_vars
+    mt_vars = {
+        "N": 624,  # N
+        "M": 397,  # M
+        "MATRIX_A": 0x9908B0DF,  # MATRIX_A
+        "UPPER_MASK": 0x80000000,  # UPPER_MASK
+        "LOWER_MASK": 0x7FFFFFFF,  # LOWER_MASK
+        "TEMPERING_MASK_B": 0x9D2C5680,  # TEMPERING_MASK_B
+        "TEMPERING_MASK_C": 0xEFC60000,  # TEMPERING_MASK_C
+        "mt": [0] * 624,  # mt
+        "mti": 624 + 1,  # mti
+        "TEMPERING_SHIFT_U": lambda y: y >> 11,  # TEMPERING_SHIFT_U(y)
+        "TEMPERING_SHIFT_S": lambda y: y << 7,  # TEMPERING_SHIFT_S(y)
+        "TEMPERING_SHIFT_T": lambda y: y << 15,  # TEMPERING_SHIFT_T(y)
+        "TEMPERING_SHIFT_L": lambda y: y >> 18,  # TEMPERING_SHIFT_L(y)
+    }
+
+    mt_vars["mt"][0] = seed & 0xFFFFFFFF
+    mt_vars["mti"] = 1
+    while mt_vars["mti"] < mt_vars["N"]:
+        mt_vars["mt"][mt_vars["mti"]] = (
+            69069 * mt_vars["mt"][mt_vars["mti"] - 1]
+        ) & 0xFFFFFFFF
+        mt_vars["mti"] += 1
+
+
+def genrand(seed: int = None):
+    global mt_vars
+
+    # Check if the global dictionary mtVars is initialized
+    if (
+        mt_vars["N"] is None
+        or mt_vars["M"] is None
+        or mt_vars["MATRIX_A"] is None
+        or mt_vars["UPPER_MASK"] is None
+        or mt_vars["LOWER_MASK"] is None
+        or mt_vars["TEMPERING_MASK_B"] is None
+        or mt_vars["TEMPERING_MASK_C"] is None
+        or mt_vars["mt"] is None
+        or mt_vars["mti"] is None
+    ):
+        if seed is None:
+            seed = 4357
+        if type(seed) is not int:
+            raise ValueError("The seed must be an integer")
+        sgenrand(seed)
+
+    mag01 = [0x0, mt_vars["MATRIX_A"]]
+
+    # Generate N words at one time
+    if mt_vars["mti"] >= mt_vars["N"]:
+        kk = 0
+        y = None
+
+        while kk < mt_vars["N"] - mt_vars["M"]:
+            y = (mt_vars["mt"][kk] & mt_vars["UPPER_MASK"]) | (
+                mt_vars["mt"][kk + 1] & mt_vars["LOWER_MASK"]
+            )  # y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK)
+            mt_vars["mt"][kk] = (
+                mt_vars["mt"][kk + mt_vars["M"]] ^ (y >> 1) ^ mag01[y & 0x1]
+            )  # mt[kk] = mt[kk + M] ^ (y >> 1) ^ mag01[y & 0x1]
+            kk += 1
+
+        while kk < mt_vars["N"] - 1:
+            y = (mt_vars["mt"][kk] & mt_vars["UPPER_MASK"]) | (
+                mt_vars["mt"][kk + 1] & mt_vars["LOWER_MASK"]
+            )  # y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK)
+            mt_vars["mt"][kk] = (
+                mt_vars["mt"][kk + (mt_vars["M"] - mt_vars["N"])]
+                ^ (y >> 1)
+                ^ mag01[y & 0x1]
+            )  # mt[kk] = mt[kk + (M - N)] ^ (y >> 1) ^ mag01[y & 0x1]
+            kk += 1
+
+        y = (mt_vars["mt"][mt_vars["N"] - 1] & mt_vars["UPPER_MASK"]) | (
+            mt_vars["mt"][0] & mt_vars["LOWER_MASK"]
+        )  # y = (mt[N - 1] & UPPER_MASK) | (mt[0] & LOWER_MASK)
+        mt_vars["mt"][mt_vars["N"] - 1] = (
+            mt_vars["mt"][mt_vars["M"] - 1] ^ (y >> 1) ^ mag01[y & 0x1]
+        )  # mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ mag01[y & 0x1]
+
+        mt_vars["mti"] = 0  # mti = 0
+
+    y = mt_vars["mt"][mt_vars["mti"]]  # y = mt[mti++]
+    mt_vars["mti"] += 1
+
+    # Tempering
+    y ^= mt_vars["TEMPERING_SHIFT_U"](y)
+    y ^= mt_vars["TEMPERING_SHIFT_S"](y) & mt_vars["TEMPERING_MASK_B"]
+    y ^= mt_vars["TEMPERING_SHIFT_T"](y) & mt_vars["TEMPERING_MASK_C"]
+    y ^= mt_vars["TEMPERING_SHIFT_L"](y)
+
+    return y / 0xFFFFFFFF

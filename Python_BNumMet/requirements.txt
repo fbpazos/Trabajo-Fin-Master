@@ -3,6 +3,8 @@ bqplot
 matplotlib
 ipywidgets
 jupyter
+ipykernel
 nbextensions
 scipy
 seaborn
+nistrng

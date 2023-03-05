@@ -1,5 +1,6 @@
 from BNumMet import Random
 from unittest import TestCase
+import numpy as np
 
 
 class test_Random(TestCase):
@@ -73,29 +74,37 @@ class test_Random(TestCase):
         self.assertEqual(Random.marsaglia_vars["args"], [1, 2])
 
         Random.clear_marsaglia_vars()
-        # Exception: seedTuple must be a tuple of length 2
-        with self.assertRaises(Exception):
+        # ValueError: seedTuple must be a tuple of length 2
+        with self.assertRaises(ValueError):
             Random.marsaglia_init(2, 3, 5, 1, seed_tuple=1)
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValueError):
             Random.marsaglia_init(2, 3, 5, 1, seed_tuple=(1, 2, 3))
+        with self.assertRaises(ValueError):
+            Random.marsaglia_init(2, 3, 5, 1, seed_tuple=(1,))
 
-        # Exception: lag_r and lag_s must be greater than 0
-        with self.assertRaises(Exception):
-            Random.marsaglia_init(2, 0, 5, 1)
-        with self.assertRaises(Exception):
-            Random.marsaglia_init(2, 3, 0, 1)
+        # ValueError: lag_r and lag_s must be greater than 0
+        with self.assertRaises(ValueError):
+            Random.marsaglia_init(2, 0, 5, 1, seed_tuple=(1, 2))
+        with self.assertRaises(ValueError):
+            Random.marsaglia_init(2, 3, 0, 1, seed_tuple=(1, 2))
 
-        # Exception: lag_r must be greater than or equal to lag_s
-        with self.assertRaises(Exception):
-            Random.marsaglia_init(2, 3, 2, 1)
+        # ValueError: lag_r must be greater than or equal to lag_s
+        with self.assertRaises(ValueError):
+            Random.marsaglia_init(2, 2, 3, 1, seed_tuple=(1, 2))
 
-        # Exception: carry must be 0 or 1
-        with self.assertRaises(Exception):
-            Random.marsaglia_init(2, 3, 5, 2)
+        # ValueError: carry must be 0 or 1
+        with self.assertRaises(ValueError):
+            Random.marsaglia_init(2, 5, 3, 24, seed_tuple=(1, 2))
 
-        # Exception: base must be greater than 0
-        with self.assertRaises(Exception):
-            Random.marsaglia_init(0, 3, 5, 1)
+        # ValueError: base must be greater than 0
+        with self.assertRaises(ValueError):
+            Random.marsaglia_init(0, 5, 3, 1, seed_tuple=(1, 2))
+
+        # Check if lag_r and lag_s are greater than 0
+        with self.assertRaises(ValueError):
+            Random.marsaglia_init(2, -1, 5, 1, seed_tuple=(1, 2))
+        with self.assertRaises(ValueError):
+            Random.marsaglia_init(2, 3, 0, 1, seed_tuple=(1, 2))
 
     def test_marsaglia_default(self):
         # Tests that Marsaglia Variables are initialized to default values
@@ -144,3 +153,84 @@ class test_Random(TestCase):
                 )
             )
             self.assertEqual(testArr[: len(resArr)], resArr)
+
+    def test_mt_start(self):
+        Random.clear_mt_vars()
+        # Tests that Mersenne Variables are initialized to None
+        mt_vars = {
+            "N": None,  # N
+            "M": None,  # M
+            "MATRIX_A": None,  # MATRIX_A
+            "UPPER_MASK": None,  # UPPER_MASK
+            "LOWER_MASK": None,  # LOWER_MASK
+            "TEMPERING_MASK_B": None,  # TEMPERING_MASK_B
+            "TEMPERING_MASK_C": None,  # TEMPERING_MASK_C
+            "mt": None,  # mt
+            "mti": None,  # mti
+        }
+        self.assertEqual(Random.mt_vars, mt_vars)
+
+        Random.clear_mt_vars()
+        # Tests that Mersenne Variables are initialized correctly
+        Random.sgenrand(1)
+        self.assertEqual(Random.mt_vars["N"], 624)
+        self.assertEqual(Random.mt_vars["M"], 397)
+        self.assertEqual(Random.mt_vars["MATRIX_A"], 0x9908B0DF)
+        self.assertEqual(Random.mt_vars["UPPER_MASK"], 0x80000000)
+        self.assertEqual(Random.mt_vars["LOWER_MASK"], 0x7FFFFFFF)
+        self.assertEqual(Random.mt_vars["TEMPERING_MASK_B"], 0x9D2C5680)
+        self.assertEqual(Random.mt_vars["TEMPERING_MASK_C"], 0xEFC60000)
+        self.assertEqual(Random.mt_vars["mt"][0], 1 & 0xFFFFFFFF)
+        self.assertEqual(Random.mt_vars["mti"], 624)  # mti
+
+    def test_mt_init(self):
+        Random.clear_mt_vars()
+        # Tests that Mersenne Variables are initialized correctly
+        Random.genrand(1)
+        self.assertEqual(Random.mt_vars["N"], 624)
+        self.assertEqual(Random.mt_vars["M"], 397)
+        self.assertEqual(Random.mt_vars["MATRIX_A"], 0x9908B0DF)
+        self.assertEqual(Random.mt_vars["UPPER_MASK"], 0x80000000)
+        self.assertEqual(Random.mt_vars["LOWER_MASK"], 0x7FFFFFFF)
+        self.assertEqual(Random.mt_vars["TEMPERING_MASK_B"], 0x9D2C5680)
+        self.assertEqual(Random.mt_vars["TEMPERING_MASK_C"], 0xEFC60000)
+        self.assertNotEqual(
+            Random.mt_vars["mt"][0], 1 & 0xFFFFFFFF
+        )  # Not equal because it has executed the generator
+        self.assertEqual(
+            Random.mt_vars["mti"], 1
+        )  # Must be 1 because it has executed the generator
+
+        Random.clear_mt_vars()
+        # Initialize not with Int
+        with self.assertRaises(ValueError):
+            Random.genrand("1")
+
+    def test_mt_randomness(self):
+        from nistrng import (
+            pack_sequence,
+            check_eligibility_all_battery,
+            run_all_battery,
+            SP800_22R1A_BATTERY,
+        )
+
+        Random.clear_mt_vars()
+
+        sequence = np.array(
+            [Random.genrand() * 0xFFFFFFFF for i in range(100)], dtype=np.uint64
+        )
+
+        binary_sequence: np.ndarray = pack_sequence(sequence)
+
+        # Check the eligibility of the test and generate an eligible battery from the default NIST-sp800-22r1a battery
+        eligible_battery: dict = check_eligibility_all_battery(
+            binary_sequence, SP800_22R1A_BATTERY
+        )
+
+        # Test the sequence on the eligible tests
+        results = run_all_battery(binary_sequence, eligible_battery, False)
+        # Print results one by one
+        results = [result.passed for result, _ in results if result.passed]
+
+        self.assertEqual(len(results), 10)
+        self.assertTrue(all(results))
