@@ -119,15 +119,18 @@ def f_Matlab(x, f):
     return f(x)
 
 
-def experiment(scipyTol, bnmTol):
+def experiment(scipyTol, bnmTol, evalFunc=1):
     global iterScipy, iterBNM, iterMatlab
 
     intervalsWidthIncrease = [i for i in range(1, 10000)]
 
-    def create_function(i):
-        return lambda x: x**i
+    def create_function(i, evalFunc):
+        if evalFunc == 1:
+            return lambda x: (x - 1) * x ** (i - 1)
+        else:
+            return lambda x: (x - 0.1) * x ** (i - 1)
 
-    functions = [(i, create_function(i)) for i in range(3, 10, 2)]
+    functions = [(i, create_function(i, evalFunc=evalFunc)) for i in range(1, 10, 2)]
 
     results = {"Scipy": {}, "BNM": {}, "Matlab": {}}
 
@@ -142,11 +145,12 @@ def experiment(scipyTol, bnmTol):
             scipyFun = lambda x: f_scipy(x, f)
             BNMFun = lambda x: f_BNM(x, f)
             matlabFun = lambda x: f_Matlab(x, f)
-
-            x1 = brentq(scipyFun, -1 - i, 1.1 + i, maxiter=1000, xtol=scipyTol)
-            x2 = zBrentDekker(BNMFun, (-1 - i, 1.1 + i), stop_iters=1000, tol=bnmTol)
+            a = 0.08
+            b = 1.1 + i
+            x1 = brentq(scipyFun, a, b, maxiter=1000, xtol=scipyTol)
+            x2 = zBrentDekker(BNMFun, (a, b), stop_iters=1000, tol=bnmTol)
             x3 = zBrentDekkerMAT(
-                matlabFun, (-1 - i, 1.1 + i), stopIters=1000
+                matlabFun, (a, b), stopIters=1000
             )  # No tolerance for matlab
 
             results["Scipy"][order].append((i, iterScipy, x1))
@@ -156,16 +160,32 @@ def experiment(scipyTol, bnmTol):
     return results
 
 
+for i in [1, 2]:
+    with open(f"./Demos/Timings/Results/NonLinear/NonLinearTimings_{i}.json", "w") as f:
+        json.dump(experiment(1e-15, 1e-15, evalFunc=i), f, indent=4)
+
+    with open(
+        f"./Demos/Timings/Results/NonLinear/NonLinearTimings_diffTol_bnm_{i}.json", "w"
+    ) as f:
+        json.dump(experiment(1e-15, 1e-17, evalFunc=i), f, indent=4)
+
+    with open(
+        f"./Demos/Timings/Results/NonLinear/NonLinearTimings_diffTol_scipy_{i}.json",
+        "w",
+    ) as f:
+        json.dump(experiment(1e-17, 1e-15, evalFunc=i), f, indent=4)
+"""
 # Save results to file
-with open("./Demos/Timings/Results/NonLinear/NonLinearTimings.json", "w") as f:
+with open("./Demos/Timings/Results/NonLinear/NonLinearTimings_2.json", "w") as f:
     json.dump(experiment(1e-15, 1e-15), f, indent=4)
 
 with open(
-    "./Demos/Timings/Results/NonLinear/NonLinearTimings_diffTol_bnm.json", "w"
+    "./Demos/Timings/Results/NonLinear/NonLinearTimings_diffTol_bnm_2.json", "w"
 ) as f:
     json.dump(experiment(1e-15, 1e-17), f, indent=4)
 
 with open(
-    "./Demos/Timings/Results/NonLinear/NonLinearTimings_diffTol_scipy.json", "w"
+    "./Demos/Timings/Results/NonLinear/NonLinearTimings_diffTol_scipy_2.json", "w"
 ) as f:
     json.dump(experiment(1e-17, 1e-15), f, indent=4)
+"""

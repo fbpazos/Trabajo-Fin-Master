@@ -28,11 +28,11 @@ This document contains results of the code analysis of BNumMet
 
 Reliability | Security | Security Review | Maintainability |
 :---:|:---:|:---:|:---:
-C | A | A | A |
+A | A | A | A |
 
 ### Quality gate status
 
-| Quality Gate Status | ERROR |
+| Quality Gate Status | OK |
 |-|-|
 
 Metric|Value
@@ -48,7 +48,7 @@ Duplicated Lines (%) on New Code|OK
 
 Coverage | Duplications | Comment density | Median number of lines of code per file | Adherence to coding standard |
 :---:|:---:|:---:|:---:|:---:
-97.6 % | 0.0 % | 44.6 % | 212.0 | 99.6 %
+98.0 % | 0.0 % | 44.5 % | 214.0 | 99.7 %
 
 ### Tests
 
@@ -60,7 +60,7 @@ Total | Success Rate | Skipped | Errors | Failures |
 
 Reliability|Security|Maintainability|Total
 ---|---|---|---
-0d 0h 2min|-|0d 3h 43min|0d 3h 45min
+-|-|0d 3h 43min|0d 3h 43min
 
 
 ### Metrics Range
@@ -68,14 +68,14 @@ Reliability|Security|Maintainability|Total
 \ | Cyclomatic Complexity | Cognitive Complexity | Lines of code per file | Coverage | Comment density (%) | Duplication (%)
 :---|:---:|:---:|:---:|:---:|:---:|:---:
 Min | 0.0 | 0.0 | 0.0 | 95.5 | 22.2 | 0.0
-Max | 287.0 | 264.0 | 1869.0 | 100.0 | 74.1 | 0.0
+Max | 288.0 | 266.0 | 1873.0 | 100.0 | 74.1 | 0.0
 
 ### Volume
 
 Language|Number
 ---|---
-Python|1869
-Total|1869
+Python|1873
+Total|1873
 
 
 ## Issues
@@ -84,7 +84,7 @@ Total|1869
 
 Type / Severity|INFO|MINOR|MAJOR|CRITICAL|BLOCKER
 ---|---|---|---|---|---
-BUG|0|0|1|0|0
+BUG|0|0|0|0|0
 VULNERABILITY|0|0|0|0|0
 CODE_SMELL|0|47|9|4|0
 
@@ -93,7 +93,6 @@ CODE_SMELL|0|47|9|4|0
 
 Name|Description|Type|Severity|Number
 ---|---|---|---|---
-Exceptions should not be created without being raised|Creating a new Exception without actually raising it has no effect and is probably due to a mistake. <br /> Noncompliant Code Example <br />  <br /> def func(x): <br />     if not isinstance(x, int): <br />         TypeError("Wrong type for parameter 'x'. func expects an integer")  # Noncompliant <br />     if x &lt; 0: <br />         ValueError  # Noncompliant <br />     return x + 42 <br />  <br /> Compliant Solution <br />  <br /> def func(x): <br />     if not isinstance(x, int): <br />         raise TypeError("Wrong type for parameter 'x'. func expects an integer") <br />     if x &lt; 0: <br />         raise ValueError <br />     return x + 42 <br />  <br /> See <br />  <br />    Python documentation - Raising Exceptions  <br /> |BUG|MAJOR|1
 String literals should not be duplicated|Duplicated string literals make the process of refactoring error-prone, since you must be sure to update all occurrences. <br /> On the other hand, constants can be referenced from many places, but only need to be updated in a single place. <br /> Noncompliant Code Example <br /> With the default threshold of 3: <br />  <br /> def run(): <br />     prepare("this is a duplicate")  # Noncompliant - "this is a duplicate" is duplicated 3 times <br />     execute("this is a duplicate") <br />     release("this is a duplicate") <br />  <br /> Compliant Solution <br />  <br /> ACTION_1 = "action1" <br />  <br /> def run(): <br />     prepare(ACTION_1) <br />     execute(ACTION_1) <br />     release(ACTION_1) <br />  <br /> Exceptions <br /> No issue will be raised on: <br />  <br />    duplicated string in decorators  <br />    strings with less than 5 characters  <br />    strings with only letters, numbers and underscores  <br />  <br />  <br /> @app.route("/api/users/", methods=['GET', 'POST', 'PUT']) <br /> def users(): <br />     pass <br />  <br /> @app.route("/api/projects/", methods=['GET', 'POST', 'PUT'])  # Compliant <br /> def projects(): <br />     pass <br /> |CODE_SMELL|CRITICAL|1
 Cognitive Complexity of functions should not be too high|Cognitive Complexity is a measure of how hard the control flow of a function is to understand. Functions with high Cognitive Complexity will be <br /> difficult to maintain. <br /> See <br />  <br />    Cognitive Complexity  <br /> |CODE_SMELL|CRITICAL|3
 Sections of code should not be commented out|Programmers should not comment out code as it bloats programs and reduces readability. <br /> Unused code should be deleted and can be retrieved from source control history if required.|CODE_SMELL|MAJOR|7

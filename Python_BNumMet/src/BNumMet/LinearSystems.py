@@ -124,7 +124,7 @@ def interactive_lu(p, l, u, col, row, pivot_row):
         row += 1  # Increment the row index
     msg = ""
     while row < u.shape[0] and col + 1 < u.shape[1] and all(u[row:, col + 1] == 0):
-        msg = "The matrix is singular, the next column is all zeros, so we skip it and move to the next row if and repeat until we find a non-zero element or reach the end of the matrix."
+        msg = "The matrix is not FULL RANK, that is, the column below the diagonal is zero therefore we move to the next column until we find a non-zero column"
         col += 1
 
     return (

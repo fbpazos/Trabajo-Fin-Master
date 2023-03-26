@@ -6,7 +6,7 @@
         {
             "label": "Sonar",
             "type": "shell",
-            "command": ".\\Utilities\\SonarScanner.bat && java -jar .\\Utilities\\ReportGenerator.jar -p BNumMet -o ./Report/%date:~6,4%-%date:~3,2%-%date:~0,2% && explorer \"http://localhost:9000/dashboard?id=BNumMet\" ",
+            "command": ".\\Utilities\\SonarScanner.bat && java -jar .\\Utilities\\ReportGenerator.jar -p BNumMet  -s http://127.1.0.1:9000 -o ./Report/%date:~6,4%-%date:~3,2%-%date:~0,2% && explorer \"http://localhost:9000/dashboard?id=BNumMet\" ",
             "group": {
                 "kind": "build",
                 "isDefault": true

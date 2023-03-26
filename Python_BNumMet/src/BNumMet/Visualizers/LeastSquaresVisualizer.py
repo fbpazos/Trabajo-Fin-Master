@@ -235,6 +235,7 @@ class LSPVisualizer:
             x=self.x,
             y=y,
             scales={"x": self.x_sc, "y": self.y_sc},
+            colors=["red"],
         )  # Create the curve object
 
         err = np.linalg.norm(
@@ -259,7 +260,7 @@ class LSPVisualizer:
         c : np.array
             The coefficients of the exponential function in the form of c[0]*x^c[1]
         """
-        self.remarks.value = f"The exponential function that best fits the data is: <br>$y = {c[0]:.4f}e^{{{c[1]:.4f}x}}$ <br><br> The coefficients of the exponential function are: <br>$c_0 = {c[0]:.4f}$ <br>$c_1 = {c[1]:.4f}$ <br><br> The error is: {err:.4f}$"
+        self.remarks.value = f"The exponential function that best fits the data is: <br>$y = {c[0]:.4f}e^{{{c[1]:.4f}x}}$ <br><br> The coefficients of the exponential function are: <br>$c_0 = {c[0]:.4f}$ <br>$c_1 = {c[1]:.4f}$ <br><br> The error is: ${err:.4f}$"
 
     def polynomial_lsp(self, degree):
         """
@@ -295,6 +296,7 @@ class LSPVisualizer:
             x=self.x,
             y=y,
             scales={"x": self.x_sc, "y": self.y_sc},
+            colors=["red"],
         )  # Create the curve object
 
         err = np.linalg.norm(self.y_data_lsp - A @ c)  # Calculate the error
@@ -390,6 +392,7 @@ class LSPVisualizer:
             x=self.x,
             y=y,
             scales={"x": self.x_sc, "y": self.y_sc},
+            colors=["red"],
         )  # Make the curve object
 
         err = np.linalg.norm(self.y_data_lsp - A @ c)  # Calculate the error
@@ -420,11 +423,15 @@ class LSPVisualizer:
             remarks += (
                 "+" if np.sign(c[2 * i - 1]) >= 0 else ""
             )  # sign of the coefficient of the sine function
-            remarks += f"{c[2*i - 1]:.2f}\sin({i}x)"  # coefficient of the sine function
+            remarks += (
+                f"{c[2*i - 1]:.2f}\sin({i}\cdot x)"  # coefficient of the sine function
+            )
             remarks += (
                 "+" if np.sign(c[2 * i]) >= 0 else ""
             )  # sign of the coefficient of the cosine function
-            remarks += f"{c[2*i]:.2f}\cos({i}x)"  # coefficient of the cosine function
+            remarks += (
+                f"{c[2*i]:.2f}\cos({i}\cdot x)"  # coefficient of the cosine function
+            )
 
         remarks += "$ <br><br> The coefficients of the sine and cosine function are: <br> "  # Second part of the remarks (coefficients)
 

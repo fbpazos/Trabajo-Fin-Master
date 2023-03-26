@@ -230,7 +230,7 @@ def marsaglia_rand(base=None, lag_r=None, lag_s=None, carry=None, seed_tuple=Non
     marsaglia_vars["args"] = marsaglia_vars["args"][1:] + [
         new_random_number
     ]  # Set the values of x_1...x_r to x_2...x_r, x_1-x_{r-s} - c
-    return new_random_number  # Return the random integer
+    return new_random_number / marsaglia_vars["base"]  # Return the random number
 
 
 # Mersenne Twister Random Number Generator

@@ -1,6 +1,7 @@
 from BNumMet import Random
 from unittest import TestCase
 import numpy as np
+from BNumMet.Visualizers.RandomVisualizer import RandomVisualizer
 
 
 class test_Random(TestCase):
@@ -129,20 +130,20 @@ class test_Random(TestCase):
 
     def test_marsaglia_rand_formula(self):
         testArr = [
-            0,
+            0.0,
             1,
-            9,
-            1,
-            7,
-            4,
-            2,
-            2,
-            0,
-            2,
-            8,
-            3,
-            4,
-            9,
+            0.9,
+            0.1,
+            0.7,
+            0.4,
+            0.2,
+            0.2,
+            0.0,
+            0.2,
+            0.8,
+            0.3,
+            0.4,
+            0.9,
         ]  # According to Bibliography
         resArr = [0, 1]
         Random.clear_marsaglia_vars()
@@ -233,4 +234,60 @@ class test_Random(TestCase):
         results = [result.passed for result, _ in results if result.passed]
 
         self.assertGreaterEqual(len(results), 9)
-        
+
+
+class test_RandomVisualizer(TestCase):
+    def test_initiate(self):
+        # Tests that the RandomVisualizer is initiated correctly without any arguments
+        # No Exceptions should be raised
+        rv = RandomVisualizer()
+
+        self.assertTrue(len(rv.generatedNumbers) == 0)
+        self.assertEqual(rv.iterations, 100)
+
+        random_float = rv.randGenerator()
+        self.assertGreaterEqual(random_float, 0)
+        self.assertLessEqual(random_float, 1)
+
+    def test_initiate_with_args(self):
+        # Tests that the RandomVisualizer is initiated correctly with arguments
+        # No Exceptions should be raised
+        rv = RandomVisualizer(randGenerator=Random.marsaglia_rand)
+
+        self.assertTrue(len(rv.generatedNumbers) == 0)
+        self.assertEqual(rv.iterations, 100)
+
+        random_float = rv.randGenerator()
+        self.assertGreaterEqual(random_float, 0)
+        self.assertLessEqual(random_float, 1)
+
+    def test_run_no_exception(self):
+        # Tests that the RandomVisualizer is initiated correctly without any arguments
+        # No Exceptions should be raised
+        rv = RandomVisualizer()
+        rv.run()
+
+    def test_play(self):
+        # Tests that the RandomVisualizer is initiated correctly without any arguments
+        # No Exceptions should be raised
+        rv = RandomVisualizer()
+        rv.run()
+        rv.runButton.click()
+
+        self.assertTrue(rv.currentValue - np.pi < 0.7)
+
+    def test_int_text(self):
+        # Tests that the RandomVisualizer is initiated correctly without any arguments
+        # No Exceptions should be raised
+        rv = RandomVisualizer()
+        rv.run()
+
+        rv.iterationsWidget.value = 10000
+        self.assertEqual(
+            rv.iterationsWidget.value, 1000
+        )  # Should be 1000 because of the max value
+
+        rv.iterationsWidget.value = 0
+        self.assertEqual(
+            rv.iterationsWidget.value, 1
+        )  # Should be 1 because of the min value
