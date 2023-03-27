@@ -1,0 +1,184 @@
+\section{Linear Systems}
+\subsection{LU Decomposition}
+\subsubsection{Description}
+One of the pillars of linear algebra is the LU decomposition, a mathematical procedure that factors a given matrix into a combination of lower and upper triangle matrices. Its real applications include solving systems of linear equations and inverting matrices, to name a few. This is why it is helpful in both academic and practical applications of linear algebra.
+
+The well-known Gaussian elimination method, which reduces the initial matrix to a more manageable shape for further analysis, is at the core of the LU decomposition. The matrix is progressively reduced to an upper triangular shape through a succession of row operations, such as adding a multiple of one row to another or switching two rows. The top triangular matrix U is the outcome of the procedure, and the bottom triangular matrix L is built from the factors used in the elimination process.
+
+A permutation matrix P is used to keep track of the row interchanges made during the elimination procedure to make sure the decomposition is carried out properly. To preserve the integrity of the decomposition, this matrix is started as the identity matrix and updated whenever a row is switched for another row.
+
+Prior to beginning the LU decomposition, the Python method verifies that the input matrix is square and raises a ValueError if it is not. The input matrix is copied, converted to an integer, and the permutation matrix P is then initialized as the identity matrix. The matrix is then subjected to the Gaussian elimination procedure, and the outcome of the function is the upper triangular matrix U, lower triangular matrix L, and permutation matrix P.
+
+Overall, the LU decomposition is an effective method that all
+
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwIn{A square matrix $A$}
+    \KwOut{A permutation matrix $P$, lower triangular matrix $L$, and upper triangular matrix $U$}
+    \If{$A$ is not square}{
+        \textbf{raise} ValueError("Matrix must be square")
+    }
+    $n \gets$ number of rows/columns of $A$ \\
+    $A' \gets$ a copy of $A$ converted to float \\
+    $P \gets$ identity matrix of size $n$ \\
+    \For{$col \gets 1$ \KwTo $n$}{
+        $maximum\_index \gets$ index of row with largest pivot element in column $col$ \\
+        \If{$A'[maximum\_index, col] \neq 0$}{
+            swap rows $col$ and $maximum\_index$ in $A'$ and $P$ \\
+            \For{$row \gets col+1$ \KwTo $n$}{
+                $multiplier \gets A'[row, col] / A'[col, col]$ \\
+                $A'[row, col+1:n] \gets A'[row, col+1:n] - multiplier \times A'[col, col+1:n]$ \\
+                $A'[row, col] \gets multiplier$
+            }
+        }
+    }
+    $L \gets$ lower triangular part of $A'$ with ones on the diagonal \\
+    $U \gets$ upper triangular part of $A'$ \\
+    \KwRet{$P$, $L$, $U$}
+    \caption{LU decomposition using Gaussian elimination}
+\end{algorithm}
+\subsubsection{BNumMet Examples}
+\paragraph{Example 1}{
+\begin{lstlisting}[language=Python]
+from BNumMet.LinearSystems import 
+
+\end{lstlisting}
+}
+
+\subsection{Forward Substitution}
+\begin{algorithm}[H]
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\Input{$lhs$: np.array, a lower triangular matrix\newline $rhs$: np.array, a vector}
+\Output{$x$: np.array, a vector}
+$lhs \gets$ lhs.astype(float);\\
+$rhs \gets$ np.copy(rhs).astype(float);\\
+$n \gets$ lhs.shape[0];\\
+$x \gets$ np.zeros(n);\\
+
+\For{$row \gets 0$ \KwTo $n-1$}{
+$rhs[row] \gets $ rhs[row] - \text{dot}(lhs[row, :row], x[:row]);\\
+$x[row] \gets $rhs[row] / lhs[row, row];
+}
+\KwRet{$x$};
+\caption{Forward Substitution}
+\end{algorithm}
+\subsubsection{BNumMet Examples}
+\paragraph{Example 1}{
+\begin{lstlisting}[language=Python]
+from BNumMet.LinearSystems import 
+
+\end{lstlisting}
+}
+
+
+
+\subsection{Backward substitution}
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwIn{lhs: an upper triangular matrix, rhs: a vector}
+\KwOut{x: a vector}
+\SetKwProg{Fn}{Function}{:}{end}
+\Fn{backward\_substitution(lhs, rhs)}{
+$lhs \gets$ lhs.astype(float);\\
+$rhs \gets$ np.copy(rhs).astype(float);\\
+$n \gets$ lhs.shape[0];\\
+$x \gets$ np.zeros(n);\\
+
+\For{row $\leftarrow$ n-1 \KwTo 0}{
+  $rhs[row] \gets$ rhs[row] - np.dot(lhs[row, row+1:], x[row+1:])\;
+  $x[row] \gets$ rhs[row] / lhs[row, row]\;
+}
+\KwRet{x}\;
+}
+\caption{Solve $Ax = b$ using backward substitution}
+\end{algorithm}
+\subsubsection{BNumMet Examples}
+\paragraph{Example 1}{
+\begin{lstlisting}[language=Python]
+from BNumMet.LinearSystems import 
+
+\end{lstlisting}
+}
+
+\subsection{LU Solver}
+\begin{algorithm}[H] 
+\SetAlgoLined
+\KwIn{A: a square matrix, b: a vector}
+\KwOut{x: a vector}
+\SetKwProg{Fn}{Function}{:}{end}
+\Fn{lu\_solve(A, b)}{
+$P, L, U \gets $ lu(A);\\
+$y \gets $ forward\_substitution(L, P $\times$ b);\\
+$x \gets $ backward\_substitution(U, y);\\
+\KwRet{x};
+}
+\caption{Solve $Ax = b$ using LU factorization}
+\end{algorithm}
+\subsubsection{BNumMet Examples}
+\paragraph{Example 1}{
+\begin{lstlisting}[language=Python]
+from BNumMet.LinearSystems import 
+
+\end{lstlisting}
+}
+
+\subsection{QR Decomposition}
+\begin{algorithm}[H]{
+\SetAlgoLined
+\KwIn{$A$: an $m \times n$ matrix}
+\KwOut{$Q$: an orthogonal matrix, $R$: an upper triangular matrix}
+$m, n \gets \text{shape}(A)$;\\
+$R \gets A$;\\
+$\text{qs} \gets \text{zeros}(m, n)$;\\
+\For{$k \in [0, n)$}{
+    $x \gets R_{k:, k}$;\\
+    $q_k \gets \text{sign}(x_0) \times \text{norm}(x) \times I_{x, 1} + x$;\\
+    $q_k \gets q_k / \text{norm}(q_k)$; \\
+    $R_{k:, k:} \gets R_{k:, k:} - 2q_k(q_k^TR_{k:, k:})$ ;\\
+}
+$ Q \gets I_m $;\\
+\For{$k \in [n-1, -1]$}{
+    $q_k \gets \text{qs}_{k:, k}$\;
+    $Q_{k:, k:} \gets Q_{k:, k:} - 2q_k(q_k^TQ_{k:, k:})$\;
+}
+$R \gets \text{triu}(R)$\;
+\Return{$Q, R$}\;
+}
+\caption{QR Factorization using Householder reflections}
+\end{algorithm}
+\subsubsection{BNumMet Examples}
+\paragraph{Example 1}{
+\begin{lstlisting}[language=Python]
+from BNumMet.LinearSystems import 
+
+\end{lstlisting}
+}
+
+\subsection{QR Solver}
+\begin{algorithm}[H]
+\SetAlgoLined
+\DontPrintSemicolon
+\KwIn{$A$: a square matrix, $b$: a vector}
+\KwOut{$x$: a vector}
+$R \gets$ copy of $A$ as float matrix;\\
+$b \gets$ copy of $b$ as float vector;\\
+$n \gets$ number of rows in $A$;\\
+\For{$k \gets 0$ \KwTo $n-1$}{
+$x \gets$ $k$-th column of $R$ starting from $k$-th row;\\
+$q_k \gets \text{Householder vector of } x$;\\
+$R_{k:,k:} \gets R_{k:,k:} - 2 q_k (q_k^T R_{k:,k:})$;\\
+$b_{k:} \gets b_{k:} - 2 q_k (q_k^T b_{k:})$;\\
+}
+$R \gets$ upper triangular part of $R$;\\
+$x \gets \text{backward substitution}(R[:n,:n], b[:n])$\\
+\Return $x$
+\caption{Solve the system Ax = b using QR factorization without calculating Q, only R}
+\end{algorithm}
+\subsubsection{BNumMet Examples}
+\paragraph{Example 1}{
+\begin{lstlisting}[language=Python]
+from BNumMet.LinearSystems import 
+
+\end{lstlisting}
+}
