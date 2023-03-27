@@ -44,7 +44,7 @@ jobs:
         pip install flake8 
 
         # Requirements
-        pip install -r requirements.txt -r requirements_dev.txt
+        pip install -r requirements.txt
 
     - name: Lint with flake8
       run: |
