@@ -5,6 +5,7 @@ from random import randint
 from unittest import TestCase
 
 import numpy as np
+import pytest
 
 from BNumMet.LinearSystems import (
     backward_substitution,

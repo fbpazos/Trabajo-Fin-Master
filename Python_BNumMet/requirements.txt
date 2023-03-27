@@ -1,7 +1,7 @@
 numpy
 bqplot
 matplotlib
-ipywidgets
+ipywidgets==8.0.4
 jupyter
 ipykernel
 nbextensions
