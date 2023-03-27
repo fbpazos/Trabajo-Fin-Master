@@ -7,4 +7,3 @@ ipykernel
 nbextensions
 scipy
 seaborn
-nistrng
