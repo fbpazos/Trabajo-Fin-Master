@@ -328,6 +328,7 @@ def genrand(seed: int = None):
         if type(seed) is not int:
             raise ValueError("The seed must be an integer")
         sgenrand(seed)
+        print("Initialized the global dictionary mtVars with seed " + str(seed))
 
     mag01 = [0x0, mt_vars["MATRIX_A"]]
 

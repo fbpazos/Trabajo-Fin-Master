@@ -107,7 +107,7 @@ def interactive_lu(p, l, u, col, row, pivot_row):
         int(np.argmax(np.abs(u[row:, col])) + row) if row > pivot_row else pivot_row
     )
     # Skip if the pivot is zero
-    if u[index_maximum, col] != 0:
+    if not np.isclose(u[index_maximum, col], 0):
         # Swap the rows of A and P for those with the largest pivot element
         u = permute(u, index_maximum, row)
         p = permute(p, index_maximum, row)
@@ -123,7 +123,9 @@ def interactive_lu(p, l, u, col, row, pivot_row):
         u[row + 1 :, col] = 0  # Set the elements below the pivot to zero
         row += 1  # Increment the row index
     msg = ""
-    while row < u.shape[0] and col + 1 < u.shape[1] and all(u[row:, col + 1] == 0):
+    while (
+        row < u.shape[0] and col + 1 < u.shape[1] and np.allclose(u[row:, col + 1], 0)
+    ):
         msg = "The matrix is not FULL RANK, that is, the column below the diagonal is zero therefore we move to the next column until we find a non-zero column"
         col += 1
 

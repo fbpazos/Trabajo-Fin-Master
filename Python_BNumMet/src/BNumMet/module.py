@@ -16,7 +16,7 @@ def pretty_print_matrix(matrix):
         The string representation of the matrix in a pretty format for LaTeX
     """
     # Initialize the string to represent the matrix
-    res = " \\begin\{pmatrix\}\n"
+    res = " \\begin{pmatrix}\n"
 
     # Loop through each row in the matrix
     for row in matrix:
@@ -24,7 +24,7 @@ def pretty_print_matrix(matrix):
         res += " & ".join([str(x) for x in row]) + "\\\\\n"
 
     # Close the matrix representation
-    res += "\end\{pmatrix\}"
+    res += "\end{pmatrix}"
 
     # Return the final string
     return res
@@ -55,3 +55,16 @@ def sort_interpolation_values(x, y):
     y = y[ind]  # Sort the y coordinates
 
     return x, y
+
+
+def pretty_plua(P, L, U, A):
+    res = f""" 
+    \\begin{{array}}{{lll}}
+        P = {pretty_print_matrix(P)} & L = {pretty_print_matrix(L)} & U = {pretty_print_matrix(U)} 
+        \\\\
+        &&
+        \\\\
+        P\cdot A = {pretty_print_matrix(P@A)} &  L\cdot U = {pretty_print_matrix(L@U)}
+    \\end{{array}}
+    """
+    return res

@@ -19,14 +19,28 @@ $w \gets w * (u - x_j) / (x_i - x_j)$;
 $v \gets v + w * y_i$
 }
 \Return $v$
-\caption{Computes the polynomial interpolation of a set of points (x,y) at the points u}
+\caption{Polinomial Interpolation}
 \end{algorithm}
 \subsubsection{BNumMet Examples}
 \paragraph{Example 1}{
 \begin{lstlisting}[language=Python]
-from BNumMet.Interpolation import 
-
+from BNumMet.Interpolation import polinomial
+x = list(np.arange(1, 7, 1))
+y = [16, 18, 21, 17, 15, 12]
+u = np.arange(0.8, 6.2, 0.05)
+v = polinomial(x, y, u)
+# Plotting using Matplotlib
+plt.plot(u, v, "b-", label="Interpolated")
+plt.plot(x, y, "ro", label="Original Points")
+plt.legend()
+plt.show()
 \end{lstlisting}
+\begin{figure}[H]
+    \centering
+    \includegraphics{Include/Images/Thesis/Documentation/Interpolation/Polinomial Example 1.png}
+    \caption{Polinomial Linear Example 1}
+    \label{fig:Polinomial Linear Example 1}
+\end{figure}
 }
 \subsection{Piecewise Linear Interpolation}
 
@@ -51,8 +65,29 @@ $k[x_j <= u] \gets j$
 $s \gets u - x_k$\\
 $v \gets y_k + s * \Delta_k$\\
 \Return $v$
-\caption{Computes the piecewise lineal interpolation of a set of points (x,y) at the points u}
+\caption{Piecewise Linear Interpolation}
 \end{algorithm}
+\subsubsection{BNumMet Examples}
+\paragraph{Example 1}{
+\begin{lstlisting}[language=Python]
+from BNumMet . Interpolation import piecewise_linear
+x = list(np.arange(1, 7, 1))
+y = [16, 18, 21, 17, 15, 12]
+u = np.arange(0.8, 6.2, 0.05)
+v = piecewise_linear(x, y, u)
+# Plotting using Matplotlib
+plt.plot(u, v, "b-", label="Interpolated")
+plt.plot(x, y, "ro", label="Original Points")
+plt.legend()
+plt.show()
+\end{lstlisting}
+\begin{figure}[H]
+    \centering
+    \includegraphics{Include/Images/Thesis/Documentation/Interpolation/PieceWise Linear Example 1.png}
+    \caption{PieceWise Linear Example 1}
+    \label{fig:PieceWise Linear Example 1}
+\end{figure}
+}
 
 \subsection{Piecewise Cubic Hermite Interpolation Polynomial (P.C.H.I.P.)}
 The pchip function is a Python implementation of the Piecewise Cubic Hermite Interpolation Polynomial (P.C.H.I.P.) based on an old Fortran program by Fritsch and Carlson.
@@ -103,9 +138,30 @@ $d \leftarrow 0$
 \KwRet{$d$}
 }
 \caption{Piecewise Cubic Hermite Interpolation}
-
-
 \end{algorithm}
+
+\subsubsection{BNumMet Examples}
+\paragraph{Example 1}{
+\begin{lstlisting}[language=Python]
+from BNumMet.Interpolation import pchip
+x = list(np.arange(1, 7, 1))
+y = [16, 18, 21, 17, 15, 12]
+u = np.arange(0.8, 6.2, 0.05)
+v = pchip(x, y, u)
+# Plotting using Matplotlib
+plt.plot(u, v, "b-", label="Interpolated")
+plt.plot(x, y, "ro", label="Original Points")
+plt.legend()
+plt.show()
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics{Include/Images/Thesis/Documentation/Interpolation/PCHIP Example 1.png}
+    \caption{PCHIP Example 1}
+    \label{fig:PCHIP Example 1}
+\end{figure}
+}
 
 \subsection{Piecewise cubic Interpolatory Splines}
 \begin{algorithm}[H]
@@ -147,3 +203,26 @@ $res \leftarrow \mathrm{lu\_solve}(\mathrm{diag}(a, -1) + \mathrm{diag}(b) + \ma
 }
 \caption{Piecewise cubic Interpolatory Splines}
 \end{algorithm}
+
+\subsubsection{BNumMet Examples}
+\paragraph{Example 1}{
+\begin{lstlisting}[language=Python]
+from BNumMet.Interpolation import splines
+x = list(np.arange(1, 7, 1))
+y = [16, 18, 21, 17, 15, 12]
+u = np.arange(0.8, 6.2, 0.05)
+v = splines(x, y, u)
+# Plotting using Matplotlib
+plt.plot(u, v, "b-", label="Interpolated")
+plt.plot(x, y, "ro", label="Original Points")
+plt.legend()
+plt.show()
+\end{lstlisting}
+\begin{figure}[H]
+    \centering
+    \includegraphics{Include/Images/Thesis/Documentation/Interpolation/Splines Example 1.png}
+    \caption{Splines Example 1}
+    \label{fig:Splines Example 1}
+\end{figure}
+
+}

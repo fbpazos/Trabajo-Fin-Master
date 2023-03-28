@@ -117,7 +117,7 @@ class LUVisualizer:
             row = []  # List of buttons
             for j in range(self.A.shape[1]):  # For each column
                 row.append(
-                    widgets.Button(description=f"{self.A[i,j]:.2f}", disabled=True)
+                    widgets.Button(description=f"{self.A[i,j]:.3f}", disabled=True)
                 )  # Create a button with the value of the matrix
                 row[-1].index = (i, j)
                 # Observer for the button
@@ -198,11 +198,15 @@ class LUVisualizer:
                 if self.step == -1:  # The end
                     self.buttons_matrix[i][j].style.button_color = "white"
                 # Color Green and enable if the button is on the col self.step, the row is greater or eq than the rank and it is not 0
-                elif j == self.step and i >= self.rank and self.U[i, j] != 0:
+                elif (
+                    j == self.step
+                    and i >= self.rank
+                    and not np.isclose(self.U[i, j], 0)
+                ):
                     self.buttons_matrix[i][j].disabled = False
                     self.buttons_matrix[i][j].style.button_color = "LightGreen"
                 # Color Red and disable if the button is on the col self.step, the row is greater or eq than the rank and it is 0
-                elif j == self.step and i >= self.rank and self.U[i, j] == 0:
+                elif j == self.step and i >= self.rank and np.isclose(self.U[i, j], 0):
                     self.buttons_matrix[i][j].style.button_color = "LightCoral"
                 # Color white and disable if the button is on the col smaller than the step and the row is smaller than the rank
                 elif j < self.step or i < self.rank:
@@ -217,7 +221,7 @@ class LUVisualizer:
                 self.buttons_matrix[i][
                     j
                 ].description = (
-                    f"{self.U[i,j]:.2f}"  # Update the description of the button
+                    f"{self.U[i,j]:.3f}"  # Update the description of the button
                 )
 
     def update_output(self, msg):

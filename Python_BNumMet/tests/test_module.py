@@ -5,7 +5,7 @@ from BNumMet.module import pretty_print_matrix, sort_interpolation_values
 class test_module(TestCase):
     def test_PrettyPrint(self):
         matrix = [[1, 2], [3, 4]]
-        stringRes = """ \\begin\\{pmatrix\\}1 & 2\\\\3 & 4\\\\\\end\\{pmatrix\\}"""
+        stringRes = """ \\begin{pmatrix}1 & 2\\\\3 & 4\\\\\\end{pmatrix}"""
 
         self.assertTrue(pretty_print_matrix(matrix).replace("\n", "") == stringRes)
 

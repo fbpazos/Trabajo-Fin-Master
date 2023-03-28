@@ -1,15 +1,5 @@
 \section{Linear Systems}
 \subsection{LU Decomposition}
-\subsubsection{Description}
-One of the pillars of linear algebra is the LU decomposition, a mathematical procedure that factors a given matrix into a combination of lower and upper triangle matrices. Its real applications include solving systems of linear equations and inverting matrices, to name a few. This is why it is helpful in both academic and practical applications of linear algebra.
-
-The well-known Gaussian elimination method, which reduces the initial matrix to a more manageable shape for further analysis, is at the core of the LU decomposition. The matrix is progressively reduced to an upper triangular shape through a succession of row operations, such as adding a multiple of one row to another or switching two rows. The top triangular matrix U is the outcome of the procedure, and the bottom triangular matrix L is built from the factors used in the elimination process.
-
-A permutation matrix P is used to keep track of the row interchanges made during the elimination procedure to make sure the decomposition is carried out properly. To preserve the integrity of the decomposition, this matrix is started as the identity matrix and updated whenever a row is switched for another row.
-
-Prior to beginning the LU decomposition, the Python method verifies that the input matrix is square and raises a ValueError if it is not. The input matrix is copied, converted to an integer, and the permutation matrix P is then initialized as the identity matrix. The matrix is then subjected to the Gaussian elimination procedure, and the outcome of the function is the upper triangular matrix U, lower triangular matrix L, and permutation matrix P.
-
-Overall, the LU decomposition is an effective method that all
 
 \begin{algorithm}[H]
     \SetAlgoLined
@@ -27,7 +17,7 @@ Overall, the LU decomposition is an effective method that all
             swap rows $col$ and $maximum\_index$ in $A'$ and $P$ \\
             \For{$row \gets col+1$ \KwTo $n$}{
                 $multiplier \gets A'[row, col] / A'[col, col]$ \\
-                $A'[row, col+1:n] \gets A'[row, col+1:n] - multiplier \times A'[col, col+1:n]$ \\
+                $A'[row, col+1:n] \gets A'[row, col+1:n] - multiplier \cdot A'[col, col+1:n]$ \\
                 $A'[row, col] \gets multiplier$
             }
         }
@@ -40,10 +30,24 @@ Overall, the LU decomposition is an effective method that all
 \subsubsection{BNumMet Examples}
 \paragraph{Example 1}{
 \begin{lstlisting}[language=Python]
-from BNumMet.LinearSystems import 
+from BNumMet.LinearSystems import lu
+A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
+P, L, U = lu(A)
+display(P, L, U)
 
+>> P = array([ [1., 0., 0.],
+               [0., 0., 1.],
+               [0., 1., 0.]])
+>> L = array([ [ 1.  ,  0.  ,  0.  ],
+               [ 0.5 ,  1.  ,  0.  ],
+               [-0.3 , -0.04,  1.  ]])
+>> U = array([ [10. , -7. ,  0. ],
+               [ 0. ,  2.5,  5. ],
+               [ 0. ,  0. ,  6.2]])
+           
 \end{lstlisting}
 }
+
 
 \subsection{Forward Substitution}
 \begin{algorithm}[H]
@@ -66,8 +70,14 @@ $x[row] \gets $rhs[row] / lhs[row, row];
 \subsubsection{BNumMet Examples}
 \paragraph{Example 1}{
 \begin{lstlisting}[language=Python]
-from BNumMet.LinearSystems import 
+from BNumMet.LinearSystems import lu, forward_substitution
+A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
+b = np.array([7, 4, 6])
+P, L, U = lu(A)
+solution_aux = forward_substitution(L, P @ b)
+display(solution_aux)
 
+>> solution_aux = array([7. , 2.5, 6.2])
 \end{lstlisting}
 }
 
@@ -91,13 +101,20 @@ $x \gets$ np.zeros(n);\\
 }
 \KwRet{x}\;
 }
-\caption{Solve $Ax = b$ using backward substitution}
+\caption{Backward Substitution}
 \end{algorithm}
 \subsubsection{BNumMet Examples}
 \paragraph{Example 1}{
 \begin{lstlisting}[language=Python]
-from BNumMet.LinearSystems import 
+from BNumMet.LinearSystems import lu, forward_substitution, backward_substitution
+A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
+b = np.array([7, 4, 6])
+P, L, U = lu(A)
+solution_aux = forward_substitution(L, P @ b)
+solution = backward_substitution(U, solution_aux)
+display(solution)
 
+>> solution = array([ 0., -1.,  1.])
 \end{lstlisting}
 }
 
@@ -113,13 +130,18 @@ $y \gets $ forward\_substitution(L, P $\times$ b);\\
 $x \gets $ backward\_substitution(U, y);\\
 \KwRet{x};
 }
-\caption{Solve $Ax = b$ using LU factorization}
+\caption{LU Solver}
 \end{algorithm}
 \subsubsection{BNumMet Examples}
 \paragraph{Example 1}{
 \begin{lstlisting}[language=Python]
-from BNumMet.LinearSystems import 
+from BNumMet.LinearSystems import lu_solve
+A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
+b = np.array([7, 4, 6])
+solution = lu_solve(A, b)
+display(solution)
 
+>> solution = array([ 0., -1.,  1.])
 \end{lstlisting}
 }
 
@@ -150,8 +172,23 @@ $R \gets \text{triu}(R)$\;
 \subsubsection{BNumMet Examples}
 \paragraph{Example 1}{
 \begin{lstlisting}[language=Python]
-from BNumMet.LinearSystems import 
+from BNumMet.LinearSystems import qr_factorization
+A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
+Q, R = qr_factorization(A)
+display(Q,R)
 
+>> Q  = 
+    array([[-0.86386843,  0.42560398,  0.26943013],
+           [ 0.25916053, -0.08312578,  0.96225045],
+           [-0.43193421, -0.90108343,  0.03849002]])
+>> R = 
+    array([[-11.5758369 ,   6.99733425,  -0.6047079 ],
+           [  0.        ,  -2.24439601,  -5.00417184],
+           [  0.        ,   0.        ,   5.96595278]])
+>> Q@R = 
+    array([[ 1.00000000e+01, -7.00000000e+00, -4.67352964e-16],
+           [-3.00000000e+00,  2.00000000e+00,  6.00000000e+00],
+           [ 5.00000000e+00, -1.00000000e+00,  5.00000000e+00]])
 \end{lstlisting}
 }
 
@@ -173,12 +210,18 @@ $b_{k:} \gets b_{k:} - 2 q_k (q_k^T b_{k:})$;\\
 $R \gets$ upper triangular part of $R$;\\
 $x \gets \text{backward substitution}(R[:n,:n], b[:n])$\\
 \Return $x$
-\caption{Solve the system Ax = b using QR factorization without calculating Q, only R}
+\caption{QR Solver}
 \end{algorithm}
 \subsubsection{BNumMet Examples}
 \paragraph{Example 1}{
 \begin{lstlisting}[language=Python]
-from BNumMet.LinearSystems import 
+from BNumMet.LinearSystems import qr_solve
+A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
+b = np.array([7, 4, 6])
+solution = qr_solve(A, b)
+display(solution)
 
+>> solution = 
+        array([-3.83634647e-16, -1.00000000e+00,  1.00000000e+00])
 \end{lstlisting}
 }

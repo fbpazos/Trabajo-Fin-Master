@@ -680,7 +680,6 @@ class NonLinearVisualizer:
             pqPair = (p2, q2)
 
         if p1 > 0:
-            print("FUCKED")
             q1 = -q1
         else:
             p1 = -p1
