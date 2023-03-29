@@ -387,10 +387,7 @@ class NonLinearVisualizer:
             secant = bq.Lines(
                 x=self.x,
                 y=[
-                    self.fb
-                    + (self.f(self.nextPoints_addition[1]) - self.fb)
-                    / (self.nextPoints_addition[1] - self.b)
-                    * (x - self.b)
+                    self.fb + (self.fa - self.fb) / (self.a - self.b) * (x - self.b)
                     for x in self.x
                 ],
                 scales={"x": self.x_sc, "y": self.y_sc},

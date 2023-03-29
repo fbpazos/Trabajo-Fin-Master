@@ -329,13 +329,11 @@ class LSPVisualizer:
             if i == 0:
                 remarks += f"{c[i]:.2f}"  # If the coefficient is 0, don't add x^{i}
             elif i == 1:
-                remarks += (
-                    "+" if np.sign(c[i]) >= 0 else "" + f"{c[i]:.2f}x"
-                )  # If the coefficient is 1, don't add power
+                remarks += ("+" if np.sign(c[i]) >= 0 else "") + f"{c[i]:.2f}x"
+                # If the coefficient is 1, don't add power
             else:
-                remarks += (
-                    "+" if np.sign(c[i]) >= 0 else "" + f"{c[i]:.2f}x^{i}"
-                )  # If the coefficient is 1, add power
+                remarks += ("+" if np.sign(c[i]) >= 0 else "") + f"{c[i]:.2f}x^{i}"
+                # If the coefficient is 1, add power
 
         remarks += "$ <br><br> The coefficients of the polynomial function are: <br> "  # Second line of the remarks
 
