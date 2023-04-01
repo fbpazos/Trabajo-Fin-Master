@@ -56,5 +56,5 @@ jobs:
       with:
         user: __token__
         password: ${{ secrets.PYPI_TOKEN }}
-        packages-dir: Python_BNumMet/
+        packages-dir: Python_BNumMet/dist/
       
