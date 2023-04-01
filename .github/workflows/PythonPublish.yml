@@ -19,6 +19,7 @@ on:
       - 'Python_BNumMet/Demos/**'
       - 'Python_BNumMet/tests/**'
       - '.github/workflows/PythonTests.yml'
+      - '.github/workflows/PythonPublish.yml'
       - 'Python_BNumMet/requirements.txt'
       - 'Python_BNumMet/setup.py'
       - 'Python_BNumMet/pyproject.toml'
@@ -47,9 +48,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install build
     - name: Build package
-      run: python -m build
+      run: |
+        cd "Python_BNumMet" 
+        python -m build
     - name: Publish package
-      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
+      uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
-        password: ${{ PYPITOKEN }}
+        password: ${{ secrets.PYPI_TOKEN }}
+        packages-dir: Python_BNumMet/dist/
+      

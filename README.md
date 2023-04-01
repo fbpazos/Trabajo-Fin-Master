@@ -1,7 +1,7 @@
 # Trabajo Fin Master
 ![Python Tests](https://github.com/fbellidopazos/Trabajo-Fin-Master/actions/workflows/PythonTests.yml/badge.svg)
 ![Latex Compile](https://github.com/fbellidopazos/Trabajo-Fin-Master/actions/workflows/LatexCompilation.yml/badge.svg)
-
+[![Upload Python Package](https://github.com/fbpazos/Trabajo-Fin-Master/actions/workflows/PythonPublish.yml/badge.svg)](https://github.com/fbpazos/Trabajo-Fin-Master/actions/workflows/PythonPublish.yml)
 Github Repository for the Master's Thesis of Applied and Computational Mathematics at Universidad Carlos III de Madrid
  
  ## Folder Structure
