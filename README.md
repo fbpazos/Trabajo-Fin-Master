@@ -2,6 +2,7 @@
 ![Python Tests](https://github.com/fbellidopazos/Trabajo-Fin-Master/actions/workflows/PythonTests.yml/badge.svg)
 ![Latex Compile](https://github.com/fbellidopazos/Trabajo-Fin-Master/actions/workflows/LatexCompilation.yml/badge.svg)
 [![Upload Python Package](https://github.com/fbpazos/Trabajo-Fin-Master/actions/workflows/PythonPublish.yml/badge.svg)](https://github.com/fbpazos/Trabajo-Fin-Master/actions/workflows/PythonPublish.yml)
+
 Github Repository for the Master's Thesis of Applied and Computational Mathematics at Universidad Carlos III de Madrid
  
  ## Folder Structure
@@ -18,3 +19,4 @@ Github Repository for the Master's Thesis of Applied and Computational Mathemati
 It is important to remark that every time someone updates this repository two things will activate
 1. Python Tests - Github Action : It will run all tests inside "Python_BNumMet" in 3 OS with 4 Python Versions
 2. Latex Compile - Github Action : It will latex-compule the main file and output it in the action
+3. Python Publish - Github Action : It will upload the project to the Pypi directory
