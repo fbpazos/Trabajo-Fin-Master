@@ -1,10 +1,66 @@
 \chapter{Software Development: The Process}
-\subsection{Organisation framework}
+This project focuses on the creation of BNumMet, a library that implements scientific numerical methods in conjunction with a graphical interface to help students learn, because of this it is essential to mention the software development process. 
 
-\section{Software Monitoring}
+To do this, we will discuss the following aspects:
+\begin{enumerate}
+    \item Initiation: We will establish the framework where BNumMet will take place, indicating the basic roles and the development framework; in the latter, we will briefly comment on the choice of development tools
+    \item Planning: We will discuss the scope of the project, the timeline, required resources, and milestones that indicate progress toward completion.
+    \item Execution: We will provide comments on how the project came together structurally and outline the steps this phase must undergo, that is, the quality check and monitoring of \& control.
+\end{enumerate}
 
-\section{Software configuration management}
-\subsection{Development Versioning}
-\subsection{Final Versioning}
 
-\section{Quality Assurance}
+\section{Initiation}
+\subsection{Roles}
+The lack of a team per se implied that we had to 'simulate' the different roles of an average software development team.
+To such an extent, we had the following division.
+\begin{itemize}
+    \item \textbf{Juan Manuel Pérez} will execute the client roles providing information on what the end-students and professors would have wanted
+    \item \textbf{Fernando Bellido} will be doing the roles of project manager, developer, QA tester, and configuration manager.
+\end{itemize}
+
+\subsection{Life Cycle Model}
+The development of BNumMet will be using an \textbf{Iterative Life Cycle}, that is, a cycle in which at every iteration we provide the client or end-user with an improved version upon the objections and remark of the previous iteration until all needs are met.
+
+The reason of this choice was predicated on the fact that the requirements were not or could not be a priori estimated, we only had the main objectives which were general and not specific, they also were client-oriented, that is, the client after each iteration would provide suggestions on what he wanted or how he would want to have the end-product.
+
+\subsection{Development framework}
+The main framework for the code during the development will be \textbf{Python $\ge$ 3.8}, the reason of this choice was mainly the work previously done by the end-of-degree's thesis by Juan Camilo in which he stated the wide use of python in the current job market but also because the fundamental goal of the project is to help students, that is why, even though Cleve Moller has made an extensive work on Matlab, Matlab Home Licence is priced at 119€, a price that a vast majority of users will not be able to pay if they want to learn independently, not to mention that as per discussed in Camilo's work most business use python or other programming languages leaving Matlab in the background. Overall, the choice of Python remains a decent choice for its practicality, readability, future-proof, and economical value.
+
+\subsection{Licensing}
+It is imperative that we discuss the license so that the project is backed by law. We must first address the general consensus on the categories of licenses.
+\begin{enumerate}
+    \item Copyleft Licenses: Persistent licenses, publishing source code is required
+        \begin{enumerate}
+            \item Strong Copyleft: Viral effect (The aggregation of licenses will prioritize the strongest license to remain)\\
+            i.e. GNU General Public License
+            \item Weak Copyleft: Without Viral effect\\
+            i.e GNU Lesser General Public License
+        \end{enumerate}
+    \item Permissive Licenses: Non-persistent, without viral effect, publishing source code is not required\\
+    i.e. MIT, Apache 2.0
+\end{enumerate}
+
+Since our project idea was based from the previous but ended up not using Camilo's code, we are not legally required to use the same license, and due to the nature of the project, we will proceed to use the \textit{GNU Affero General Public License v3.0 (AGPL} which is the strongest copyleft license, the GNU Affero General Public License v3.0 (AGPLv3) is a free, copyleft license for software and other kinds of works. It is specifically designed to ensure cooperation with the community in the case of network server software \cite{fsf1}. The license is intended to guarantee users’ freedom to share and change all versions of a program, ensuring that it remains free software for all its users \cite{fsf1}.
+
+
+The AGPLv3 was created to address a specific problem: how to protect a user’s rights when the program is being utilized over a network \cite{fsf2}. Its terms effectively consist of the terms of GPLv3, with an additional paragraph in section 13 to allow users who interact with the licensed software over a network to receive the source for that program \cite{fsf3}. 
+
+
+The idea behind it is to address the flaw other licenses have which is, in sort, take profit of the software, modify it internally without having the need to make these changes available to the public.
+
+\section{Planning}
+As per stated, we are using an Iterative Life Cycle, therefore we must indicate how are we going to iterate, in the development of this project the iterations were made every two weeks, with the exceptions of weeks which were incompatible with the correct development of the Master's courses.
+
+Every iteration will have the project manager presenting the changes made to the client, then the client will provide some feedback and next steps. In between iterations, the feedback must be implemented as well as ensuring its quality.
+
+There is only one time limitation, which is the end of the Master and the deadline for the thesis to be presented, therefor every iteration must be ended before April 2023, from then on, only small fixes will be applied to the project.
+\section{Execution}
+\subsection{Quality Assurance}
+\subsection{Monitoring and Control}
+\subsubsection{Software configuration management}
+
+ \paragraph{Development Versioning}
+ \paragraph{End-User Versioning}
+
+
+

@@ -1,48 +1,67 @@
-# BasicLineAlg
+# BNumMet
 - Title: BNumMet
-- Author: [Fernando Bellido Pazos](fbellidopazos@gmail.com)
+- Author: Fernando Bellido Pazos [fbellidopazos@gmail.com](fbellidopazos@gmail.com)
 - Date: 2022
-- Version: 0.1
-- License: ??
-- Description: Basic Numerical Methods For Python 3
+- Version: 1.0.0
+- License: GNU Affero General Public License v3.0 (AGPL-3.0)
+- Description: A Scholar implementation of Numerical Methods in Python enhanced with interactive widgets
 - Tags: 
-- URL: [Trabajo Fin de Master](https://github.com/fbellidopazos/Trabajo-Fin-Master)
+- URL: [Python_BNumMet](https://github.com/fbpazos/Trabajo-Fin-Master/tree/main/Python_BNumMet)
+
+## Table of Contents
+- [BNumMet](#bnummet)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Examples](#examples)
+  - [Tests or development](#tests-or-development)
+    - [Linux](#linux)
+    - [Windows](#windows)
+    - [Python Side](#python-side)
+  - [BNumMet - Structure](#bnummet---structure)
+  - [SonarQube](#sonarqube)
+
 
 ## Introduction
+[Insert introduction here]
 
 ## Installation
 In order to install the package, you can use the following command:
 
 ```bash
-pip install bnummet # This is not yet available
+pip install BNumMet
 ```
 
 
 ## Usage
-
+[Insert usage instructions here]
 
 
 ## Examples
+[Insert code examples here]
 
 
-## Tests
-We recommend to use a virtual environment to install the package. To do so, you can use the following commands:
 
-Linux
+## Tests or development
+We recommend using a virtual environment to install the package. To do so, you can use the following commands:
+
+### Linux 
 -------
 ```bash
 python3 -m venv venv # Create a virtual environment
 source venv/bin/activate # Activate the virtual environment
 ```
-Windows
+### Windows
 -------
 ```cmd
 python -m venv venv # Create a virtual environment
 venv\Scripts\activate # Activate the virtual environment
 ```
-Python Side
+### Python Side
 -------
-Then, you can test the package using the following command:
+
+After downloading the repository, you can install the package and run the tests using the following commands:
 
 
 ```bash
@@ -60,8 +79,9 @@ python tests/__init__.py # Run tests
 # It will generate a coverage report in the Tests/coverage folder in different formats (html, xml, lcov). 
 # It will also format the code using the Black Library (I Might've forgottent to do so :) )
 ```
-----
+
 ## BNumMet - Structure
+----
 ```bash
 .
 ├── Demos # Contains the Jupyter Notebooks with the demos
@@ -126,8 +146,8 @@ python tests/__init__.py # Run tests
 ## SonarQube
 In order to run the SonarQube analysis, you can use the following command:
 
-Start the SonarQube server (Docker Version)
--------
+### Start the SonarQube server (Docker Version)
+
 ```bash
 docker run -d --name sonarqube -p 9000:9000 sonarqube
 ```
@@ -135,37 +155,45 @@ Since its running locally, you can access the server at http://localhost:9000, a
 Additionally, for simplicity with login go to Administration -> Security -> Disable "Force User Authentication". (This is not recommended for production environments)
 
 
-Run the analysis
--------
+### Run the analysis
+
+Remeber the credentials here are admin/1234 but you can change them in the sonarqube server.
+
 Linux 
 ```bash
-docker run --rm -ti -v "%cd%":"/usr/src" --link sonarqube newtmitch/sonar-scanner sonar-scanner /
-    -Dsonar.projectName="BNumMet" /
-    -Dsonar.projectKey="BNumMet" /
-    -Dsonar.sources="src/BNumMet/" /
-    -Dsonar.python.version=3 /
-    -Dsonar.python.xunit.reportPath="tests/Reports/testsReport.xml"  /
-    -Dsonar.python.coverage.reportPaths="tests/Reports/Coverage/xml/coverage.xml" /
-    -Dsonar.scm.disabled=true /
-    -Dsonar.tests="tests" /
-    -Dsonar.test.inclusions="tests/**" /
-    -Dsonar.test.exclusions="tests/Reports/Coverage/**"
+docker run --rm -ti -v "$(pwd)":/usr/src \
+--link sonarqube newtmitch/sonar-scanner sonar-scanner \
+-Dsonar.login="admin" \
+-Dsonar.password="1234" \
+-Dsonar.projectName="BNumMet" \
+-Dsonar.projectKey="BNumMet" \
+-Dsonar.sources="src/BNumMet/" \
+-Dsonar.python.version=3 \
+-Dsonar.python.xunit.reportPath="tests/Reports/testsReport.xml" \
+-Dsonar.python.coverage.reportPaths="tests/Reports/Coverage/xml/coverage.xml" \
+-Dsonar.scm.disabled=true \
+-Dsonar.tests="tests" \
+-Dsonar.test.inclusions="tests/**" \
+-Dsonar.test.exclusions="tests/Reports/Coverage/**"
+
 ```
 
 Windows - just replace "$(pwd)" with "%cd%" 
 
 ```cmd
-docker run --rm -ti -v "%cd%":"/usr/src" --link sonarqube newtmitch/sonar-scanner 
-sonar-scanner ^
--Dsonar.projectName="BNumMet" ^
--Dsonar.projectKey="BNumMet" ^
--Dsonar.sources="src/BNumMet/" ^
--Dsonar.python.version=3 ^
--Dsonar.python.xunit.reportPath="tests/Reports/testsReport.xml"  ^
--Dsonar.python.coverage.reportPaths="tests/Reports/Coverage/xml/coverage.xml" ^
--Dsonar.scm.disabled=true ^
--Dsonar.tests="tests" ^
--Dsonar.test.inclusions="tests/**" ^
+docker run --rm -ti -v "%cd%":"/usr/src" \
+--link sonarqube newtmitch/sonar-scanner sonar-scanner \
+-Dsonar.login="admin" \
+-Dsonar.password="1234" \
+-Dsonar.projectName="BNumMet" \
+-Dsonar.projectKey="BNumMet" \
+-Dsonar.sources="src/BNumMet/" \
+-Dsonar.python.version=3 \
+-Dsonar.python.xunit.reportPath="tests/Reports/testsReport.xml" \
+-Dsonar.python.coverage.reportPaths="tests/Reports/Coverage/xml/coverage.xml" \
+-Dsonar.scm.disabled=true \
+-Dsonar.tests="tests" \
+-Dsonar.test.inclusions="tests/**" \
 -Dsonar.test.exclusions="tests/Reports/Coverage/**"
 ```
 
