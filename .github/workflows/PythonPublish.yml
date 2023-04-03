@@ -9,32 +9,25 @@
 name: Upload Python Package
 
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["Python Tests"]
+    types:
+      - completed # Only run, when the tests workflow Python Tests is completed
   push:
     branches:
       - main
     paths:
-      - 'Python_BNumMet/src/**'
-      - 'Python_BNumMet/Demos/**'
-      - 'Python_BNumMet/tests/**'
-      - '.github/workflows/PythonTests.yml'
-      - '.github/workflows/PythonPublish.yml'
-      - 'Python_BNumMet/requirements.txt'
-      - 'Python_BNumMet/setup.py'
-      - 'Python_BNumMet/pyproject.toml'
-      - 'Python_BNumMet/setup.cfg'
-      - 'Python_BNumMet/tox.ini'
+      - 'Python_BNumMet/VERSION' # Only trigger, when the version file is changed 
     
 
 
-permissions:
+permissions: # https://docs.github.com/en/actions/reference/authentication-in-a-workflow#permissions-for-the-github_token
   contents: read
 
 jobs:
-  deploy:
-
+  deploy: # https://packaging.python.org/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }} # Only run, if the tests succeeded 
 
     steps:
     - uses: actions/checkout@v3
@@ -57,4 +50,5 @@ jobs:
         user: __token__
         password: ${{ secrets.PYPI_TOKEN }}
         packages-dir: Python_BNumMet/dist/
+
       
