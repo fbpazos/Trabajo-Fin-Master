@@ -110,6 +110,8 @@ plt.show()
 }
 
 \subsection{Marsaglia's Random Generator}
+The algorithm is based of \cite{10.1214/aoap/1177005878} the original paper where Gearge Marsaglia and Arif Zaman discussed it.
+
 \begin{algorithm}[H]
 \SetAlgoLined
  \SetKwInOut{Input}{Input}
@@ -203,6 +205,8 @@ plt.scatter(*zip(*fail), s=1, c="black")
 }
 
 \subsection{Mersenne Twister Random Generator}
+The algorithm was based of \cite{10.5555/148286} which is an implementation of the Mersnne Twister in the programming language of C. The implementation has been tested using the NIST Random test suite \cite{smid2010statistical}, more on this on the Analaysis of Solutions section
+
 \begin{algorithm}[H]
 \SetAlgoLined
 \SetKwFunction{sgenrand}{sgenrand}

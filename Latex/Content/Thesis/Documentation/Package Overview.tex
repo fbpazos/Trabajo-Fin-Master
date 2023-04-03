@@ -1,12 +1,75 @@
 \section{General Overview}
 \subsection{What is BNumMet?}
+BNumMet ($'/bi:\ num\ m\varepsilon t/'$) is short for Basic Numerical Methods, it is a self-contained library to provide students a scholarly implementation of numerical methods alongside a visual interface that captures the essence of the methods explained.
+
+The intend and purpose of this library is to provide students an introduction to both Python and numerical methods, that will serve for their future in the academic and Enterprise world. It uses NumPy, as students will find it in their everyday life while using numerical methods in Python. 
+
+
 
 \subsection{How to install?}
+There are two main ways to install the package, using the pypi package installer or manual installation
+\subsubsection{PyPi Package Manager}
+Since the package is publicly available in the PyPi webpage ( \href{https://pypi.org/project/BNumMet/}{https://pypi.org/project/BNumMet/} ), we can use the 'pip' command.
+
+Assuming a correct installation of Python and/or pip, the following command will install all dependencies and the package:
+\begin{lstlisting}[language=Python]
+pip install BNumMet
+\end{lstlisting}
+
+\subsubsection{Manual Installation}
+Alternatively, you can download the repository and install the package manually. To do so, the following manual installation instructions will be proposed:
+\begin{enumerate}
+    \item Clone the repository: \href{https://github.com/fbpazos/Trabajo-Fin-Master}{https://github.com/fbpazos/Trabajo-Fin-Master}, there is two ways, using git and a manual cloning
+    \begin{enumerate}
+        \item Using git: \lstinline|git clone https://github.com/fbpazos/Trabajo-Fin-Master|
+        
+        \item Manual cloning: Click on \href{https://github.com/fbpazos/Trabajo-Fin-Master/archive/refs/heads/main.zip}{https://github.com/fbpazos/Trabajo-Fin-Master/archive/refs/heads/main.zip}, this will download a zip file with the latest version. Extracting this will provide the cloning.
+    \end{enumerate}
+
+    \item Install using Python: Once cloned, 'cd' into the folder named as 'Python\_BNumMet', and write in a terminal one of this two options:
+    \begin{enumerate}
+        \item Using pure Python: \lstinline|python setup.py install|
+        \item Using pip locally: \lstinline|pip install .|
+    \end{enumerate}
+    
+\end{enumerate}
+
 
 \subsection{How to continue development?}
+If anyone desires to continue the development, respecting the license provided, we recommend the use of virtual environments to externalize the current installation of other libraries when developping BNumMet. 
+
+\begin{enumerate}
+       \item Clone the repository: \href{https://github.com/fbpazos/Trabajo-Fin-Master}{https://github.com/fbpazos/Trabajo-Fin-Master}, there is two ways, using git and a manual cloning
+    \begin{enumerate}
+        \item Using git: \lstinline|git clone https://github.com/fbpazos/Trabajo-Fin-Master|
+        
+        \item Manual cloning: Click on \href{https://github.com/fbpazos/Trabajo-Fin-Master/archive/refs/heads/main.zip}{https://github.com/fbpazos/Trabajo-Fin-Master/archive/refs/heads/main.zip}, this will download a zip file with the latest version. Extracting this will provide the cloning.
+    \end{enumerate}
+
+    \item (Optional) Create the virtual enviroment and activate it: Once cloned, 'cd' into the folder named as 'Python\_BNumMet', proceed with the following commands
+    \begin{enumerate}
+        \item Using CMD: \lstinline|python3 -m venv venv && source venv/bin/activate|
+        \item Using Bash: \lstinline|python -m venv venv && venv\Scripts\activate|
+    \end{enumerate}
+    
+    \item Install the package in editable mode: In contrast to normally installing the library as we aforementioned, editable mode allows us to make changes to the library and those changes will automatically be updated into the python installation, to properly install it using this mode: \lstinline|pip install -e .| , the '-e' indicate editable, it could also be written as \lstinline|--editable|
+
+\end{enumerate}
+
+When continuing development, make sure to add tests to new/old functions as well as passing a SonarQube's analysis, therefore we assure good-quality standards to the students.
+\subsubsection{Run tests}
+In order to properly run the tests, we recommend using one of the following commands:
+\begin{itemize}
+    \item Vanilla Pytest: Inside the folder of the project run \lstinline|pytest|
+    \item Pytest with Black-Formatting and Coverage: Inside the project folder run \lstinline|python tests/__init__.py|
+\end{itemize}
+
+
 
 
 \subsection{Folder Structure}
+From now on, we will draw our attention to the folder 'Python\_BNumMet' and we will tear down the main structure we have followed.
+
 \begin{forest}
 for tree={
     font=\ttfamily,
@@ -86,6 +149,7 @@ for tree={
   ]
  ]
  [LICENSE]
+ [VERSION]
  [MANIFEST.in]
  [Readme.md]
  [Report : Directory of SonarQube's Reports]
