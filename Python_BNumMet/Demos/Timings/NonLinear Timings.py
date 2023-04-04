@@ -167,7 +167,7 @@ for i in [1, 2]:
     with open(
         f"./Demos/Timings/Results/NonLinear/NonLinearTimings_diffTol_bnm_{i}.json", "w"
     ) as f:
-        json.dump(experiment(1e-15, 1e-17, evalFunc=i), f, indent=4)
+        json.dump(experiment(1e-15, 1e-32, evalFunc=i), f, indent=4)
 
     with open(
         f"./Demos/Timings/Results/NonLinear/NonLinearTimings_diffTol_scipy_{i}.json",

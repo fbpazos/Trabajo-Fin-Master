@@ -1,0 +1,147 @@
+\section{Analysis of Solutions: NonLinear}
+The analysis of this package differs from the previous two, were we draw our attention to the syntax and it benefits, in this analysis we will focus on comparing the same method over different plausible implementations, that might differ slightly on the code but have a humongous impact on the results of such slight algorithmic difference.
+
+In particular, we will focus on the different implementations the Brentt-Dekker algorithm can have, we will tackle the following:
+\begin{enumerate}
+    \item Scipy's Brentt Method: The commonly used library for scientific-computing has their own implementation of Brent-Dekker's Algorithm. However the code is not publicly visible. We will discuss how to obtain results without knowing how it works.
+    \item Matlab's - Cleve Moller' Implementation: As we discussed this project has the underlying idea of Cleve Moller's book \cite{doi:10.1137/1.9780898717952}, that is why we have made the translation of this algorithm into Python to properly test it, though it must be noted we will not be using it in our package as an standalone, since we do not own the right to do so.
+    \item Original Brent-Dekker's Algorithm: Following the original documentation of Brent \cite{brent2002algorithms} we have translated the procedure given in Chapter 4 of Brent's work to Python.
+\end{enumerate}
+
+In this analysis we are interested in how many function evaluation does the algorithm need to find the root, the fundamental reason that we are interested in the number of evaluations is because this types of algorithms do not have an excessive algorithmic complexity making the evaluation of the function that (most likely) will be non-linear carry all the computational cost, that is why we need to find the number of evaluations. However, we are unable to look at Scipy's code to tamper with it to obtain our desired result, to properly proceed I want to digress from the discussion at hand and focus on how can we find the number of function evaluations without the need of having the actual implementation.
+
+\subsection{Finding function evaluations without external code}
+As a thought experiment, imagine you have a machine that is protected so as not to be opened or tampered, this machine can only take in a function $f(x)$ and outputs its zero (for arguments sake, suppose it can be done without any problems), this machine does not output how many times did it use the function to calculate or has a small light that shows how it is processing. We can only input functions and have as an output the location of the zero. 
+
+
+
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,141); %set diagram left start at 0, and has height of 141
+
+%Straight Lines [id:da07216189034981646] 
+\draw    (95,71.28) -- (261.29,71.28) ;
+\draw [shift={(263.29,71.28)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Shape: Rectangle [id:dp6037570291001613] 
+\draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (264.3,39.53) -- (370.12,39.53) -- (370.12,100) -- (264.3,100) -- cycle ;
+%Straight Lines [id:da284111323999086] 
+\draw    (370.62,71.28) -- (566.14,72.78) ;
+\draw [shift={(568.14,72.79)}, rotate = 180.44] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+
+% Text Node
+\draw (158.6,42.52) node [anchor=north west][inner sep=0.75pt]    {$f( x)$};
+% Text Node
+\draw (455.28,47.56) node [anchor=north west][inner sep=0.75pt]    {$zero\ at\ x_{0}$};
+% Text Node
+\draw (289,59.67) node [anchor=north west][inner sep=0.75pt]   [align=left] {Machine};
+
+
+\end{tikzpicture}
+
+
+
+One could argue why not create a function that counts the evaluation every time it is invoked, something of this sort will reassemble : 
+\begin{lstlisting}
+FUNCTION 
+    IN : x
+    PERFORM : 
+        evaluations +=1
+    OUT : f(x)
+\end{lstlisting}
+
+But most programming languages lack the ability to auto-initialize the value and even if initialized it must be done inside the function itself which will be reseted every function evaluation, right?
+
+Imagine we can create a function (think of if as a piece of hardware) that it can safely be input to our machine and still have our expected zero, but we - as professionals we are - can create one 'invisible' cable that is connected to a light outside the machine, and every time it evaluates the function the light is turned on (or in this case a counter is updated). To do such thing we must draw our attention to Global Variables, variables that are within the reach of the entire execution of a program and can be edited and accessed anywhere in the code. 
+
+This idea will look like 
+\begin{lstlisting}
+global evaluations = 0
+FUNCTION 
+    IN : x
+    PERFORM : 
+        evaluations +=1
+    OUT : f(x)
+\end{lstlisting}
+
+
+Once this link is created we only need to reset the counter every time we input a new function and we will obtain the evaluations they did of the function
+
+
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,190); %set diagram left start at 0, and has height of 190
+
+%Straight Lines [id:da8004978280594872] 
+\draw    (99,89.28) -- (265.29,89.28) ;
+\draw [shift={(267.29,89.28)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Shape: Rectangle [id:dp04043727048803203] 
+\draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (268.3,57.53) -- (374.12,57.53) -- (374.12,118) -- (268.3,118) -- cycle ;
+%Straight Lines [id:da458025777694687] 
+\draw    (374.62,89.28) -- (570.14,90.78) ;
+\draw [shift={(572.14,90.79)}, rotate = 180.44] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Flowchart: Connector [id:dp3688737316817359] 
+\draw  [fill={rgb, 255:red, 201; green, 201; blue, 201 }  ,fill opacity=1 ] (143,67.17) .. controls (143,54.37) and (153.37,44) .. (166.17,44) .. controls (178.96,44) and (189.33,54.37) .. (189.33,67.17) .. controls (189.33,79.96) and (178.96,90.33) .. (166.17,90.33) .. controls (153.37,90.33) and (143,79.96) .. (143,67.17) -- cycle ;
+%Curve Lines [id:da6747445781275441] 
+\draw  [dash pattern={on 4.5pt off 4.5pt}]  (166.17,90.33) .. controls (166.33,112.33) and (211,169) .. (251,139) ;
+%Shape: Rectangle [id:dp15460904797277109] 
+\draw  [fill={rgb, 255:red, 255; green, 255; blue, 255 }  ,fill opacity=1 ] (251,139) -- (343.33,139) -- (343.33,165.33) -- (251,165.33) -- cycle ;
+
+% Text Node
+\draw (459.28,65.56) node [anchor=north west][inner sep=0.75pt]    {$zero\ at\ x_{0}$};
+% Text Node
+\draw (151,57.4) node [anchor=north west][inner sep=0.75pt]    {$f( x)$};
+% Text Node
+\draw (268,144) node [anchor=north west][inner sep=0.75pt]   [align=left] {counter};
+% Text Node
+\draw (296,78.67) node [anchor=north west][inner sep=0.75pt]   [align=left] {Machine};
+
+\end{tikzpicture}
+
+\subsection{Results}
+To test it we will implemented the thought experiment into code and proceed in the following manner, we will create a function $f(x) = (x-a)\cdot x^{i}$, where $a$ will be either $1$ or $0.1$, a number that can be written in floating point expression and one that cannot, the $i$ will be the exponent of the function which will take odd values. We will run the 3 aforementioned methods once (since in this case the algorithms are purely deterministic, as they do not rely on time) for different interval widths starting at $0.8$ and ending in $1.1+j$ where j will be increasing from 1 to 10000 in step sizes of 1. Using in all the methods the same input tolerance
+
+We will then take the number of evaluations as well as the value of x at where the zero is found in order to measure the relative error.
+
+\subsubsection{For $a=1$}
+As we can observe in the first plot of [fig: \ref{fig:NonLinear 3 method Results for a=1 same tolerance}] Scipy's implementation of Brent-Dekker's Algorithm is the worst in term of number of evaluations, and Matlab's has almost everywhere a similar behaviour in number of evaluations. Looking on the second plot, we see that altough BNumMet's implementation was better in terms of evaluations, it is the worst in terms of relative error, and Matlab's is similar to Scipy's but slightly worst.
+
+One question rises from here, will BNumMets implementation improve if we reduce the tolerance, at the risk of number of evaluations - but as seen we still have room for tweaking. And in fact, we can improve BNumMets relative error by increasing the tolerance and still have an advantage over Scipy's implementation almost everywhere [fig: \ref{fig:NonLinear 3 method Results for a=1 BNumMet smaller tolerance}]
+
+\subsubsection{For $a=0.1$}
+The same discussion of $a=1$ remains valid to the case $a=0.1$, it must be noted that in this case the plots show a extravagant behaviour, with the number of evaluations, at certain points, the evaluations remain the same regardless of the interval size. On the first plot [fig \ref{fig:NonLinear 3 method Results for a=0.1 same tolerance}] we observe that BNumMet takes the leading position while on the second plot remain with a high relative error but closer to Matlab's on the overall scheme.
+
+Incrementing the input tolerance to BNumMet's implementation, we observe [fig \ref{fig:NonLinear 3 method Results for a=0.1 BNumMet smaller tolerance}] not only does BNumMet's implentation offer a lower number of function evaluations but also it provides a better relative error in comparison to Scipy's
+
+All in all, the decision to implement the original Brent-Dekker was a good choice, not only does it preserve the historical algorithm but also improves on the well known library of Scipy.
+
+\begin{sidewaysfigure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Analysis of Solutions/NonLinear AS/NonLinear 3 method Results a-1.png}
+    \caption{NonLinear 3 method Results for $a=1$ same tolerance}
+    \label{fig:NonLinear 3 method Results for a=1 same tolerance}
+\end{sidewaysfigure}
+
+\begin{sidewaysfigure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Analysis of Solutions/NonLinear AS/NonLinear 3 method Results Small Tol Bnum a-1.png}
+    \caption{NonLinear 3 method Results for $a=1$ BNumMet smaller tolerance}
+    \label{fig:NonLinear 3 method Results for a=1 BNumMet smaller tolerance}
+\end{sidewaysfigure}
+
+\begin{sidewaysfigure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Analysis of Solutions/NonLinear AS/NonLinear 3 method Results a-0.1.png}
+    \caption{NonLinear 3 method Results for $a=0.1$ same tolerance}
+    \label{fig:NonLinear 3 method Results for a=0.1 same tolerance}
+\end{sidewaysfigure}
+
+\begin{sidewaysfigure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Analysis of Solutions/NonLinear AS/NonLinear 3 method Results Small Tol Bnum a-0.1.png}
+    \caption{NonLinear 3 method Results for $a=0.1$ BNumMet smaller tolerance}
+    \label{fig:NonLinear 3 method Results for a=0.1 BNumMet smaller tolerance}
+\end{sidewaysfigure}
