@@ -1,21 +1,21 @@
 \chapter{Software Development: The Process}
-This project focusses on the creation of BNumMet, a library that implements scientific numerical methods in conjunction with a graphical interface to help students learn, because of this it is essential to mention the software development process. 
+This project focuses on the creation of BNumMet, a library that implements scientific numerical methods in conjunction with a graphical interface to help students learn, because of this it is essential to mention the software development process. 
 
 To do this, we will discuss the following aspects using \cite{PMBOK2013} as our project management guide:
 \begin{enumerate}
-    \item Initiation: We will establish the framework where BNumMet will take place, indicating the basic roles and the development framework; in the latter, we will briefly comment on the choice of development tools
+    \item Initiation: We will establish the framework where BNumMet will take place, indicating the basic roles and the development framework; in the latter, we will briefly comment on the choice of development tools.
     \item Planning: We will discuss the scope of the project, the timeline, the required resources, and milestones that indicate progress toward completion.
-    \item Execution: We will provide comments on how the project came together structurally and outline the steps this phase must undergo, that is, the quality check and monitoring of \& control.
+    \item Execution: We will provide comments on how the project came together structurally and outline the steps this phase must undergo, that is, the quality check and monitoring \& control.
 \end{enumerate}
 
 
 \section{Initiation}
 \subsection{Roles}
 The lack of a team per se implied that we had to 'simulate' the different roles of an average software development team.
-To such an extent, we have the following division.
+To this extent, we have the following division.
 \begin{itemize}
     \item \textbf{Juan Manuel Pérez} will execute the client roles providing information on what the end-students and professors would have wanted
-    \item \textbf{Fernando Bellido} will assume the roles of project manager, developer, QA tester, and configuration manager.
+    \item \textbf{Fernando Bellido} will assume the roles of project manager, developer, QA tester and configuration manager.
 \end{itemize}
 
 \subsection{Life Cycle Model}
@@ -31,58 +31,58 @@ It is imperative that we discuss the licence so that the project is supported by
 \begin{enumerate}
     \item Copyleft Licences: Persistent licences, publishing source code is required.
         \begin{enumerate}
-            \item Strong Copyleft: Viral effect (The aggregation of licences will prioritise the strongest licence to remain)\\
-            i.e. GNU General Public License
-            \item Weak Copyleft: Without Viral effect\\
-            i.e GNU Lesser General Public License
+            \item Strong Copyleft: Viral effect (The aggregation of licences will prioritise the strongest licence to remain).\\
+            i.e. GNU General Public License.
+            \item Weak Copyleft: Without Viral effect.\\
+            i.e GNU Lesser General Public License.
         \end{enumerate}
-    \item Permissive licences: Non-persistent, without viral effect, publishing source code is not required\\
-    i.e. MIT, Apache 2.0
+    \item Permissive licences: Non-persistent, without viral effect, publishing source code is not required.\\
+    i.e. MIT, Apache 2.0.
 \end{enumerate}
 
-Since our project idea was based on the previous but ended up not using Camilo's code, we are not legally required to use the same licence, and due to the nature of the project, we will proceed to use the \textit{GNU Affero General Public Licence v3.0 (AGPL} which is the strongest copyleft licence, the GNU Affero General Public Licence v3.0 (AGPLv3) is a free copyleft licence for software and other kinds of work. It is specifically designed to ensure cooperation with the community in the case of network server software \cite{fsf1}. The licence is intended to guarantee the freedom of users to share and change all versions of a program, ensuring that it remains free software for all its users \cite{fsf1}.
+Since our project idea was based on the previous but ended up not using Camilo's code, we are not legally required to use the same licence, and due to the nature of the project, we will proceed to use the \textit{GNU Affero General Public Licence v3.0 (AGPL)} which is the strongest copyleft licence. The GNU Affero General Public Licence v3.0 (AGPLv3) is a free copyleft licence for software and other kinds of work. It is specifically designed to ensure cooperation with the community in the case of network server software \cite{fsf1}. The licence is intended to guarantee the freedom of users to share and change all versions of a program, ensuring that it remains free software for all its users \cite{fsf1}.
 
 
  AGPLv3 was created to address a specific problem: How to protect the rights of a user when the program is used over a network \cite{fsf2}. Its terms effectively consist of the terms of GPLv3, with an additional paragraph in Section 13 to allow users who interact with the licenced software over a network to receive the source of that program \cite{fsf3}. 
 
 
-The idea behind it is to address the flaw other licences have, which is, in sort, take profit of the software and modify it internally without having the need to make these changes available to the public.
+The idea behind it is to address the flaw other licences have, which is, in sort, to take profit of the software and modify it internally without having the need to make these changes available to the public.
 
 
-For more details on the licenses, what they have to offer can be looked up at \cite{choosealicense}\cite{opensourceorg}
+For more details on the licences, what they have to offer can be looked up at \cite{choosealicense}\cite{opensourceorg}
 \section{Planning}
-As per stated, we are using an Iterative Life Cycle; therefore we must indicate how we are going to iterate, in the development of this project the iterations were made every two weeks, with the exceptions of weeks which were incompatible with the correct development of the Master's courses.
+As stated, we are using an Iterative Life Cycle; therefore, we must indicate how we are going to iterate; in the development of this project the iterations were made every two weeks, with the exceptions of weeks which were incompatible with the correct development of the Master courses.
 
-Each iteration will have the project manager present the changes made to the client, and then the client will provide feedback and next steps. In between iterations, the feedback must be implemented as well as ensuring its quality.
+Each iteration will have the project manager present the changes made to the client and then the client will provide feedback and next steps. In between iterations, the feedback must be implemented as well as ensuring its quality.
 
 There is only one time limitation, which is the end of the Master and the deadline for the thesis to be presented; therefore, every iteration must be ended before April 2023, from then on only small fixes will be applied to the project.
 \section{Execution}
 \subsection{Quality Assurance}
-Software has an intrinsic problem, it cannot be tested and its correct function is not ensured; therefore, we shall try to provide quality standards. In particular, during the development of BNumMet, we will provide two different levels of quality assurance.
+Software has an intrinsic problem, it cannot be tested and its correct functioning is not ensured; therefore, we shall try to provide quality standards. In particular, during the development of BNumMet, we will provide two different levels of quality assurance.
 \begin{enumerate}
     \item Unitary Tests: Is a type of software testing in which individual units or components of a software are tested. The purpose is to validate that each unit of the software code performs as expected.  Unit tests isolate a section of code and verify its correctness. 
     
-    \item Code Reviewer: In particular, we will use the tool known as SonarQube. SonarQube is a self-managed automatic code review tool that systematically helps you deliver clean code. It integrates into your existing workflow and detects issues in your code to help you perform continuous code inspections of your projects. The tool analyses the adherence to coding standars and core values such as comment percentage, cognitive, and cyclomatic complexity to ensure that your code meets high-quality standards \cite{sonarsource} \cite{sonarqube}. At the end of this document the latest report of SonarQube from the latest version of BNumMet will be attached.
+    \item Code Reviewer: In particular, we will use the tool known as SonarQube. SonarQube is a self-managed automatic code review tool that systematically helps you deliver clean code. It integrates into your existing workflow and detects issues in your code to help you perform continuous code inspections of your projects. The tool performs an analysis to the adherence to coding standards and core values such as comment percentage, cognitive, and cyclomatic complexity to ensure that your code meets high-quality standards \cite{sonarsource} \cite{sonarqube}. At the end of this document the latest report of SonarQube from the latest version of BNumMet will be attached.
 \end{enumerate}
 
 
 \subsection{Software configuration management}
-Is the task of tracking and controlling changes in the software, part of the larger cross-disciplinary field of configuration management.\cite{Pre94}
+Software configuration management is the task of tracking and controlling changes in the software, part of the larger cross-disciplinary field of configuration management.\cite{Pre94}
 
-To do such task, we will proceed by using GitHub, which is defined as an Internet hosting service for software development and version control using Git (distributed version control). To such an extent we will define our general base line for the project.
+To do such task, we will proceed by using GitHub, which is defined as an internet hosting service for software development and version control using Git (distributed version control). To such an extent, we will define our general base line for the project.
 \begin{itemize}
     \item .github : Folder dedicated to Github Actions
-    \item Latex : Folder dedicated to Latex files 
+    \item Latex : Folder dedicated to Latex files or other closeyly related to the generation of the written thesis.
     \item Python\_BNumMet : Folder dedicated to coding BNumMet
 \end{itemize}
 
-All files inside the directories will be added/removed accordingly to the execution phase, all backups will be provided by GitHub and in the case of latex files, by saving the current state of the 'commit' inside another folder on a separate disk drive
+All files inside the directories will be added/removed accordingly to the execution phase, all backups will be provided by GitHub and, in the case of latex files, by saving the current state of the 'commit' inside another folder on a separate disk drive
 \subsubsection{Versioning}
-As part of the Configuration management, we should proceed to define how we keep track of changes, which is the latest version of them all
+As part of the configuration management, we should proceed to define how we keep track of changes and which is the latest version of them all
 \paragraph{Development Versioning}
 During the first stages of the execution phase, the versioning was done by using the date of the year in the following format DD-MM-YYYY.
 
-In the final stages the new versioning scheme was provided to clarify that the project was in its final stages to be published, it followed the following scheme.
+In the final stages, the new versioning scheme was provided to clarify that the project was in its final stages to be published, and it followed the following scheme.
 \begin{center}
     <major>.<minor>.<patch>\textbf{dev}<development Number>
 \end{center}
@@ -92,16 +92,16 @@ As per the final versioning, the one made to announce the end user an updated ve
     <major>.<minor>.<patch>
 \end{center}
 
-\subsection{Remarks: Github Actions}
-One of the perks of using Github and in particular the version that provides students without charge the features of Github Pro is the fact that there is an automation that can be done every time a new version of the project is posted on Github.
+\subsection{Remarks: Github actions}
+One of the perks of using Github and in particular the version that provides students free of charge the features of Github Pro is the fact that there is automations that can be done every time a new version of the project is posted on Github.
 
-We have used 3 types of automations that helps us both maintain the code in accordance with the tests and provide 'quality of life' improvements.
+We have used 3 types of automations that help us both maintain the code in accordance with the tests and provide 'quality of life' improvements.
 \begin{itemize}
     \item Latex Compilation: If a file inside the Latex folder is updated, github - once commited - will compile the latex files and provide the PDF that was generated, this is primarily a 'quality of life' action, since it is not critical to the development, it only provides us with the latest PDF without needing a computer with a Latex compiler.
-    \item Python Tests: As the name indicates, this tests the correct functioning of our Python library by using the test on an external machine. The reason this action is crucial is because during development it is easier to adapt to one's own machine and not an external one (even with the use of a virtual Python Environment). Github automates this testing and, as we have done, it tests it on different operating systems with the four latest versions of Python, to ensure both universality of the code and the correct functioning at every version.
+    \item Python Tests: As the name indicates, this tests the correct functioning of our Python library by using the tests made on an external machine. The reason this action is crucial is because during development it is easier to adapt to one's own machine and not an external one (even with the use of a virtual Python environment). Github automates this testing and, as we have done, it tests it on different operating systems with the four latest versions of Python, to ensure both universality of the code and the correct functioning at every version.
     \item Upload Python Package: This action provides the scripting required to upload the Python package to the PyPi directory.
 \end{itemize}
-All the scripting needed for this workflow to function will be attached in the appendix.
+All the scripting needed for this workflow to function will be attached in the Appendix.
 
 \section{Ending}
 Even though more work can be done, the final stage of the development process will be accompanied by making the development repository public, as well as the PyPi source that users can use to fully use the project. 
@@ -135,7 +135,7 @@ The lists of tasks completed are the following:
 
 \item Interpolation
 \begin{itemize}
-    \item Use Boolean logic statements in the indices to select array elements.
+    \item Use Boolean logic statements in the indices to select the elements of the array.
     \item Do not automatically re-adjust axes when moving.
     \item Introduce sliders to easily change the axes and add a link to the toolbar.
     \item Change the colours of the buttons on Mac.
@@ -151,7 +151,7 @@ The lists of tasks completed are the following:
     \item Use the reference with the original algorithm as a reference.
     \item Remove the reference to the fzero algorithm.
     \item Allow the option to display the curve used to approximate zero, whether secant or iqi.
-    \item Allow the user to choose the method of advancement in the iteration (bisection, secant or iqi). Iqi should be blocked as an option if there are not enough nodes.
+    \item Allow the user to choose the method of advancement in the iteration (bisection, secant, or iqi). Iqi should be blocked as an option if there are not enough nodes.
     \item Look for current Python algorithms for nonlinear equation solutions (fzero?? iqi??).
     \item Compare the Brent-Dekker method with the methods already implemented in Scipy.
     \item Search the Web for improvements to the Brent-Dekker algorithm. -> Look at the Wijngaarden-Brent-Dekker method.

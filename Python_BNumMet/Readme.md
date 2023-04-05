@@ -6,7 +6,7 @@
 - Version: 1.0.0
 - License: GNU Affero General Public License v3.0 (AGPL-3.0)
 - Description: A Scholar implementation of Numerical Methods in Python enhanced with interactive widgets
-- Tags: 
+- Tags: Numerical methods, Open-source, Python, Jupyter, Software development, Linear systems, Interpolation, Nonlinear, Least squares, Random number generators
 - URL: [Python_BNumMet](https://github.com/fbpazos/Trabajo-Fin-Master/tree/main/Python_BNumMet)
 
 ## Table of Contents

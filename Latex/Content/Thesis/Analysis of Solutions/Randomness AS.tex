@@ -1,17 +1,17 @@
 \section{Analysis of Solution: Randomness}
-One question that arises in Random Number Generators is, how can we make sure our generator is actually random?, in this section we will dive into how have we tested our Mersenne Twister function.
+One question that arises in Random Number Generators is, how can we make sure our generator is actually random?, in this section we will dive into how we have tested our Mersenne Twister function.
 
-The reference we have followed is \cite{smid2010statistical}, which develops a suite of tests to check different random number generators and we have used an already developed version of this suite for Python\cite{InsaneMonster2022}, since it was out of the scope for this project. 
+The reference we have followed is \cite{smid2010statistical}, which develops a suite of tests to check different random number generators, and we have used an already developed version of this suite for Python\cite{InsaneMonster2022}, since it was out of the scope of this project. 
 
-Some discussion on the test we are eliglible to test are the following
+Some discussion of the test we are eligible to test are the following.
 
 
 \begin{enumerate}
-\item  \textbf{Monobit test}: This test purpose is to count how many zeros are there in the sequence, if it is close (up to some epsilon) to ½ then the tests will pass. This is a crucial test inside the suite, since if this test fails the rest will not pass.
+\item  \textbf{Monobit test}: This test purpose is to count how many zeros are there in the sequence, if it is close (up to some epsilon) to ½ then the tests will pass. This is a crucial test inside the suite since if this test fails, the rest will not pass.
 
-\item  \textbf{Frequency within a Block: }The test is analogous to the Monobit but instead of counting number of zeros in the entire string, it counts the frequency of 1 appearing in M -sized blocks, it should be close to M/2 plus or minus epsilon. 
+\item  \textbf{Frequency within a Block: }The test is analogous to the Monobit but instead of counting number of zeros in the entire string, it counts the frequency of 1 appearing in M-sized blocks, it should be close to M/2 plus or minus epsilon. 
 
-\item  \textbf{Runs Tests: }This test counts the number of runs the sequence has. A run of length \textit{k} consists of exactly \textit{k} identical bits, and it is bounded by a bit of the opposite value. 
+\item  \textbf{Runs Tests: }This test counts the number of runs the sequence has. A run of length \textit{k} consists of exactly \textit{k} identical bits and is bounded by a bit of opposite value. 
 
 \begin{enumerate}
 \item  ``01111110'' : Run of length 6
@@ -21,19 +21,19 @@ Some discussion on the test we are eliglible to test are the following
 If the lengths are the ones one could expect from a random number, then the test will pass.
 
 
-\item  \textbf{Longer Runs Test}: In this case the goal is to determine if the longest run length of ones is consistent with what one can expect from a random number.  An irregularity in the length of ones implies an irregularity in the length of zeros.
+\item  \textbf{Longer Runs Test}: In this case, the goal is to determine if the longest run length of ones is consistent with what one can expect from a random number.  An irregularity in the length of ones, implies an irregularity in the length of zeros.
 
-\item  \textbf{Discrete Fourier Spectral Test}: It tries to detect periodic features of the run, it applies the Discrete Fourier Transform and count the peaks, the main goal is to find if the peaks that exceeds the 95\% threshold are less than a 5\%.
+\item  \textbf{Discrete Fourier Spectral Test}: It tries to detect periodic features of the run, it applies the Discrete Fourier Transform and count the peaks, the main goal is to find if the peaks that exceed the 95\% threshold are less than 5\%.
 
-\item  \textbf{Non-overlapping Template Matching:} The test tries to find generators that produce many occurrences of a aperiodic pattern, it searches on blocks of m-bits for this types of patterns.
+\item  \textbf{Non-overlapping Template Matching:} The test tries to find generators that produce many occurrences of a aperiodic pattern, it searches on blocks of m bits for these types of patterns.
 
-\item \textbf{ Serial test}: This test focuses on determining the number of occurrences of the $2^m$ length of bit patterns and checking if they are one what is to be expected, since random sequences have uniformity so each sequence the same probability of appearing. Were we to take $m=1$ we would have the same as the Monobit test.
+\item \textbf{ Serial test}: This test focuses on determining the number of occurrences of the $2^m$ length of bit patterns and checking if they are one that is to be expected, since random sequences have uniformity, so each sequence has the same probability of appearing. Were we to take $m=1$ we would have the same results as in the monobit test.
 
-\item  \textbf{Approximate Entropy Test: }This is exactly the serial test, but it compares with 2 consecutive block of lengths $m$ and $m+1$.
+\item  \textbf{Approximate Entropy Test: }This is exactly the serial test, but compares with 2 consecutive blocks of lengths $m$ and $m+1$.
 
-\item \textbf{ Cumulative sums: }This test tries to find which is the maximal length a random walk, assuming a $0\ =\ -1$, it should be close to zero.
+\item \textbf{ Cumulative sums: }This test tries to find which is the maximal length of a random walk, assuming a $0\ =\ -1$ and summing all the sequence, it should be close to zero.
 
-\item \textbf{ Random Excursion: }It checks that the number of cycles having k-visits in a cumulative sum walk is that of a properly random test.
+\item \textbf{ Random Excursion: }It checks that the number of cycles that have k visits in a cumulative sum walk is that of a properly random test.
 
 \begin{enumerate}
 \item A cycle consists of a sequence of steps taken at random that begin at and return to the origin.
@@ -43,7 +43,7 @@ If the lengths are the ones one could expect from a random number, then the test
 \end{enumerate}
 
 \subsection{Results}
-To test it we will generate a total of 100 random integer numbers, and run the battery of test through that sequence.
+To test it we will generate a total of 100 random integer numbers and run the battery of test through that sequence.
 \begin{lstlisting}[language=Python]
 import numpy
 from nistrng import *
@@ -94,5 +94,5 @@ for test,(res,_) in zip(eligible_battery,results):
     	Result: True
 \end{lstlisting}
 
-The results are positive, except for one, on closer investigation it seems like this test suite has one flaw [\href{https://github.com/InsaneMonster/NistRng/issues/9}{https://github.com/InsaneMonster/NistRng/issues/9}] documented by one of the users, after the change they suggested it works and outputs True. Therefore a success in all test, we can assure our students that the Mersenne Twister is a true random number generator.
+The results are positive, except for one, on closer investigation it seems like this test suite has one flaw [\href{https://github.com/InsaneMonster/NistRng/issues/9}{https://github.com/InsaneMonster/NistRng/issues/9}] documented by one of the users, after the change they suggested it works and outputs True. Therefore, a success in all test, we can assure our students that the Mersenne Twister is a true random number generator.
 
