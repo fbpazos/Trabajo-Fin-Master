@@ -1,5 +1,7 @@
 from unittest import TestCase
-from BNumMet.module import pretty_print_matrix, sort_interpolation_values
+from BNumMet.module import pretty_print_matrix, sort_interpolation_values, pretty_plua
+from BNumMet.LinearSystems import lu
+import numpy as np
 
 
 class test_module(TestCase):
@@ -17,3 +19,11 @@ class test_module(TestCase):
         x, y = sort_interpolation_values(x, y)
 
         self.assertTrue((x == xRes).all() and (y == yRes).all())
+
+    def test_pretty_plua(self):
+        matrix = [[1, 2], [3, 4]]
+
+        p, l, u = lu(np.array(matrix))
+        res = pretty_plua(p, l, u, matrix)
+        # assert type of p, l, u, a is str
+        self.assertTrue(type(res) == str)

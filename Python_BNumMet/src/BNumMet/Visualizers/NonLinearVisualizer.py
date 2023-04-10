@@ -9,7 +9,7 @@ class NonLinearVisualizer:
         self, fun=lambda x: (x - 1) * (x - 4) * np.exp(-x), interval=(0, 3), tol=1e-3
     ):
         # Initialize basic Parameters
-        self.brentDekker = zBrentDekker(
+        self.brent_dekker = zBrentDekker(
             fun, interval, tol, iters=True, steps=True
         )  # Get the output of Brent Dekkers Alg --> (x, iters)
 
@@ -35,17 +35,17 @@ class NonLinearVisualizer:
         self.c, self.fc, self.e = self.a, self.fa, self.b - self.a
         ## Section: EXT
         # Call the sectionEXT() function to perform the first external section of the algorithm
-        self.sectionEXT()
+        self.section_ext()
 
         # Current Step Save Values
         # ==========================================================================
         # Save the current state of the algorithm in a tuple
-        self.currentStep = (self.a, self.b, self.c, self.e)
+        self.current_step = (self.a, self.b, self.c, self.e)
 
         # Revert Stack
         # ==========================================================================
         # Create an empty stack to keep track of previous states of the algorithm
-        self.revertStack = []
+        self.revert_stack = []
 
         # Draw mesh
         # ==========================================================================
@@ -54,17 +54,17 @@ class NonLinearVisualizer:
         self.x = np.linspace(min(self.a, self.b), max(self.a, self.b), 1000)
         self.widen = False
 
-    def checkBoxChanged(self, change):
-        with self.Fig.hold_sync():  # Hold the figure syncronized
+    def checkbox_changed(self, change):
+        with self.fig.hold_sync():  # Hold the figure syncronized
             self.draw_figures()  # Draw the figures
 
-    def sectionINT(self):
+    def section_int(self):
         # Check if the function evaluates with the same sign on both sides of c
         if np.sign(self.fb) == np.sign(self.fc) != 0:
             # If the condition is met, update the values of c, fc and e
             self.c, self.fc, self.e = self.a, self.fa, self.b - self.a
 
-    def sectionEXT(self):
+    def section_ext(self):
         # Check which of the endpoints has the smaller absolute value of f
         if abs(self.fc) < abs(self.fb):
             # If the condition is met, swap the values of a, b and c with b, c and b respectively,
@@ -78,51 +78,51 @@ class NonLinearVisualizer:
                 self.fb,
             )
 
-    def initializeComponents(self):
+    def initialize_components(self):
         # Current Solution Text
         # ==========================================================================
         # Widget for displaying current solution output
         # Current Solution: (b, f(b))
         # Iterations: N
-        self.currentSolOut = widgets.Output()
+        self.current_solution_output = widgets.Output()
 
         # Helper Text
         # ==========================================================================
         # Widget for displaying helper output
         # Suggestion for next step: <Bisect/IQI/Secant>
-        self.helperOut = widgets.Output()  # Next Possible Step: <Bisect/IQI/None>
+        self.helper_output = widgets.Output()  # Next Possible Step: <Bisect/IQI/None>
 
         # Brent-Dekker Solution
         # ==========================================================================
         # Widget for displaying Brent-Dekker solution output
         # Brent-Dekker Solution: (x^, f(x^)) in N^ iterations
-        self.brentDekkerOut = widgets.HTML(
-            value=f"<blockquote> Brent-Dekker Solution: <b>({self.brentDekker[0]:.4e}, {self.f(self.brentDekker[0]):.4e})</b> in <b>{self.brentDekker[1]}</b> iterations"
+        self.brent_dekker_output = widgets.HTML(
+            value=f"<blockquote> Brent-Dekker Solution: <b>({self.brent_dekker[0]:.4e}, {self.f(self.brent_dekker[0]):.4e})</b> in <b>{self.brent_dekker[1]}</b> iterations"
         )
 
         # Reset Button
         # ==========================================================================
         # Widget for reset button
-        self.resetButton = widgets.Button(
+        self.reset_button = widgets.Button(
             description="Reset",
             disabled=False,
             button_style="danger",
             tooltip="Reset",
             icon="undo",
         )
-        self.resetButton.on_click(self.reset)
+        self.reset_button.on_click(self.reset)
 
         # Revert Button
         # ==========================================================================
         # Widget for revert button
-        self.revertButton = widgets.Button(
+        self.revert_button = widgets.Button(
             description="Revert",
             disable=False,
             button_style="warning",
             tooltip="Revert",
             icon="arrow-left",
         )
-        self.revertButton.on_click(self.revert)
+        self.revert_button.on_click(self.revert)
 
         # FIGURE
         # ==========================================================================
@@ -139,15 +139,15 @@ class NonLinearVisualizer:
             label="Y",
         )
         # Set up the plot figure
-        self.Fig = bq.Figure(
+        self.fig = bq.Figure(
             marks=[],
             axes=[ax_x, ax_y],
             title="Zeros of a Function",
         )
         # Set up the plot figure toolbar
-        self.Toolbar = bq.Toolbar(figure=self.Fig)
+        self.toolbar = bq.Toolbar(figure=self.fig)
         # Add default lines to the plot figure
-        self.defaultLines()
+        self.default_lines()
 
         # FUNCTION BUTTONS
         # ==========================================================================
@@ -155,95 +155,95 @@ class NonLinearVisualizer:
         # Each button has a pointIndex attribute that is used to identify the point in the points array
         # 0: Bisect  1: Secant  2: IQI
         # Bisect Button
-        self.bisectButton = widgets.Button(
+        self.bisect_button = widgets.Button(
             description="Bisect",
             disabled=False,
             tooltip="Bisect",
         )
-        self.bisectButton.pointIndex = 0
-        self.bisectButton.on_click(self.next_step)
+        self.bisect_button.pointIndex = 0
+        self.bisect_button.on_click(self.next_step)
 
         # Secant Button
-        self.secantButton = widgets.Button(
+        self.secant_button = widgets.Button(
             description="Secant",
             disabled=False,
             tooltip="Secant",
         )
-        self.secantButton.pointIndex = 1
-        self.secantButton.on_click(self.next_step)
+        self.secant_button.pointIndex = 1
+        self.secant_button.on_click(self.next_step)
 
         # IQI Button
-        self.IQIButton = widgets.Button(
+        self.iqi_button = widgets.Button(
             description="IQI",
             disabled=False,
             tooltip="IQI",
         )
-        self.IQIButton.pointIndex = 2
-        self.IQIButton.on_click(self.next_step)
+        self.iqi_button.pointIndex = 2
+        self.iqi_button.on_click(self.next_step)
 
         # CHECKBOXES FOR FUNCTION BUTTONS
         # ==========================================================================
-        self.bisectCheckbox = widgets.Checkbox(
+        self.bisect_checkbox = widgets.Checkbox(
             value=False,
             description="Bisect",
             disabled=False,
             indent=False,
         )
         # On change of checkbox, function checkBoxChanged
-        self.bisectCheckbox.observe(self.checkBoxChanged, names="value")
+        self.bisect_checkbox.observe(self.checkbox_changed, names="value")
 
-        self.secantCheckbox = widgets.Checkbox(
+        self.secant_checkbox = widgets.Checkbox(
             value=False,
             description="Secant",
             disabled=False,
             indent=False,
         )
-        self.secantCheckbox.observe(self.checkBoxChanged, names="value")
+        self.secant_checkbox.observe(self.checkbox_changed, names="value")
 
-        self.IQICheckbox = widgets.Checkbox(
+        self.iqi_checkbox = widgets.Checkbox(
             value=False,
             description="IQI",
             disabled=False,
             indent=False,
         )
-        self.IQICheckbox.observe(self.checkBoxChanged, names="value")
+        self.iqi_checkbox.observe(self.checkbox_changed, names="value")
 
         # GRID
         # ==========================================================================
         self.grid = widgets.GridspecLayout(2, 2)
-        self.grid[0, 0] = widgets.VBox([self.Toolbar, self.Fig])
+        self.grid[0, 0] = widgets.VBox([self.toolbar, self.fig])
 
         # Text Outputs Group
-        textGroup = widgets.VBox(
-            [self.currentSolOut, self.helperOut, self.brentDekkerOut]
+        texts_group = widgets.VBox(
+            [self.current_solution_output, self.helper_output, self.brent_dekker_output]
         )
-        self.grid[1, 0] = textGroup
+        self.grid[1, 0] = texts_group
 
         # Buttons Group
         text1 = widgets.HTML(value="<b>Next Step Selector</b>")  # Next Step Selector
         text2 = widgets.HTML(value="<b>Draw Step?</b>")  # Draw Step?
         selectors = widgets.VBox(  # Next Step Selectors
-            [text1, self.bisectButton, self.secantButton, self.IQIButton]
+            [text1, self.bisect_button, self.secant_button, self.iqi_button]
         )
         checkboxes = widgets.VBox(
-            [text2, self.bisectCheckbox, self.secantCheckbox, self.IQICheckbox]
+            [text2, self.bisect_checkbox, self.secant_checkbox, self.iqi_checkbox]
         )
-        buttonsGroup = widgets.HBox([selectors, checkboxes])
+        buttons_group = widgets.HBox([selectors, checkboxes])
 
-        self.grid[0, 1] = buttonsGroup
+        self.grid[0, 1] = buttons_group
 
         # Reset and Revert Buttons Group
-        buttonsGroup2 = widgets.HBox(
+        buttons_group_2 = widgets.HBox(
             [
-                self.revertButton,
-                self.resetButton,
+                self.revert_button,
+                self.reset_button,
             ]
         )
-        self.grid[1, 1] = buttonsGroup2
+        self.grid[1, 1] = buttons_group_2
 
-    def defaultLines(self):
+    def default_lines(self):
         # 0. Horizontal Line f(x)=0
-        self.hLine = bq.Lines(  # Horizontal Line f(x)=0
+        self.horizontal_line = bq.Lines(  # Horizontal Line f(x)=0
             x=self.x,
             y=[0] * len(self.x),
             scales={"x": self.x_sc, "y": self.y_sc},
@@ -252,7 +252,7 @@ class NonLinearVisualizer:
             colors=["Black"],
         )
         # 1. Function Line f(x)
-        self.functionLine = bq.Lines(  # Function Line f(x)
+        self.function_line = bq.Lines(  # Function Line f(x)
             x=self.x,
             y=list(map(self.f, self.x)),
             scales={"x": self.x_sc, "y": self.y_sc},
@@ -278,19 +278,19 @@ class NonLinearVisualizer:
         None.
         """
 
-        if self.hintStep is None:
+        if self.hint_step is None:
             return
-        self.revertStack.append(
+        self.revert_stack.append(
             [self.a, self.b, self.c, self.e, self.iterations]
         )  # Add the current state to the revert stack
 
         self.a = self.b  # Set a = b
         self.fa = self.fb  # Set f(a) = f(b)
 
-        newB = self.nextPoints_addition[b.pointIndex]  # Get the next point
+        new_point_b = self.next_points_addition[b.pointIndex]  # Get the next point
         self.b = (
-            newB
-            if abs(self.b - newB) > self.tolerance
+            new_point_b
+            if abs(self.b - new_point_b) > self.tolerance
             else self.b + np.sign(0.5 * (self.c - self.b)) * self.tolerance
         )  # If the new point is too close to the current point, move it a little bit
         self.fb = self.f(self.b)  # Set f(b) = f(newB)
@@ -299,9 +299,9 @@ class NonLinearVisualizer:
         self.iterations += 1  # Increment the number of iterations
 
         # Section: Ext
-        self.sectionEXT()  # Update the section
+        self.section_ext()  # Update the section
         # Section: Int
-        self.sectionINT()  # Update the section
+        self.section_int()  # Update the section
 
         self.one_step()  # Update the plot
 
@@ -309,24 +309,24 @@ class NonLinearVisualizer:
         """
         Reset everything to the initial state, this can be understood as reverting all the steps
         """
-        if len(self.revertStack) == 0:
+        if len(self.revert_stack) == 0:
             return
 
-        self.a, self.b, self.c, self.e, self.iterations = self.revertStack[
+        self.a, self.b, self.c, self.e, self.iterations = self.revert_stack[
             0
         ]  # Get the initial state
         self.fb = self.f(self.b)  # Set f(b) = f(newB)
         self.fa = self.f(self.a)  # Set f(a) = f(b)
         self.fc = self.f(self.c)  # Set f(c) = f(newC)
 
-        self.revertStack = []  # Clear the revert stack
+        self.revert_stack = []  # Clear the revert stack
         self.one_step()  # Update the plot
 
     def revert(self, b):
         """
         This method reverts the last step
         """
-        if len(self.revertStack) == 0:  # If there is no step to revert
+        if len(self.revert_stack) == 0:  # If there is no step to revert
             return
 
         (
@@ -335,7 +335,7 @@ class NonLinearVisualizer:
             self.c,
             self.e,
             self.iterations,
-        ) = self.revertStack.pop()  # Get the last state
+        ) = self.revert_stack.pop()  # Get the last state
         self.fb = self.f(self.b)  # Set f(b) = f(newB)
         self.fa = self.f(self.a)  # Set f(a) = f(b)
         self.fc = self.f(self.c)  # Set f(c) = f(newC)
@@ -347,16 +347,16 @@ class NonLinearVisualizer:
         This method is called when a step is made
         """
         with self.grid.hold_sync():  # Hold the grid syncronized
-            self.brent_dekker_Step()  # Update the Brent-Dekker step
-            self.IQIButton.disabled = (
-                self.nextPoints_addition[2] is None
+            self.brent_dekker_step()  # Update the Brent-Dekker step
+            self.iqi_button.disabled = (
+                self.next_points_addition[2] is None
             )  # Disable the IQI button if the IQI point is None
-            self.IQICheckbox.disabled = (
-                self.nextPoints_addition[2] is None
+            self.iqi_checkbox.disabled = (
+                self.next_points_addition[2] is None
             )  # Disable the IQI checkbox if the IQI point is None
 
             self.update_ouputs()  # Update the outputs
-            with self.Fig.hold_sync():  # Hold the figure syncronized
+            with self.fig.hold_sync():  # Hold the figure syncronized
                 self.draw_figures()  # Draw the figures
             # self.drawFigures()
 
@@ -398,12 +398,12 @@ class NonLinearVisualizer:
             )  # Draw a line
             return secant
 
-        def bisect_draw(m, minY, maxY):
+        def bisect_draw(m, min_y, max_y):
             # m = (a + b) / 2
             # draw a vertical line at m
             bisect = bq.Lines(
                 x=[m, m],
-                y=[minY, maxY],
+                y=[min_y, max_y],
                 scales={"x": self.x_sc, "y": self.y_sc},
                 colors=["green"],
                 display_legend=True,
@@ -412,84 +412,93 @@ class NonLinearVisualizer:
             )  # Draw a line
             return bisect
 
-        def iqi_draw(a, b, c, minY, maxY):
+        def iqi_draw(a, b, c, min_y, max_y):
             # draw a vertical line at m
-            interpolY = [self.f(a), self.f(b), self.f(c)]  # [f(a), f(b), f(c)]
-            interpolX = [a, b, c]  # [a, b, c]
-            yMesh = np.linspace(minY, maxY, 1000)
+            inperpolation_y = [self.f(a), self.f(b), self.f(c)]  # [f(a), f(b), f(c)]
+            interpolation_x = [a, b, c]  # [a, b, c]
+            y_mesh = np.linspace(min_y, max_y, 1000)
             # Lagrange interpolation with (Y,X)
             q_y = (  # Lagrange interpolation
-                lambda y: ((y - interpolY[1]) * (y - interpolY[2]))
-                / ((interpolY[0] - interpolY[1]) * (interpolY[0] - interpolY[2]))
-                * interpolX[0]
-                + ((y - interpolY[0]) * (y - interpolY[2]))
-                / ((interpolY[1] - interpolY[0]) * (interpolY[1] - interpolY[2]))
-                * interpolX[1]
-                + ((y - interpolY[0]) * (y - interpolY[1]))
-                / ((interpolY[2] - interpolY[0]) * (interpolY[2] - interpolY[1]))
-                * interpolX[2]
+                lambda y: ((y - inperpolation_y[1]) * (y - inperpolation_y[2]))
+                / (
+                    (inperpolation_y[0] - inperpolation_y[1])
+                    * (inperpolation_y[0] - inperpolation_y[2])
+                )
+                * interpolation_x[0]
+                + ((y - inperpolation_y[0]) * (y - inperpolation_y[2]))
+                / (
+                    (inperpolation_y[1] - inperpolation_y[0])
+                    * (inperpolation_y[1] - inperpolation_y[2])
+                )
+                * interpolation_x[1]
+                + ((y - inperpolation_y[0]) * (y - inperpolation_y[1]))
+                / (
+                    (inperpolation_y[2] - inperpolation_y[0])
+                    * (inperpolation_y[2] - inperpolation_y[1])
+                )
+                * interpolation_x[2]
             )
-            xMesh = q_y(yMesh)  # Get the x values for the y values
-            xMesh = np.where(
-                (xMesh < self.x[0]) | (xMesh > self.x[-1]), np.nan, xMesh
+            x_mesh = q_y(y_mesh)  # Get the x values for the y values
+            x_mesh = np.where(
+                (x_mesh < self.x[0]) | (x_mesh > self.x[-1]), np.nan, x_mesh
             )  # Set the x values outside the range to nan
-            IQILine = bq.Lines(  # Draw a line
-                x=xMesh,
-                y=yMesh,
+            iqi_line = bq.Lines(  # Draw a line
+                x=x_mesh,
+                y=y_mesh,
                 scales={"x": self.x_sc, "y": self.y_sc},
                 colors=["blue"],
                 display_legend=True,
                 labels=["IQI Line"],
                 line_style="dashed",
             )
-            return IQILine
+            return iqi_line
 
         points2check = [  # Points to check
             self.a,
             self.b,
             self.c,
-            self.nextPoints_addition[0],
-            self.nextPoints_addition[1],
+            self.next_points_addition[0],
+            self.next_points_addition[1],
         ] + (
             []
-            if self.nextPoints_addition[2] is None
+            if self.next_points_addition[2] is None
             else [
-                self.nextPoints_addition[2]
+                self.next_points_addition[2]
             ]  # If the IQI point is None, add it to the list
         )
 
-        if self.hintStep is None:  # If the hint step is None
-            self.Fig.marks = [
-                self.hLine,
-                self.functionLine,
+        if self.hint_step is None:  # If the hint step is None
+            self.fig.marks = [
+                self.horizontal_line,
+                self.function_line,
             ]  # Set the marks to the function and the horizontal line
             return
 
-        minMax = [
+        min_max = [
             min(points2check),
             max(points2check),
         ]  # Get the min and max of the points to check
 
-        if minMax[0] < min(self.original_data) or minMax[1] > max(
+        if min_max[0] < min(self.original_data) or min_max[1] > max(
             self.original_data
         ):  # If the min or max of the points to check is outside the range of the original data
             self.x = np.linspace(  # Set the x values to the min and max of the points to check
-                min(min(self.original_data), minMax[0]),
-                max(max(self.original_data), minMax[1]),
+                min(min(self.original_data), min_max[0]),
+                max(max(self.original_data), min_max[1]),
                 1000,
             )
-            self.defaultLines()  # Set the default lines
+            self.default_lines()  # Set the default lines
             self.widen = True  # Set widen to True
         elif self.widen:  # If widen is True
             self.x = np.linspace(
                 min(self.original_data), max(self.original_data), 1000
             )  # Set the x values to the min and max of the original data
-            self.defaultLines()  # Set the default lines
+            self.default_lines()  # Set the default lines
             self.widen = False  # Set widen to False
 
         marks2plot = [
-            self.hLine,
-            self.functionLine,
+            self.horizontal_line,
+            self.function_line,
         ]  # Set the marks to the function and the horizontal line
 
         # 1. The Current Points (a,b,c)
@@ -517,7 +526,7 @@ class NonLinearVisualizer:
         # 2. The next step suggestions
         marks2plot.append(  # Bisect
             draw_point(
-                self.nextPoints_addition[0],
+                self.next_points_addition[0],
                 0,
                 "green",
                 "Bisection",
@@ -526,17 +535,17 @@ class NonLinearVisualizer:
         )
         marks2plot.append(
             draw_point(  # Secant
-                self.nextPoints_addition[1],
+                self.next_points_addition[1],
                 0,
                 "red",
                 "Secant",
                 "triangle-up",
             )
         )
-        if self.nextPoints_addition[2] is not None:
+        if self.next_points_addition[2] is not None:
             marks2plot.append(
                 draw_point(  # IQI
-                    self.nextPoints_addition[2],
+                    self.next_points_addition[2],
                     0,
                     "blue",
                     "IQI",
@@ -545,41 +554,41 @@ class NonLinearVisualizer:
             )
 
         # FIX THE VIEW
-        self.x_sc.min = minMax[
+        self.x_sc.min = min_max[
             0
         ]  # Set the x scale min to the min of the points to check
-        self.x_sc.max = minMax[
+        self.x_sc.max = min_max[
             1
         ]  # Set the x scale max to the max of the points to check
 
         self.y_sc.min = min(
-            self.f(minMax[0]), self.f(minMax[1])
+            self.f(min_max[0]), self.f(min_max[1])
         )  # Set the y scale min to the min of the function of the min and max of the points to check
         self.y_sc.max = max(
-            self.f(minMax[0]), self.f(minMax[1])
+            self.f(min_max[0]), self.f(min_max[1])
         )  # Set the y scale max to the max of the function of the min and max of the points to check
 
-        fX = list(map(self.f, self.x))  # Get the function values for the x values
-        yminMax = (min(fX), max(fX))  # Get the min and max of the function values
+        fx = list(map(self.f, self.x))  # Get the function values for the x values
+        y_min_max = (min(fx), max(fx))  # Get the min and max of the function values
 
         # 3. The steps
-        if self.secantCheckbox.value:  # If the secant checkbox is checked
+        if self.secant_checkbox.value:  # If the secant checkbox is checked
             marks2plot.append(secant_draw())  # Draw the secant line
 
-        if self.bisectCheckbox.value:  # If the bisect checkbox is checked
+        if self.bisect_checkbox.value:  # If the bisect checkbox is checked
             marks2plot.append(  # Draw the bisect line
                 bisect_draw(
-                    self.nextPoints_addition[0], yminMax[0], yminMax[1]
+                    self.next_points_addition[0], y_min_max[0], y_min_max[1]
                 )  # Draw the bisect line
             )
         if (
-            self.IQICheckbox.value and self.nextPoints_addition[2] is not None
+            self.iqi_checkbox.value and self.next_points_addition[2] is not None
         ):  # If the IQI checkbox is checked and the IQI point is not None
             marks2plot.append(
-                iqi_draw(self.a, self.b, self.c, yminMax[0], yminMax[1])
+                iqi_draw(self.a, self.b, self.c, y_min_max[0], y_min_max[1])
             )  # Draw the IQI line
 
-        self.Fig.marks = marks2plot  # Set the marks to the marks to plot
+        self.fig.marks = marks2plot  # Set the marks to the marks to plot
 
     def update_ouputs(self):
         """
@@ -588,17 +597,17 @@ class NonLinearVisualizer:
             > helper text
         The next step must be calculated before calling this method
         """
-        self.currentSolOut.clear_output()  # Clear the current solution output
-        self.helperOut.clear_output()  # Clear the helper output
+        self.current_solution_output.clear_output()  # Clear the current solution output
+        self.helper_output.clear_output()  # Clear the helper output
 
-        with self.currentSolOut:  # Print the current solution
+        with self.current_solution_output:  # Print the current solution
             print(
                 f"Current Solution: ({self.b:.4e}, {self.f(self.b):.4e})"
             )  # Print the current solution
             print(f"Iterations: {self.iterations}")  # Print the iterations
-        with self.helperOut:  # Print the helper text
+        with self.helper_output:  # Print the helper text
             print(  # Print the helper text
-                f"Next Step suggestion: {self.hintStep if self.hintStep is not None else 'FINISHED'}"
+                f"Next Step suggestion: {self.hint_step if self.hint_step is not None else 'FINISHED'}"
             )
 
     def run(self):
@@ -610,12 +619,12 @@ class NonLinearVisualizer:
         Widgets.GridBox
             The GridBox containing all the widgets
         """
-        self.initializeComponents()  # Initialize the components
+        self.initialize_components()  # Initialize the components
         self.one_step()  # Run one step
 
         return self.grid
 
-    def brent_dekker_Step(self):
+    def brent_dekker_step(self):
         """
         This method imitates the Brent-Dekker in one step, instead of giving the result point, this method returns the 3 available points for the next step as well as the next possible step
 
@@ -633,17 +642,17 @@ class NonLinearVisualizer:
         m = 0.5 * (self.c - self.b)
 
         if abs(m) <= self.tolerance or self.f(self.b) == 0 or self.f(self.a) == 0:
-            self.hintStep = None
-            self.nextPoints_addition = [None, None, None]
+            self.hint_step = None
+            self.next_points_addition = [None, None, None]
             self.errs = [None, None, None]
             self.update_ouputs()
             return
 
         next_step = None
-        nextPoints_addition = [None, None, None]
+        next_points_addition = [None, None, None]
         errs = [None, None, None]
 
-        nextPoints_addition[0] = self.b + m  # Always exists
+        next_points_addition[0] = self.b + m  # Always exists
         errs[0] = m  # Always exists
 
         # See if Bisection is possible
@@ -651,7 +660,7 @@ class NonLinearVisualizer:
         # Here we do nothing because it is the midpoint - only thing next_step is Bisection (which will be default if secant/iqi fails)
 
         s = self.fb / self.fa
-        pqPair = None
+        pq_pair = None
         if self.a == self.c:
             # Linear Interpolation (Secant)
             p1 = 2 * m * s
@@ -674,7 +683,7 @@ class NonLinearVisualizer:
             else:
                 p2 = -p2
 
-            pqPair = (p2, q2)
+            pq_pair = (p2, q2)
 
         if p1 > 0:
             q1 = -q1
@@ -684,28 +693,28 @@ class NonLinearVisualizer:
         # Store e-Values for next step
         errs[1] = abs(p1 / q1)  # Secant always exists
         errs[2] = (
-            None if pqPair is None else abs(pqPair[0] / pqPair[1])
+            None if pq_pair is None else abs(pq_pair[0] / pq_pair[1])
         )  # IQI may not exist if a==c if it does, it is stored in pqPair
 
         # Store next points (Quantity to add) for next step
-        nextPoints_addition[1] = self.b + p1 / q1  # Secant always exists
-        nextPoints_addition[2] = (
-            None if pqPair is None else self.b + pqPair[0] / pqPair[1]
+        next_points_addition[1] = self.b + p1 / q1  # Secant always exists
+        next_points_addition[2] = (
+            None if pq_pair is None else self.b + pq_pair[0] / pq_pair[1]
         )  # IQI may not exist if a==c if it does, it is stored in pqPair
-        pqPair = (
-            (p1, q1) if pqPair is None else pqPair
+        pq_pair = (
+            (p1, q1) if pq_pair is None else pq_pair
         )  # If IQI does not exist, use Secant instead (pqPair is None if IQI does not exist), otherwise use IQI (pqPair is not None if IQI exists)
 
         # Choose the best interpolation
-        if 2 * pqPair[0] < 3 * m * pqPair[1] - abs(
-            self.tolerance * pqPair[1]
-        ) and pqPair[0] < abs(0.5 * self.e * pqPair[1]):
+        if 2 * pq_pair[0] < 3 * m * pq_pair[1] - abs(
+            self.tolerance * pq_pair[1]
+        ) and pq_pair[0] < abs(0.5 * self.e * pq_pair[1]):
             next_step = "IQI" if self.a != self.c else "Secant"
         else:
             next_step = "Bisection"
 
-        self.hintStep = next_step
-        self.nextPoints_addition = nextPoints_addition
+        self.hint_step = next_step
+        self.next_points_addition = next_points_addition
         self.errs = errs
 
-        return next_step, nextPoints_addition, errs
+        return next_step, next_points_addition, errs

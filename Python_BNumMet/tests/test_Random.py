@@ -242,22 +242,22 @@ class test_RandomVisualizer(TestCase):
         # No Exceptions should be raised
         rv = RandomVisualizer()
 
-        self.assertTrue(len(rv.generatedNumbers) == 0)
+        self.assertTrue(len(rv.generated_numbers) == 0)
         self.assertEqual(rv.iterations, 100)
 
-        random_float = rv.randGenerator()
+        random_float = rv.random_generator()
         self.assertGreaterEqual(random_float, 0)
         self.assertLessEqual(random_float, 1)
 
     def test_initiate_with_args(self):
         # Tests that the RandomVisualizer is initiated correctly with arguments
         # No Exceptions should be raised
-        rv = RandomVisualizer(randGenerator=Random.marsaglia_rand)
+        rv = RandomVisualizer(random_generator=Random.marsaglia_rand)
 
-        self.assertTrue(len(rv.generatedNumbers) == 0)
+        self.assertTrue(len(rv.generated_numbers) == 0)
         self.assertEqual(rv.iterations, 100)
 
-        random_float = rv.randGenerator()
+        random_float = rv.random_generator()
         self.assertGreaterEqual(random_float, 0)
         self.assertLessEqual(random_float, 1)
 
@@ -272,9 +272,9 @@ class test_RandomVisualizer(TestCase):
         # No Exceptions should be raised
         rv = RandomVisualizer()
         rv.run()
-        rv.runButton.click()
+        rv.run_button.click()
 
-        self.assertTrue(rv.currentValue - np.pi < 0.7)
+        self.assertTrue(rv.current_value - np.pi < 0.7)
 
     def test_int_text(self):
         # Tests that the RandomVisualizer is initiated correctly without any arguments
@@ -282,12 +282,12 @@ class test_RandomVisualizer(TestCase):
         rv = RandomVisualizer()
         rv.run()
 
-        rv.iterationsWidget.value = 10000
+        rv.iterations_widget.value = 10000
         self.assertEqual(
-            rv.iterationsWidget.value, 1000
+            rv.iterations_widget.value, 1000
         )  # Should be 1000 because of the max value
 
-        rv.iterationsWidget.value = 0
+        rv.iterations_widget.value = 0
         self.assertEqual(
-            rv.iterationsWidget.value, 1
+            rv.iterations_widget.value, 1
         )  # Should be 1 because of the min value

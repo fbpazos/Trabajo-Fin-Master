@@ -167,16 +167,16 @@ class Test_NonLinearVisualizer(TestCase):
 
         iters = 0
         guiStack = []
-        while nonLinearVisualizer.hintStep != None:
-            if nonLinearVisualizer.hintStep == "Bisection":
+        while nonLinearVisualizer.hint_step != None:
+            if nonLinearVisualizer.hint_step == "Bisection":
                 guiStack.append("Bisection")
-                nonLinearVisualizer.bisectButton.click()
-            elif nonLinearVisualizer.hintStep == "Secant":
+                nonLinearVisualizer.bisect_button.click()
+            elif nonLinearVisualizer.hint_step == "Secant":
                 guiStack.append("Secant")
-                nonLinearVisualizer.secantButton.click()
-            elif nonLinearVisualizer.hintStep == "IQI":
+                nonLinearVisualizer.secant_button.click()
+            elif nonLinearVisualizer.hint_step == "IQI":
                 guiStack.append("IQI")
-                nonLinearVisualizer.IQIButton.click()
+                nonLinearVisualizer.iqi_button.click()
             iters += 1
 
             if iters > itersbrentt:
@@ -200,21 +200,21 @@ class Test_NonLinearVisualizer(TestCase):
 
         # Perform all steps and store them in a stack
         guiStack = []
-        while nonLinearVisualizer.hintStep != None:
-            guiStack.append(nonLinearVisualizer.hintStep)
-            if nonLinearVisualizer.hintStep == "Bisection":
-                nonLinearVisualizer.bisectButton.click()
-            elif nonLinearVisualizer.hintStep == "Secant":
-                nonLinearVisualizer.secantButton.click()
-            elif nonLinearVisualizer.hintStep == "IQI":
-                nonLinearVisualizer.IQIButton.click()
+        while nonLinearVisualizer.hint_step != None:
+            guiStack.append(nonLinearVisualizer.hint_step)
+            if nonLinearVisualizer.hint_step == "Bisection":
+                nonLinearVisualizer.bisect_button.click()
+            elif nonLinearVisualizer.hint_step == "Secant":
+                nonLinearVisualizer.secant_button.click()
+            elif nonLinearVisualizer.hint_step == "IQI":
+                nonLinearVisualizer.iqi_button.click()
 
         # Revert the last step and check if the hintStep is the same as the future step in the stack
         i = len(guiStack) - 1
-        while nonLinearVisualizer.revertStack != []:
-            nonLinearVisualizer.revertButton.click()
+        while nonLinearVisualizer.revert_stack != []:
+            nonLinearVisualizer.revert_button.click()
             i -= 1
-            self.assertTrue(nonLinearVisualizer.hintStep == stack[i + 1])
+            self.assertTrue(nonLinearVisualizer.hint_step == stack[i + 1])
 
     def test_reset(self):
         """
@@ -229,19 +229,19 @@ class Test_NonLinearVisualizer(TestCase):
 
         # Perform all steps and store them in a stack
         guiStack = []
-        while nonLinearVisualizer.hintStep != None:
-            guiStack.append(nonLinearVisualizer.hintStep)
-            if nonLinearVisualizer.hintStep == "Bisection":
-                nonLinearVisualizer.bisectButton.click()
-            elif nonLinearVisualizer.hintStep == "Secant":
-                nonLinearVisualizer.secantButton.click()
-            elif nonLinearVisualizer.hintStep == "IQI":
-                nonLinearVisualizer.IQIButton.click()
+        while nonLinearVisualizer.hint_step != None:
+            guiStack.append(nonLinearVisualizer.hint_step)
+            if nonLinearVisualizer.hint_step == "Bisection":
+                nonLinearVisualizer.bisect_button.click()
+            elif nonLinearVisualizer.hint_step == "Secant":
+                nonLinearVisualizer.secant_button.click()
+            elif nonLinearVisualizer.hint_step == "IQI":
+                nonLinearVisualizer.iqi_button.click()
 
         # A Reset should revert all steps and set the hintStep to the first step in the stack
-        nonLinearVisualizer.resetButton.click()
-        self.assertEqual(nonLinearVisualizer.revertStack, [])
-        self.assertTrue(nonLinearVisualizer.hintStep == stack[0])
+        nonLinearVisualizer.reset_button.click()
+        self.assertEqual(nonLinearVisualizer.revert_stack, [])
+        self.assertTrue(nonLinearVisualizer.hint_step == stack[0])
 
         a = nonLinearVisualizer.a
         c = nonLinearVisualizer.c
@@ -261,32 +261,32 @@ class Test_NonLinearVisualizer(TestCase):
         nonLinearVisualizer = NonLinearVisualizer(f, interval, tol=tol)
         nonLinearVisualizer.run()
 
-        og_length = len(nonLinearVisualizer.Fig.marks)
+        og_length = len(nonLinearVisualizer.fig.marks)
 
-        nonLinearVisualizer.bisectCheckbox.value = True
-        self.assertTrue(len(nonLinearVisualizer.Fig.marks) > og_length)
+        nonLinearVisualizer.bisect_checkbox.value = True
+        self.assertTrue(len(nonLinearVisualizer.fig.marks) > og_length)
 
-        nonLinearVisualizer.bisectCheckbox.value = False
-        self.assertEqual(len(nonLinearVisualizer.Fig.marks), og_length)
+        nonLinearVisualizer.bisect_checkbox.value = False
+        self.assertEqual(len(nonLinearVisualizer.fig.marks), og_length)
 
-        nonLinearVisualizer.secantCheckbox.value = True
-        self.assertTrue(len(nonLinearVisualizer.Fig.marks) > og_length)
+        nonLinearVisualizer.secant_checkbox.value = True
+        self.assertTrue(len(nonLinearVisualizer.fig.marks) > og_length)
 
         self.assertTrue(
-            nonLinearVisualizer.IQICheckbox.disabled
+            nonLinearVisualizer.iqi_checkbox.disabled
         )  # IQI is disabled by at first step of this function
         # Perform all steps and store them in a stack
         guiStack = []
-        while nonLinearVisualizer.hintStep != None:
-            guiStack.append(nonLinearVisualizer.hintStep)
-            if nonLinearVisualizer.hintStep == "Bisection":
-                nonLinearVisualizer.bisectButton.click()
-            elif nonLinearVisualizer.hintStep == "Secant":
-                nonLinearVisualizer.secantButton.click()
-            elif nonLinearVisualizer.hintStep == "IQI":
-                self.assertFalse(nonLinearVisualizer.IQICheckbox.disabled)
-                nonLinearVisualizer.IQICheckbox.value = True
-                self.assertTrue(len(nonLinearVisualizer.Fig.marks) > og_length)
+        while nonLinearVisualizer.hint_step != None:
+            guiStack.append(nonLinearVisualizer.hint_step)
+            if nonLinearVisualizer.hint_step == "Bisection":
+                nonLinearVisualizer.bisect_button.click()
+            elif nonLinearVisualizer.hint_step == "Secant":
+                nonLinearVisualizer.secant_button.click()
+            elif nonLinearVisualizer.hint_step == "IQI":
+                self.assertFalse(nonLinearVisualizer.iqi_checkbox.disabled)
+                nonLinearVisualizer.iqi_checkbox.value = True
+                self.assertTrue(len(nonLinearVisualizer.fig.marks) > og_length)
                 break
 
     def test_sign_not_guranteed(self):
@@ -328,9 +328,9 @@ class Test_NonLinearVisualizer(TestCase):
         nonLinearVisualizer.run()
 
         # A Reset should revert all steps and set the hintStep to the first step in the stack
-        nonLinearVisualizer.resetButton.click()
-        self.assertEqual(nonLinearVisualizer.revertStack, [])
-        self.assertTrue(nonLinearVisualizer.hintStep == stack[0])
+        nonLinearVisualizer.reset_button.click()
+        self.assertEqual(nonLinearVisualizer.revert_stack, [])
+        self.assertTrue(nonLinearVisualizer.hint_step == stack[0])
 
     def test_exception_wrongSign(self):
         """

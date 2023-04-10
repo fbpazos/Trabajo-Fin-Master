@@ -192,7 +192,7 @@ plt.legend()
 plt.show()
 ```
 
-![Interpolation](https://raw.githubusercontent.com/fbpazos/Trabajo-Fin-Master/main/Latex/Include/Images/Thesis/Documentation/Interpolation/PCHIP%20Example%201.png?token=GHSAT0AAAAAAB4UDLTP2QAM3MIK5XNV3UQ2ZBKWKMQ)
+![Interpolation](https://dub07pap002files.storage.live.com/y4m52-hsxWxH8zjFakW7db0zDr1AGGI4j3VL3PTT_g5KO0AiotCnUBwwO5I9sSXIToLvJnfWtCBaOyZLukE_JBryO-JNNkodo2W0xjneL0cDoDy3CZaoFC-d8N0XbkOAWYjZgcu3M1K-j74BgEXUL5-oV6S_yLayyCtUl30xP6BPlC6bio1ZqPtqs2mARBgEP7e?encodeFailures=1&width=543&height=413)
 
 ### Non-Linear
 
@@ -221,7 +221,7 @@ fail = [
 plt.scatter(*zip(*fail), s=1, c="black")
 plt.show()
 ```
-![Randomness](https://raw.githubusercontent.com/fbpazos/Trabajo-Fin-Master/main/Latex/Include/Images/Thesis/Documentation/Randomness/Marsaglia%20Rand%20Example%203.png?token=GHSAT0AAAAAAB4UDLTPNUUF6YTR75GHN7CCZBKWMCQ)
+![Randomness](https://dub07pap002files.storage.live.com/y4mzE0abSi6MSC6wlcNO6cc7HkixFGCybt2guF2nrsuJevEeYJ01VOcaZ244FjFpN27PlSrAUucq_62p8wlyPdlkW1hEGJTD2ngxsI5DX8KtFOGtFqfHSyijZiYvKO4D2QoeURctNgIbgg75bzDNkiYWIjcJhXbwdipgxoLEuQItQBXjEX3vGcH134768ZZXfF_?encodeFailures=1&width=547&height=413)
 
 ### Visualizers
 #### Linear Systems
@@ -230,7 +230,7 @@ from BNumMet.Visualizers.LUVisualizer import LUVisualizer
 luVisualizer = LUVisualizer()
 display(luVisualizer.run())
 ```
-![LUVisualizer](https://raw.githubusercontent.com/fbpazos/Trabajo-Fin-Master/main/Latex/Include/Images/Thesis/Documentation/Visualizers/LUVisualizer/Example%201/Example%201%20-%2000%20-%20Initial%20State.png?token=GHSAT0AAAAAAB4UDLTPYKFM4QBOJKB4RDGQZBKWNDQ)
+![LUVisualizer](https://dub07pap002files.storage.live.com/y4m1q7uSd3dG2sMftf0YKDwNnz7aLGBnXeclboMbvU5un83LIpfX4Pw-8MJCHRzYcwLocDkZ1BeeAEx3qaowz7GUROV2rDzAYvmCcDEMw-X9P2HzXU9U3BzSMAQISEyUxxvVp3aNi46blEf1c1Liw_cADasxsqjOaZwwrrwTP7x7awPTudf0z4GwEmO2RH_akoB?encodeFailures=1&width=1080&height=404)
 
 #### Interpolation
 ```python
@@ -238,7 +238,7 @@ from BNumMet.Visualizers.InterpolationVisualizer import InterpolVisualizer
 interpolVisualizer = InterpolVisualizer()
 display(interpolVisualizer.run())
 ```
-![interpolVisualizer](https://raw.githubusercontent.com/fbpazos/Trabajo-Fin-Master/main/Latex/Include/Images/Thesis/Documentation/Visualizers/Interpolation/Example%201/Example%201%20-%2000%20-%20Initial%20State.png?token=GHSAT0AAAAAAB4UDLTOLYUOFN2JCWWDMMNWZBKWNPA)
+![interpolVisualizer](https://dub07pap002files.storage.live.com/y4mIg9iw5xzbHxOkHF5tfZGqdjS2yob1Zzd6LXkedOdQE8RBt54lqqfLUX8XB2113dOYLKqzjph5GDzoYvp-Qf7uaqL8NQ_GH0CBYfTQNT1FIqB6Yn-KO4dT78rau9Ka1FfR5zsbToR24NJnkJX5jy-xymWato5cUJ4aDJqAz_ENPJA2n1nNkCaFQ7WX58tmqzz?encodeFailures=1&width=952&height=551)
 
 
 #### Non-Linear
@@ -247,7 +247,7 @@ from BNumMet.Visualizers.NonLinearVisualizer import NonLinearVisualizer
 zerosVisualizer = NonLinearVisualizer()
 zerosVisualizer.run()
 ```
-![zerosVisualizer](https://raw.githubusercontent.com/fbpazos/Trabajo-Fin-Master/main/Latex/Include/Images/Thesis/Documentation/Visualizers/NonLinear/Example%201/Example%201%20-%2000%20-%20Initial%20State.png?token=GHSAT0AAAAAAB4UDLTONMMPKCLJ6ESNJKC4ZBKWOXA)
+![zerosVisualizer](https://dub07pap002files.storage.live.com/y4m1UJWkc5j50NF4KZd1w9VENgIqMT-GMjhE-qhKLIdF3K-ymR4Rttav5ZwUjSaCDFzuz0mYyDPS-5MBo89JEyTOO-P5PdwXoJN4rCO1vlrn_MxwTHLsscwHGFITW_0KwLW1cWi0u5EAtXphyBQf_tCH-OT5aqPQT8TS6urP1bgeHDrmAm6twsn0E2AqWKhbMpX?encodeFailures=1&width=864&height=711)
 
 
 #### Least Squares
@@ -258,7 +258,7 @@ yData = np.array([4.5, 2.4, 1.5, 1, 1.5, 2.4])
 lspVisualizer = LSPVisualizer(xData, yData)
 lspVisualizer.run()
 ```
-![lspVisualizer](https://raw.githubusercontent.com/fbpazos/Trabajo-Fin-Master/main/Latex/Include/Images/Thesis/Documentation/Visualizers/LeastSquares/Example%201/Example%201%20-%2000%20-%20Initial%20State.png?token=GHSAT0AAAAAAB4UDLTOGS7TTRSRNDBCS4KCZBKWPSA)
+![lspVisualizer](https://dub07pap002files.storage.live.com/y4mJQgX2hkcE5PU_vExDNiJb3-xPapyxDQqf7yZbw1uJ3kkxv5gxwsmYb13hUqf_IYyxdp9cZJHUP4UPYCuXzXs_hh27XFdwF5e6DsQSr0JGfKQhxivPBD6B_90wSpatlXWFG47NPzC5SxsDcM8Mj0u50hQUCGdXsbpGHHY5eDnB-CL_E2I1F0F0CkNPnAna5XW?encodeFailures=1&width=794&height=465)
 
 #### Randomness
 ```python
@@ -266,7 +266,7 @@ from BNumMet.Visualizers.RandomVisualizer import RandomVisualizer
 randomVisualizer = RandomVisualizer()
 randomVisualizer.run()
 ```
-![randomVisualizer](https://raw.githubusercontent.com/fbpazos/Trabajo-Fin-Master/main/Latex/Include/Images/Thesis/Documentation/Visualizers/Randomness/Example%201/Example%201%20-%2000%20-%20Initial%20State.png?token=GHSAT0AAAAAAB4UDLTPTJFHTKTPLC43VJQAZBKWQHQ)
+![randomVisualizer](https://dub07pap002files.storage.live.com/y4mE3vUbK5Q6OnxGwiw3aQCfp8TrjYyo9mNdVMs1qjLWA3hNpGcLtisRHQZRXQEOEmdU3b3LLH4OLDgfgUFT2GrO4ktOIa6nyKB10ICQR_WIEyS-LPyM1NDXdEmKhe8uafPjJdJy8-fJI9y9t-tiuOaDZFGedaHBDfFZCvTZbYKvHgDmRrqycXAp7vx1lesvPLv?encodeFailures=1&width=722&height=758)
 
 
 

@@ -6,7 +6,7 @@ from BNumMet import Random
 
 
 class RandomVisualizer:
-    def __init__(self, randGenerator=Random.genrand):
+    def __init__(self, random_generator=Random.genrand):
         """
         Initializes the RandomVisualizer class.
 
@@ -15,11 +15,11 @@ class RandomVisualizer:
         randGenerator : RandomGenerator
             The random generator to use. It is a function that does not take any parameters and returns a random number between 0 and 1.
         """
-        self.randGenerator = randGenerator
-        self.generatedNumbers = []
-        self.currentValue = 0
+        self.random_generator = random_generator
+        self.generated_numbers = []
+        self.current_value = 0
         self.iterations = 100
-        self.currentIteration = 0
+        self.current_iteration = 0
         self.inside_circle = 0
 
     def initialize_components(self):
@@ -104,7 +104,7 @@ class RandomVisualizer:
         # Draw the line of Pi
         x = np.linspace(0, self.iterations, 1000)
         y = np.full(1000, np.pi)
-        self.piLine = bq.Lines(
+        self.pi_line = bq.Lines(
             x=x,
             y=y,
             scales={"x": self.x_sc2, "y": self.y_sc2},
@@ -112,10 +112,10 @@ class RandomVisualizer:
             labels=["Pi"],
             display_legend=True,
         )
-        self.figure2.marks = [self.piLine]
+        self.figure2.marks = [self.pi_line]
 
         # Prepare the figure for the current value update
-        self.currentValueLine = bq.Lines(
+        self.current_value_line = bq.Lines(
             x=[],
             y=[],
             scales={"x": self.x_sc2, "y": self.y_sc2},
@@ -123,11 +123,11 @@ class RandomVisualizer:
             labels=["Current Value"],
             display_legend=True,
         )
-        self.figure2.marks = [self.piLine, self.currentValueLine]
+        self.figure2.marks = [self.pi_line, self.current_value_line]
 
         # Widget: Number of Points to generate
         # =================================================================================================
-        self.iterationsWidget = widgets.BoundedIntText(
+        self.iterations_widget = widgets.BoundedIntText(
             value=self.iterations,
             min=1,
             max=1000,
@@ -137,7 +137,7 @@ class RandomVisualizer:
 
         # Widget: Button for running the algorithm
         # =================================================================================================
-        self.runButton = widgets.Button(
+        self.run_button = widgets.Button(
             description="Run",
             disabled=False,
             button_style="",  # 'success', 'info', 'warning', 'danger' or ''
@@ -145,61 +145,61 @@ class RandomVisualizer:
             icon="check",  # (FontAwesome names without the `fa-` prefix)
         )
         # Observer: Button for running the algorithm
-        self.runButton.on_click(self.play_montecarlo)
+        self.run_button.on_click(self.play_montecarlo)
 
         # Widget: Grid
         # =================================================================================================
         self.grid = widgets.GridspecLayout(4, 4)
         self.grid[0:2, 0:2] = self.figure1
         self.grid[2:4, 0:4] = self.figure2
-        self.grid[0:1, 2:4] = self.iterationsWidget
-        self.grid[1:2, 2:4] = self.runButton
+        self.grid[0:1, 2:4] = self.iterations_widget
+        self.grid[1:2, 2:4] = self.run_button
 
     def number_of_iterations(self):
         """
         Updates the number of iterations. This is called when the user plays the animation. It configures the x axis of the second figure. and the number of iterations of the algorithm.
         """
-        self.iterations = self.iterationsWidget.value
+        self.iterations = self.iterations_widget.value
         self.x_sc2.max = self.iterations
-        self.piLine.x = np.linspace(0, self.iterations, 1000)
+        self.pi_line.x = np.linspace(0, self.iterations, 1000)
 
     def play_montecarlo(self, b):
         """
         Plays the montecarlo algorithm.
         """
         self.number_of_iterations()
-        self.currentIteration = 0
-        self.generatedNumbers = []
-        self.currentValue = 0
+        self.current_iteration = 0
+        self.generated_numbers = []
+        self.current_value = 0
         self.inside_circle = 0
         self.points.x = []
         self.points.y = []
-        self.currentValueLine.x = []
-        self.currentValueLine.y = []
+        self.current_value_line.x = []
+        self.current_value_line.y = []
 
-        self.runButton.disabled = True
+        self.run_button.disabled = True
 
-        for self.currentIteration in range(self.iterations):
-            newX = self.randGenerator()
-            newY = self.randGenerator()
-            self.generatedNumbers.append([newX, newY])
+        for self.current_iteration in range(self.iterations):
+            new_x = self.random_generator()
+            new_y = self.random_generator()
+            self.generated_numbers.append([new_x, new_y])
             with self.points.hold_sync():  # Animation for the points
-                self.points.x = [x[0] for x in self.generatedNumbers]
-                self.points.y = [x[1] for x in self.generatedNumbers]
-            if ((newX - 0.5) ** 2 + (newY - 0.5) ** 2) <= 0.25:
+                self.points.x = [x[0] for x in self.generated_numbers]
+                self.points.y = [x[1] for x in self.generated_numbers]
+            if ((new_x - 0.5) ** 2 + (new_y - 0.5) ** 2) <= 0.25:
                 self.inside_circle += 1
             # sleep(0.0001)
-            self.currentValue = 4 * self.inside_circle / len(self.generatedNumbers)
+            self.current_value = 4 * self.inside_circle / len(self.generated_numbers)
 
-            with self.currentValueLine.hold_sync():  # Animation for the current value
-                self.currentValueLine.x = [x for x in self.currentValueLine.x] + [
-                    self.currentIteration
+            with self.current_value_line.hold_sync():  # Animation for the current value
+                self.current_value_line.x = [x for x in self.current_value_line.x] + [
+                    self.current_iteration
                 ]
-                self.currentValueLine.y = [y for y in self.currentValueLine.y] + [
-                    self.currentValue
+                self.current_value_line.y = [y for y in self.current_value_line.y] + [
+                    self.current_value
                 ]
 
-        self.runButton.disabled = False
+        self.run_button.disabled = False
 
     def run(self):
         """

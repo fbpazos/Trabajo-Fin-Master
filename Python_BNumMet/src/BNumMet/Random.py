@@ -340,31 +340,31 @@ def genrand(seed: int = None):
         while kk < mt_vars["N"] - mt_vars["M"]:
             y = (mt_vars["mt"][kk] & mt_vars["UPPER_MASK"]) | (
                 mt_vars["mt"][kk + 1] & mt_vars["LOWER_MASK"]
-            )  # y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK)
+            )  # y = (mt[kk] AND UPPER_MASK) OR (mt[kk + 1] AND LOWER_MASK)
             mt_vars["mt"][kk] = (
                 mt_vars["mt"][kk + mt_vars["M"]] ^ (y >> 1) ^ mag01[y & 0x1]
-            )  # mt[kk] = mt[kk + M] ^ (y >> 1) ^ mag01[y & 0x1]
+            )  # mt[kk] = mt[kk + M] XOR (y >> 1) XOR mag01[y AND 0x1]
             kk += 1
 
         while kk < mt_vars["N"] - 1:
             y = (mt_vars["mt"][kk] & mt_vars["UPPER_MASK"]) | (
                 mt_vars["mt"][kk + 1] & mt_vars["LOWER_MASK"]
-            )  # y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK)
+            )  # y = (mt[kk] AND UPPER_MASK) OR (mt[kk + 1] AND LOWER_MASK)
             mt_vars["mt"][kk] = (
                 mt_vars["mt"][kk + (mt_vars["M"] - mt_vars["N"])]
                 ^ (y >> 1)
                 ^ mag01[y & 0x1]
-            )  # mt[kk] = mt[kk + (M - N)] ^ (y >> 1) ^ mag01[y & 0x1]
+            )  # mt[kk] = mt[kk + (M - N)] XOR (y >> 1) AND mag01[y & 0x1]
             kk += 1
 
         y = (mt_vars["mt"][mt_vars["N"] - 1] & mt_vars["UPPER_MASK"]) | (
             mt_vars["mt"][0] & mt_vars["LOWER_MASK"]
-        )  # y = (mt[N - 1] & UPPER_MASK) | (mt[0] & LOWER_MASK)
+        )  # y = (mt[N - 1] AND UPPER_MASK) OR (mt[0] AND LOWER_MASK)
         mt_vars["mt"][mt_vars["N"] - 1] = (
             mt_vars["mt"][mt_vars["M"] - 1] ^ (y >> 1) ^ mag01[y & 0x1]
-        )  # mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ mag01[y & 0x1]
+        )  # mt[N - 1] = mt[M - 1] XOR (y >> 1) XOR mag01[y & 0x1]
 
-        mt_vars["mti"] = 0  # mti = 0
+        mt_vars["mti"] = 0
 
     y = mt_vars["mt"][mt_vars["mti"]]  # y = mt[mti++]
     mt_vars["mti"] += 1
