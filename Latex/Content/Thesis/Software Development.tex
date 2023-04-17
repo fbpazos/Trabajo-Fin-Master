@@ -1,11 +1,11 @@
 \chapter{Software Development: The Process}
-This project focuses on the creation of BNumMet, a library that implements scientific numerical methods in conjunction with a graphical interface to help students learn, because of this it is essential to mention the software development process. 
+This project focusses on the creation of BNumMet, a library that implements scientific numerical methods in conjunction with a graphical interface to help students learn, because of this it is essential to mention the fundamental steps we are going to take on the software development front, since the project is primarily a software development one. 
 
 To do this, we will discuss the following aspects using \cite{PMBOK2013} as our project management guide:
 \begin{enumerate}
-    \item Initiation: We will establish the framework where BNumMet will take place, indicating the basic roles and the development framework; in the latter, we will briefly comment on the choice of development tools.
+    \item Initiation: We will establish the framework where BNumMet will take place, indicating the basic roles and the development framework.
     \item Planning: We will discuss the scope of the project, the timeline, the required resources, and milestones that indicate progress toward completion.
-    \item Execution: We will provide comments on how the project came together structurally and outline the steps this phase must undergo, that is, the quality check and monitoring \& control.
+    \item Execution: We will provide comments on how the project will come together structurally and outline the steps this phase must undergo, that is, quality check and monitoring \& control.
 \end{enumerate}
 
 
@@ -40,25 +40,16 @@ It is imperative that we discuss the licence so that the project is supported by
     i.e. MIT, Apache 2.0.
 \end{enumerate}
 
-Since our project idea was based on the previous but ended up not using Camilo's code, we are not legally required to use the same licence, and due to the nature of the project, we will proceed to use the \textit{GNU Affero General Public Licence v3.0 (AGPL)} which is the strongest copyleft licence. The GNU Affero General Public Licence v3.0 (AGPLv3) is a free copyleft licence for software and other kinds of work. It is specifically designed to ensure cooperation with the community in the case of network server software \cite{fsf1}. The licence is intended to guarantee the freedom of users to share and change all versions of a program, ensuring that it remains free software for all its users \cite{fsf1}.
-
-
- AGPLv3 was created to address a specific problem: How to protect the rights of a user when the program is used over a network \cite{fsf2}. Its terms effectively consist of the terms of GPLv3, with an additional paragraph in Section 13 to allow users who interact with the licenced software over a network to receive the source of that program \cite{fsf3}. 
-
-
-The idea behind it is to address the flaw other licences have, which is, in sort, to take profit of the software and modify it internally without having the need to make these changes available to the public.
-
-
-For more details on the licences, what they have to offer can be looked up at \cite{choosealicense}\cite{opensourceorg}
 \section{Planning}
 As stated, we are using an Iterative Life Cycle; therefore, we must indicate how we are going to iterate; in the development of this project the iterations were made every two weeks, with the exceptions of weeks which were incompatible with the correct development of the Master courses.
 
 Each iteration will have the project manager present the changes made to the client and then the client will provide feedback and next steps. In between iterations, the feedback must be implemented as well as ensuring its quality.
 
-There is only one time limitation, which is the end of the Master and the deadline for the thesis to be presented; therefore, every iteration must be ended before April 2023, from then on only small fixes will be applied to the project.
+The project originally started on October 2022 with iterations starting on the 6th of that month, the ending will be limited to the end of the Master and the deadline for the thesis to be presented; therefore, every iteration must be ended before May 2023, from then on only small fixes will be applied to the project.
+
 \section{Execution}
 \subsection{Quality Assurance}
-Software has an intrinsic problem, it cannot be tested and its correct functioning is not ensured; therefore, we shall try to provide quality standards. In particular, during the development of BNumMet, we will provide two different levels of quality assurance.
+Software has an intrinsic problem, it cannot be tested, and its correct functioning is not ensured; therefore, we shall try to provide quality standards. In particular, during the development of BNumMet, we will provide two different levels of quality assurance.
 \begin{enumerate}
     \item Unitary Tests: Is a type of software testing in which individual units or components of a software are tested. The purpose is to validate that each unit of the software code performs as expected.  Unit tests isolate a section of code and verify its correctness. 
     
@@ -76,101 +67,27 @@ To do such task, we will proceed by using GitHub, which is defined as an interne
     \item Python\_BNumMet : Folder dedicated to coding BNumMet
 \end{itemize}
 
-All files inside the directories will be added/removed accordingly to the execution phase, all backups will be provided by GitHub and, in the case of latex files, by saving the current state of the 'commit' inside another folder on a separate disk drive
+All files within the directories will be added/removed accordingly to the execution phase, all backups will be provided by GitHub and, in the case of latex files, by saving the current state of the 'commit' inside another folder on a separate disk drive
 \subsubsection{Versioning}
-As part of the configuration management, we should proceed to define how we keep track of changes and which is the latest version of them all
+As part of configuration management, we should proceed to define how are we going to keep track of changes and to stavlish which is the latest version of them all
 \paragraph{Development Versioning}
-During the first stages of the execution phase, the versioning was done by using the date of the year in the following format DD-MM-YYYY.
+During the first stages of the execution phase, the versioning will be done by using the date of the year in the following format DD-MM-YYYY.
 
-In the final stages, the new versioning scheme was provided to clarify that the project was in its final stages to be published, and it followed the following scheme.
+In the final stages, the new versioning scheme will be provided to clarify that the project was in its final stages to be published, and it follows the following scheme.
 \begin{center}
     <major>.<minor>.<patch>\textbf{dev}<development Number>
 \end{center}
 \paragraph{End-User Versioning}
-As per the final versioning, the one made to announce the end user an updated version will follow a scheme similar to the one in the last stages of the development phase.
+As per the final versioning, the one made to announce to the end user an updated version will follow a scheme similar to the one in the last stages of the development phase.
 \begin{center}
     <major>.<minor>.<patch>
 \end{center}
 
-\subsection{Remarks: Github actions}
-One of the perks of using Github and in particular the version that provides students free of charge the features of Github Pro is the fact that there is automations that can be done every time a new version of the project is posted on Github.
 
-We have used 3 types of automations that help us both maintain the code in accordance with the tests and provide 'quality of life' improvements.
-\begin{itemize}
-    \item Latex Compilation: If a file inside the Latex folder is updated, github - once commited - will compile the latex files and provide the PDF that was generated, this is primarily a 'quality of life' action, since it is not critical to the development, it only provides us with the latest PDF without needing a computer with a Latex compiler.
-    \item Python Tests: As the name indicates, this tests the correct functioning of our Python library by using the tests made on an external machine. The reason this action is crucial is because during development it is easier to adapt to one's own machine and not an external one (even with the use of a virtual Python environment). Github automates this testing and, as we have done, it tests it on different operating systems with the four latest versions of Python, to ensure both universality of the code and the correct functioning at every version.
-    \item Upload Python Package: This action provides the scripting required to upload the Python package to the PyPi directory.
-\end{itemize}
-All the scripting needed for this workflow to function will be attached in the Appendix.
 
 \section{Ending}
 Even though more work can be done, the final stage of the development process will be accompanied by making the development repository public, as well as the PyPi source that users can use to fully use the project. 
 \begin{itemize}
     \item Github Repository: \href{https://github.com/fbpazos/Trabajo-Fin-Master}{https://github.com/fbpazos/Trabajo-Fin-Master}
     \item PyPi Package: \href{https://pypi.org/project/BNumMet/}{https://pypi.org/project/BNumMet/}
-\end{itemize}
-\subsection{Final Task list}
-The lists of tasks completed are the following:
-
-\begin{itemize}
-\item General
-\begin{itemize}
-\item Review the name of the functions.
-\item Manage licenses.
-\item Initialise with default cases in the absence of initial data.
-\end{itemize}
-\item Linear Systems
-\begin{itemize}
-    \item Describe the changes with respect to the previous TFG.
-    \item Highlight the pivot column of the current iteration.
-    \item Highlight the rows and columns fixed in previous iterations with different colors.
-    \item Rename LinearEquations to LinearSystems.
-    \item Replace the for loop in line 50 with matrix notation.
-    \item Compare different methods.
-    \item Highlight the rows on which iteration has already been completed, not just the columns up to the current one.
-    \item Implement the for loop in the most efficient way.
-    \item Implement the rank revealing algorithm.
-    \item Modify the system message.
-\end{itemize}
-
-\item Interpolation
-\begin{itemize}
-    \item Use Boolean logic statements in the indices to select the elements of the array.
-    \item Do not automatically re-adjust axes when moving.
-    \item Introduce sliders to easily change the axes and add a link to the toolbar.
-    \item Change the colours of the buttons on Mac.
-    \item Correct splinetx name.
-    \item Improve zoom effect and do not restrict the part of the interpolating function drawn to the limits chosen to display it.
-    \item Replace slider with button: Extrapolation effect.
-    \item Compare times with the implementation of the first section using for loops or boolean comparison evaluations.
-    \item Perform linear regression to see the efficiency difference -> implement the most efficient one.
-\end{itemize}
-
-\item NonLinear Solutions
-\begin{itemize}
-    \item Use the reference with the original algorithm as a reference.
-    \item Remove the reference to the fzero algorithm.
-    \item Allow the option to display the curve used to approximate zero, whether secant or iqi.
-    \item Allow the user to choose the method of advancement in the iteration (bisection, secant, or iqi). Iqi should be blocked as an option if there are not enough nodes.
-    \item Look for current Python algorithms for nonlinear equation solutions (fzero?? iqi??).
-    \item Compare the Brent-Dekker method with the methods already implemented in Scipy.
-    \item Search the Web for improvements to the Brent-Dekker algorithm. -> Look at the Wijngaarden-Brent-Dekker method.
-    \item In the comparison of methods, represent the relative error instead of the absolute one.
-    \item Choose a different root function and try two cases, one with exact representation and one with approximate representation, e.g.: 1 and 0.1.
-    \item Choose a function with a first-order zero, e.g.: (x-1)x*(i-1), (x-0.1)x*(i-1). Same as the previous point.
-\end{itemize}
-
-\item Least Squares
-\begin{itemize}
-    \item Change the colours of the graph.
-    \item Fix "\$".
-\end{itemize}
-
-\item Random Number Generator
-\begin{itemize}
-    \item Implement the GUI.
-    \item Study the tests.
-    \item Implement Visualiser tests.
-    \item Implement RNG that fails the tests. Specifically, visual GUI tests should fail.
-\end{itemize}
 \end{itemize}

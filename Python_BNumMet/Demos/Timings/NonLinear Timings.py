@@ -7,6 +7,8 @@ import json
 # Matlabs Brent's method
 def zBrentDekkerMAT(f, interval, stopIters=1000, iters=False, *args):
     """
+    NOTE: This is a direct copy of the matlab function fzero  https://www.mathworks.com/help/matlab/ref/fzero.html by Mathworks Inc. This is not my code. I have only modified it to work with python. I have not tested it for accuracy. I own no rights to this code. I am only using it for educational purposes.
+
     Finds a zeros over the given interval using a combination of Bisection and secant method
     params:
         f: function to find the zeros
@@ -167,13 +169,13 @@ for i in [1, 2]:
     with open(
         f"./Demos/Timings/Results/NonLinear/NonLinearTimings_diffTol_bnm_{i}.json", "w"
     ) as f:
-        json.dump(experiment(1e-15, 1e-32, evalFunc=i), f, indent=4)
+        json.dump(experiment(1e-15, 0, evalFunc=i), f, indent=4)
 
     with open(
         f"./Demos/Timings/Results/NonLinear/NonLinearTimings_diffTol_scipy_{i}.json",
         "w",
     ) as f:
-        json.dump(experiment(1e-17, 1e-15, evalFunc=i), f, indent=4)
+        json.dump(experiment(1e-42, 1e-15, evalFunc=i), f, indent=4)
 """
 # Save results to file
 with open("./Demos/Timings/Results/NonLinear/NonLinearTimings_2.json", "w") as f:

@@ -1,0 +1,26 @@
+\section{Random Number Generator Package}
+To expand the techniques available in BNumMet even further, we will incorporate a lesser-known field of numerical methods, namely the implementation of generators for (pseudo) random numbers. The underlying motivation for its development is our interest about how random number generators function, as well as allowing the end-user to study a side of numerical techniques that is not generally taught. We should also mention that this package was not originally intended to be developed, but due to some extra time, we decided it would be beneficial to include it.
+
+Many of the suggested techniques rely on specific values being initialized, so we used a Python dictionary to help students understand the meaning of each variable by associating a key with its value; this dictionary is then used as a global dictionary in the appropriate method.
+
+\subsection{Lehmer's Generator}
+Lehmer's Random Number Generator is one of the simplest yet most elegant generators available. This type of generator is a Linear Congruential generator, which is defined by the following recurrence relation. \cite{payne1969coding} \cite{park1988random}
+\[x_{n+1} = k\cdot x_n \mod{n}\]
+
+In the case of Lehmer's generator it follows:
+\[x_{n+1} = (a\cdot x_n+c) \mod{n}\]
+The selection of $a,c,n$ and $x_0$ is critical, and some values have been proposed for optimal generation; one of these values has been used as the method's default initializer, in particular:
+\[a= 7^5, c=0, m=2^{31}-1, x_0 = 1 \]
+
+These values ensure that this generator works properly, but some bad generators can be found, which is an interesting exercise for the student to search for or come up with. Additionally it is worth mentioning that the developped function allows for input parameters to be set.
+
+\subsection{Marsaglia's Generator}
+
+In the original paper \cite{10.1214/aoap/1177005878} Marsaglia expands on random number generators by providing a generator that is born from a type of relation such as Fibonacci, those generators that add or subtract previous values from the current value, but in Marsaglia's case this generator has some \textit{lag} added to it, that is it extends the appearance of the value that would be expected without \textit{lag}. It is accomplished by introducing two parameters know as $lag_s$ and $lag_r$ as well as a $carry$ variable which will be $1$ if the generated number is negative - to which the $base$ will be added - and $0$ if the generator produced a positive number. This $carry$ variable is what gives the name to this type of generator which are know as $add-with-carry$ or $subtract-with-borrow$
+
+One of the complexities of this method is that it generates primarily integer numbers and is limited to the base it accepts as input; however, dividing by the base (the largest number in the generator) produces a decimal number between 0 and 1. Some input arguments were proposed, but as we saw in Lehmer's generator, some default parameters were provided. 
+\[base = 2^{31}-1, lag_r=19, lag_s=7, carry=1, seed\_tuple = (1,1)\]
+This set of values was proposed in the original paper; it is also worth noting that we used the subtract with borrow method, despite the fact that the addition with carry method is analogous. We strongly encourage students to try to find ill-inputs that generate patterns in their output.
+
+
+\subsection{Mersenne Twister Generator}

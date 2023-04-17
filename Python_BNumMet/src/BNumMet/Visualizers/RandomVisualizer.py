@@ -147,13 +147,19 @@ class RandomVisualizer:
         # Observer: Button for running the algorithm
         self.run_button.on_click(self.play_montecarlo)
 
+        self.pi_value = widgets.FloatText( # Widget: Pi value
+            value=0,
+            description="$\pi$:",
+            disabled=True,
+        )
         # Widget: Grid
         # =================================================================================================
         self.grid = widgets.GridspecLayout(4, 4)
         self.grid[0:2, 0:2] = self.figure1
         self.grid[2:4, 0:4] = self.figure2
-        self.grid[0:1, 2:4] = self.iterations_widget
-        self.grid[1:2, 2:4] = self.run_button
+        self.grid[0:1, 2:4] = widgets.VBox([self.iterations_widget,self.run_button])
+        
+        self.grid[1:2, 2:4] = self.pi_value
 
     def number_of_iterations(self):
         """
@@ -198,6 +204,8 @@ class RandomVisualizer:
                 self.current_value_line.y = [y for y in self.current_value_line.y] + [
                     self.current_value
                 ]
+                self.pi_value.value = self.current_value
+            sleep(0.0001)
 
         self.run_button.disabled = False
 

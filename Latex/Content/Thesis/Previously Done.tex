@@ -1,37 +1,48 @@
-\chapter{Previously done work}
+\chapter{State of the Art}
 \section{Mathworks}
-The underlying idea behind this project comes from \cite{doi:10.1137/1.9780898717952} in which the author, Cleve Moller, provides a textbook for students to get an introduction to numerical methods using Matlab; not only does this work provide with the guide to understand the fundamental numerical methods, but it also includes attached the code for the various methods he includes, while also creating a Graphical User Interface for each method to help students gain a better understanding of such.
+The underlying idea behind this project comes from \cite{doi:10.1137/1.9780898717952} in which the author, Cleve Moller, provides a textbook for students to get an introduction to numerical methods using Matlab; not only does this work provide with the guide to understand the fundamental numerical methods, but it also includes attached the code for the various methods he includes, while also creating a Graphical User Interface for each method to help students gain a better understanding of such. The code is written in Matlab, which is a proprietary programming language developed by Mathworks, Inc. and is widely used in the scientific community and less so in the industry.
 
-To this extent, our project will be focused on the code side of the book, due to the fact that the book is highly accessible to anyone but, as we will discuss, we must provide a new programming framework for this methods to take place.
+Mathworks has created a series of packages that are freely available to the public. These packages are known as Toolboxes, and they may be downloaded from the Mathworks website. 
 
-From this work, we must extract some objectives and guidelines that we must achieve for our project to be acceptable; the following list must be at the core of the project.
-
+Along with the graphical interface, the author created some of the following chapters and the visualization associated:
 \begin{itemize}
-\item The code
-    \begin{itemize}
-        \item It must be readable to students.
-        \item It must be commented in a language that is easy for a student to read.
-        \item It must not use external libraries for the algorithms.
-        \item It must be documented.
-        \item It must serve as an introduction to the programming language.
-        \item It must be efficient.
-        \item It must be functional, that is, it should output the correct answer.
-    \end{itemize}
-\item The Graphical User Interface
-    \begin{itemize}
-        \item It must provide the user with the ability to choose how to proceed.
-        \item It must be easy to use.
-        \item It must provide insight on one or more aspects of the algorithm.
-    \end{itemize}
+    \item Linear Equations - LU Decomposition Visualizer
+    \item Interpolation - Visualization of various interpolation techniques
+    \item Zeros and Roots - Brent-Dekker's Algorithm visualizer
+    \item Least Squares - Applying least squares to the US Census 
+    \item Quadrature - Visualization of how quadrature applies
+    \item Ordinary Differential Equations - How different ODE function
+    \item Fourier Analysis - Visualization of Fourier Analysis
+    \item Random Numbers - Some simple Random Number Generators
+    \item Eigenvalues and Singular Values - Visualization on how they are obtained from the matrix
 \end{itemize}
 
-Overall, we must prioritise to the best of our abilities the final goal which is that students must learn properly the algorithms. 
+
+
+\subsection{Author comments on this work}
+Although, Cleve Moller provides the initial framework for solving the main dilemma we are faced with, there are potential improvements that could be made to the project, among them, the following are proposed:
+
+\begin{enumerate}
+    \item Use a programming language that is open source and free to use.
+    \item Use a programming language that is widely used in the scientific community as well as in the industry.
+    \item Provide an Open Source Licence for the project to be used by anyone.
+    \item Provide a Graphical User Interface that is more intuitive and user-friendly.
+\end{enumerate}
+
+
+Overall, the work done by Cleve Moller is a great starting point for the development of this project, but it is not enough to solve the dilemma presented in the Introduction, since it is not open source and it is not free to use and therefore, it is not accessible to everyone to either use or improve. Additionally, it is built on a proprietary programming language that is not widely used in the industry, which generates a barrier for the project to be used in the industry and the ability for a student to learn from the language and use it in their future career.
+
 
 \section{End-of-Degree Thesis}
-The first attempt to solve the dilemma presented in the Introduction was first tackled by Juan Camilo Bucheli and Juan Manuel Pérez Pardo, as an end-of-degree thesis, \cite{}. Together, they constructed the first framework for the underlying idea behind BNumMet.
-They carefully went over the details of the Socio-Economical front and development of the project, and they also discussed both the meaning of what it means for a project to be open source and the licences associated with them. Additionally, they pondered on the reasons of their choice of the programming language and discussed the main and widely-used library of numerical methods (LAPACK). 
+The first attempt to solve the dilemma presented in the Introduction was first tackled by Juan Camilo Bucheli and Juan Manuel Pérez Pardo, as an end-of-degree thesis, \cite{bucheli2020}. Together, they constructed the first framework for the underlying idea behind BNumMet.
+They carefully went over the details of the Socio-Economical front and development of the project, and they also discussed both the meaning of what it means for a project to be open source and the licences associated with them. Additionally, they pondered on the reasons of their choice of the programming language and discussed the main and widely-used library of numerical methods (LAPACK).
+
+The authors implemented the Linear Systems Chapter in this project, prioritizing the LU decomposition with Matlab's translation of the LU Decomposition visualizer. They also began developing the Interpolation visualizer using some of the interpolation methods mentioned in the work from Mathworks.
+
+It should be emphasized that the numerical techniques applied are not licensed; they are open-source, with the exception of some tolerance considerations and step selection; the only thing licensed are the visualizers for each chapter.
 
 
+\subsection{Author comments on this work}
 After a closer investigation of the project, we must ask the following questions that derive from this work.
 \begin{enumerate}
     \item Is the licence they had previously chosen still valid with the current evolution of technology?
@@ -39,22 +50,21 @@ After a closer investigation of the project, we must ask the following questions
     \item Can we improve the global state of the art?
     \item Is the previously done code valid and/or useful for continuing the work?
     \item How can we continue the work as the author would have wanted?
+    \item Are the principles of open source followed?
 \end{enumerate}
 
-
-\subsection{Author comments on this work}
-While questions 1 and 2 will be discussed in a latter chapter (Software Development process), question 3 remains to this day valid and the overall discussion remains the same, though some comments on the formalities of the programming languages and derivations of Python could be addressed, this is not the intent of this work.
-
-Question 4 is from where this idea of BNumMet started; even though the code is readable and - somewhat - functional, there exists room for improvement, on the one hand the code must be translated to the English language; reasons vary from being the universal language of coding to the fact that is the most spoken language in the world, thereby enabling access to this project to a vast majority of people. On the other hand, the overall algorithmic could be improved; therefore, the following list is proposed as the set of goals to improve of this end-of-degree thesis:
+Even though the code they provided is readable and - somewhat - functional, there exists room for improvement, on the one hand the code must be translated to the English language; reasons vary from being the universal language of coding to the fact that is the most spoken language in the world, thereby enabling access to this project to a vast majority of people. On the other hand, the overall algorithmic could be improved; therefore, the following list are some of the weak points behind their project:
 
 \begin{enumerate}
     \item The use of threading on the LU Graphical User interface can be simplified to not use threading to reduce computer resources as well as improving the readability of the project.
-    \item Updating the naming and code conventions to current Python standards.
+    \item Naming and code conventions to current Python standards.
     \item An overall improvement on how the tests are made.
     \item The development of the requirements that PyPI (Python Package Index) requires for it to be properly executable and installed through pip.
     \item Updating the Graphical User Interface with the underlying theory of Human-Computer Interaction.
 \end{enumerate}
 
-Finally, to answer question 5, we should proceed to the conclusion of Camilo and Pérez's work, where they state that if some future work is to be made, they would focus it on the development of new packages; therefore, we must add to our goals the addition of new packages that could not be implemented.
+\section{External References}
+Some external references can be found that attempt to cover this topic, to name a few \cite{BUldingMatlabGUI} \cite{vonDohlen2020} \cite{Kosasih}. Upon closer examination, these articles attempt to generate a graphical user interface in order to teach, but all of them lack the pedagogical aspect of such, they only develop the solver alongside an interface that only provides the user with input and a click-to-run solver without allowing the end-user to properly choose and see what the algorithm does behind the scenes. Furthermore, the aforementioned publications highlight Matlab's core programming framework, which may be useful in academia but will be a hurdle in the business sector where other languages are employed.
 
 
+Even while the authors' work is a fantastic startubg point, we must focus on attempting to attain the pedagogical part that they did not fully achieve.

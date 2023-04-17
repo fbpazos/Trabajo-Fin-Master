@@ -73,13 +73,20 @@ class LSPVisualizer:
         # 3. Int text for selecting the number of sines and cosines
         self.sine_cosine_degree = widgets.BoundedIntText(  # int text for selecting the number of sines and cosines
             value=1,  # default value
-            description="Sines & Cosines degree:",  # description
+            description="",  # description
             disabled=False,
             min=0,
+            layout=widgets.Layout(width="50%")
+            # Make smaller width
         )
+
         self.sine_cosine_degree.observe(
             self.degree_change_sine_cosine, names="value"
         )  # observe the change of the int text
+
+        self.sine_cosine_degree_box = widgets.HBox(
+            [widgets.Label("Basis\n Elements:"), self.sine_cosine_degree]
+        )
 
         # 4. Checkbox for Error Bound Visualization
         self.error_bound = widgets.Checkbox(  # checkbox for error bound visualization
@@ -181,7 +188,7 @@ class LSPVisualizer:
             change["new"] == "Sines & Cosines"
         ):  # if the function type is "Sines & Cosines" then we need to
             to_grid.append(
-                self.sine_cosine_degree
+                self.sine_cosine_degree_box
             )  # add the sine and cosine degree dropdown to the grid
             self.sine_cosine_degree.max = (
                 (  # set the max degree to half the number of data points - 1
@@ -200,7 +207,11 @@ class LSPVisualizer:
         with self.fig.hold_sync():  # update the figure
             self.fig.marks = to_draw  # update the marks
             self.grid[0:2, 2:] = widgets.VBox(
-                to_grid
+                to_grid,
+                layout=widgets.Layout(  # set the layout of the grid
+                    width="auto",
+                    height="auto",
+                ),
             )  # update the grid (the dropdowns and degree selectors)
 
     def exponential_lsp(self):
@@ -260,7 +271,7 @@ class LSPVisualizer:
         c : np.array
             The coefficients of the exponential function in the form of c[0]*x^c[1]
         """
-        self.remarks.value = f"The exponential function that best fits the data is: <br>$y = {c[0]:.4f}e^{{{c[1]:.4f}x}}$ <br><br> The coefficients of the exponential function are: <br>$c_0 = {c[0]:.4f}$ <br>$c_1 = {c[1]:.4f}$ <br><br> The error is: ${err:.4f}$"
+        self.remarks.value = f"The exponential function that best fits the data is: <br>$y = {c[0]:.4f}e^{{{c[1]:.4f}x}}$ <br><br> The coefficients of the exponential function are: <br>$c_0 = {c[0]:.4f}$ <br>$c_1 = {c[1]:.4f}$ <br><br> The error is: ${err:.4f}$ $\left(\sqrt{{\sum_i (y_i - f(x_i))^2}}\\right)$"
 
     def polynomial_lsp(self, degree):
         """
@@ -340,7 +351,7 @@ class LSPVisualizer:
         for i in range(len(c)):  # Add the coefficients of the polynomial function
             remarks += f"$c_{i} = {c[i]:.2f}$<br> "  # Add the coefficient
 
-        remarks += f"<br> The error is {err:.4f}"  # Third line of the remarks
+        remarks += f"<br> The error is ${err:.4f}$ $\left(\sqrt{{\sum_i (y_i - f(x_i))^2}}\\right)$ <br><br>"  # Third line of the remarks
 
         self.remarks.value = remarks  # Update the remarks
 
@@ -393,7 +404,19 @@ class LSPVisualizer:
             colors=["red"],
         )  # Make the curve object
 
-        err = np.linalg.norm(self.y_data_lsp - A @ c)  # Calculate the error
+        err = np.linalg.norm(
+            self.y_data_lsp
+            - [
+                np.sum(
+                    [
+                        c[i] * np.sin(i * x) + c[i + 1] * np.cos(i * x)
+                        for i in range(1, degree + 1)
+                    ]
+                )
+                + c[0]
+                for x in self.x_data_lsp
+            ]
+        )  # Calculate the error
 
         return curve, c, err
 
@@ -436,7 +459,7 @@ class LSPVisualizer:
         for i in range(len(c)):  # Iterate through coefficients
             remarks += f"$c_{i} = {c[i]:.2f}$ <br>"  # coefficient
 
-        remarks += f"<br> The error is: {err:.4f}"  # Third part of the remarks (error)
+        remarks += f"<br> The error is: ${err:.4f}$ $\left(\sqrt{{\sum_i (y_i - f(x_i))^2}}\\right)$ <br><br>"  # Third part of the remarks (error)
 
         self.remarks.value = remarks  # Set the remarks
 
