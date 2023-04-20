@@ -1,19 +1,30 @@
 \section{Non Linear Equation Solver Package}
-As part of extending Camilo's work, we decided to implement the numerical methods associated with solving nonlinear equations because it is a topic that, like the others, is widely taught in a numerical methods course and is a fundamental approach to solving most equations that may not be solvable using a linear approach.
+As part of extending BNumMet's functionality, we decided to implement the numerical methods associated with solving nonlinear equations because it is a topic that, like the others, is widely taught in a numerical methods course and is a fundamental approach to solving most equations that may not be solvable using a linear approach.
 
-Except for the final, all of the approaches are quite straightforward, with the main exception being that the input function may be multidimensional, but only the zero will be located in one of the dimensions. In addition, an iteration counter has been introduced for student study of the efficiency of the various methods.
+Except for the last method, all of the approaches are quite straightforward, with the main exception being that the input function may be multidimensional, but only the zero will be located in one of the dimensions. In addition, an iteration counter has been introduced for student study of the efficiency of the various methods.
 
 \subsection{Bisection}
 We have implemented the well known method of the bisection method, a method that at every iteration divides the search interval into two half's and takes the one whose sign at the extremes change. No extra considerations have been taken into account except for adding the appropriate comments for any student to know what every step is doing.
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/NonLinear/Bisection Examples}
 
 \subsection{Newton's Method}
-Most numerical methods classes use this approach to illustrate the secant method, which is why we built it; nevertheless, it should be noted that according to the method, this is the only way that needs the input of the derivative.
+Most numerical methods classes use this approach to illustrate the secant method, which is why we built it; nevertheless, it should be noted that according to the method, this is the only one that needs the input of the derivative.
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/NonLinear/Newtons Examples}
+
 
 \subsection{Secant Method}
 As a continuation of Newton's approach, it is critical to apply the Secant method, which generalizes Newton's method by approximating the derivative and eliminating the necessity for the derivative that Newton's method requires. 
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/NonLinear/Secant Examples}
 
 \subsection{Inverse Quadratic Interpolation (I.Q.I.)}
 The aim is to utilize quadratic interpolation to approximate the inverse of f, and further iterations will result in the zero we want. It should be noted that this method is often used as part of another method that we will examine later \cite{10.5555/2553197}, that is why we created it as a standalone to offer students with a glimpse of what the method is about without additional code that may interfere with the learning process.
+
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/NonLinear/IQI Examples}
+
 
 \subsection{Brent-Dekker's Algorithm}
 Brent Dekkers algorithm is one of the methods that combines the previously discussed methods into a method that will improve the number of evaluations a specific method may require while also eliminating some of the caveats that, for example, the secant method has, where there are functions where this latter method does not converge.  It should be noted that this approach was first developed by Dekker, Wiengarten, and their colleagues, only to be modified by Brent to improve convergence. \cite{brent2002algorithms} 
@@ -37,8 +48,7 @@ In particular, we will focus on the different implementations the Brentt-Dekker 
 
 In this analysis we are interested in how many function evaluation does the algorithm need to find the root, the fundamental reason that we are interested in the number of evaluations is because this types of algorithms do not have an excessive algorithmic complexity, making the evaluation of the function that (most likely) will be nonlinear carry all the computational cost, that is why we need to find the number of evaluations. However, we are unable to look at Scipy's code to tamper with it to obtain our desired result, to properly proceed I want to digress from the discussion at hand and focus on how we can find the number of function evaluations without the need of having the actual implementation.
 
-\paragraph{Finding function evaluations without external code}
-As a thought experiment, imagine you have a machine that is protected so as not to be opened or tampered with, this machine can only take in a function $f(x)$ and outputs its zero (for arguments sake, suppose it can be done without any problems), this machine does not output how many times did it use the function to calculate or has a small light that shows how it is processing. We can only input functions and have as an output the location of the zero. 
+\paragraph{Finding function evaluations without external code} As a thought experiment, imagine you have a machine that is protected so as not to be opened or tampered with, this machine can only take in a function $f(x)$ and outputs its zero (for arguments sake, suppose it can be done without any problems), this machine does not output how many times did it use the function to calculate or has a small light that shows how it is processing. We can only input functions and have as an output the location of the zero. 
 
 
 
@@ -78,9 +88,9 @@ FUNCTION
     OUT : f(x)
 \end{lstlisting}
 
-But most programming languages lack the ability to auto-initialise the value, and even if initialised it must be done inside the function itself which will be reset every function evaluation, right?
+But most programming languages lack the ability to auto-initialise the value, and even if initialised it must be done inside the function itself which will be reset every function evaluation.
 
-Imagine we can create a function (think of if as a piece of hardware) that can safely be input to our machine and still have our expected zero, but we - as professionals we are - can create one 'invisible' cable that is connected to a light outside the machine, and every time it evaluates the function, the light is turned on (or in this case a counter is updated). To do such thing, we must draw our attention to Global Variables, variables that are within the reach of the entire execution of a program and can be edited and accessed anywhere in the code. 
+Imagine we can create a function (think of if as a piece of hardware) that can safely be input to our machine and still have our expected zero, but we  can create one 'invisible' cable that is connected to a light outside the machine, and every time it evaluates the function, the light is turned on (or in this case a counter is updated). To do such thing, we must draw our attention to Global Variables, variables that are within the reach of the entire execution of a program and can be edited and accessed anywhere in the code. 
 
 This idea will look like 
 \begin{lstlisting}
@@ -129,14 +139,18 @@ Once this link is created, we only need to reset the counter every time we input
 \end{tikzpicture}
 
 \paragraph{Results}
-To test it we will implement the thought experiment in code and proceed in the following manner, we will create a function $f(x) = (x-a)\cdot x^{i}$, where $a$ will be either $1$ or $0.1$, a number that can be written in floating-point expression and one that cannot, the $i$ will be the exponent of the function which will take odd values. We will run the 3 aforementioned methods once (since in this case the algorithms are purely deterministic, as they do not rely on time) for different interval widths starting at $0.8$ and ending in $1.1+j$ where j will be increasing from 1 to 10000 in step sizes of 1. Using in all the methods the same input tolerance
+To test it we will implement the thought experiment in code and proceed in the following manner, we will create a function $f(x) = (x-a)\cdot x^{i}$, where $a$ will be either $1$ or $0.1$, a number that can be written in floating-point expression and one that cannot, the $i$ will be the exponent of the function which will take odd values. We will run the 3 aforementioned methods once (since in this case the algorithms are purely deterministic, as they do not rely on time) for different interval widths starting at $0.8$ and ending in $1.1+j$ where j will be increasing from 1 to 10000 in step sizes of 1. Using in all the methods the same input tolerance.
+
+Our goal with this test will be firstly to prove the effectiveness of the original algorithm and the implementation in python with respect to the other two, as well as, observing if we have an algorithmic advantage or not with these aforementioned methods.
 
 We will then take the number of evaluations and the value of x at where the zero is found in order to measure the relative error.
 
 \subparagraph{For $a=1$}
 As we can observe in the first plot of [fig \ref{fig:NonLinear 3 method Results for a=1 same tolerance}] Scipy's implementation of Brent-Dekker's Algorithm is the worst in term of number of evaluations, and Matlab's has almost everywhere a similar behaviour in number of evaluations. Looking at the second plot, we see that even though BNumMet's implementation was better in terms of evaluations, it is the worst in terms of relative error, and Matlab's is similar to Scipy's but slightly worst.
 
-One question rises from here: will BNumMets implementation improve if we reduce the tolerance, at the risk of number of evaluations - but as seen, we still have room for tweaking. In fact, we can improve the relative error of BNumMets by increasing the tolerance and still have an advantage over Scipy's implementation almost everywhere [fig \ref{fig:NonLinear 3 method Results for a=1 BNumMet smaller tolerance}]
+One question rises from here: will BNumMets implementation improve - in terms of having a lower number of function evaluations - if we reduce the tolerance, at the risk of number of evaluations - but as seen, we still have room for tweaking. In fact, we can improve the relative error of BNumMets by decreasing the tolerance and still have an advantage over Scipy's implementation almost everywhere [fig \ref{fig:NonLinear 3 method Results for a=1 BNumMet smaller tolerance}]
+
+This results proves that the original implementation of Brent-Dekker is better than Scipy's, because at a lower number of function evaluations we achieve a better relative error. 
 
 \subparagraph{For $a=0.1$}
 The same discussion of $a=1$ remains valid to the case $a=0.1$, it must be noted that in this case the plots show a extravagant behaviour, with the number of evaluations, at certain points, the evaluations remain the same regardless of the interval size. On the first plot [fig \ref{fig:NonLinear 3 method Results for a=0.1 same tolerance}] we observe that BNumMet takes the leading position while on the second plot, there remains a high relative error but closer to Matlab's on the overall scheme.
@@ -174,3 +188,5 @@ All in all, the decision to implement the original Brent-Dekker was a good choic
 \end{sidewaysfigure}
 
 
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/NonLinear/Brent Dekker Examples}

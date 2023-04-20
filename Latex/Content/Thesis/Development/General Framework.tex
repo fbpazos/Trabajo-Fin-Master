@@ -2,32 +2,35 @@
 \section{General framework of the Project}
 
 \subsection{Licensing}
-One of the first considerations we must take into stablishing the development of the project is the License, as discussed in chapter 3, there are 2 major types of licences, but since our project idea was based on the previous but ended up not using Camilo's code after a careful analysis of the implementation, we are not legally required to use the same licence, and due to the nature of the project, we will proceed to use the \textit{GNU Affero General Public Licence v3.0 (AGPL)} which is the strongest copyleft licence. The GNU Affero General Public Licence v3.0 (AGPLv3) is a free copyleft licence for software and other kinds of work. It is specifically designed to ensure cooperation with the community in the case of network server software \cite{fsf1}. The licence is intended to guarantee the freedom of users to share and change all versions of a program, ensuring that it remains free software for all its users \cite{fsf1}.
+One of the first considerations we must take into establishing the development of the project is the License, as discussed in chapter 3, there are 2 major types of licences, but since our project idea was based on the previous but ended up not using Camilo's code after a careful analysis of the implementation, we are not legally required to use the same licence, and due to the nature of the project, we will proceed to use the \textit{GNU Affero General Public Licence v3.0 (AGPL)} which is the strongest copyleft licence. The GNU Affero General Public Licence v3.0 (AGPLv3) is a free copyleft licence for software and other kinds of work. It is specifically designed to ensure cooperation with the community in the case of network server software \cite{fsf1}. The licence is intended to guarantee the freedom of users to share and change all versions of a program, ensuring that it remains free software for all its users \cite{fsf1}.
 
 
  AGPLv3 was created to address a specific problem: How to protect the rights of a user when the program is used over a network \cite{fsf2}. Its terms effectively consist of the terms of GPLv3, with an additional paragraph in Section 13 to allow users who interact with the licenced software over a network to receive the source of that program \cite{fsf3}. 
 
 
-The idea behind it is to address the flaw other licences have, which is, in sort, to take profit of the software and modify it internally without having the need to make these changes available to the public.
+The idea behind it is to address the flaw other licences have, which is, in short, to take profit of the software and modify it internally without having the need to make these changes available to the public.
 
 
 For more details on what specific licenses have to offer can be looked up at \cite{choosealicense}\cite{opensourceorg}
 
 \subsection{Software configuration management}
-To properly execute the Software configuration management we will be using one of the benefits of using Github and, in particular, the version that provides students free of charge the features of Github Pro is the fact that there are automations that can be done every time a new version of the project is posted on Github.
+To properly execute the Software configuration management we will be using one of the benefits of GitHub and, in particular, the version that provides students free of charge the features of GitHub Pro which is the use of automations that can be done every time a new version of the project is posted on GitHub.
 
-We have used three types of automations that help us both maintain the code in accordance with the tests and provide 'quality of life' improvements.
+We have used three types of automations that help us both maintain the code in accordance with the tests and provide ``quality of life'' improvements.
 \begin{itemize}
-    \item Latex Compilation: If a file inside the Latex folder is updated, github - once commited - will compile the latex files and provide the PDF that was generated, this is primarily a 'quality of life' action, since it is not critical to the development, it only provides us with the latest PDF without needing a computer with a Latex compiler.
-    \item Python Tests: As the name indicates, this tests the correct functioning of our Python library by using the tests made on an external machine. The reason this action is crucial is because during development it is easier to adapt to one's own machine and not an external one (even with the use of a virtual Python environment). Github automates this testing and, as we have done, it tests it on different operating systems with the four latest versions of Python, to ensure both universality of the code and the correct functioning at every version.
+    \item Latex Compilation: If a file inside the Latex folder is updated, GitHub - once committed - will compile the latex files and provide the PDF that was generated, this is primarily a ``quality of life'' action, since it is not critical to the development, it only provides us with the latest PDF without needing a computer with a Latex compiler.
+    \item Python Tests: As the name indicates, this tests the correct functioning of our Python library by using the tests made on an external machine. The reason this action is crucial is because during development it is easier to adapt to one's own machine and not an external one (even with the use of a virtual Python environment). GitHub automates this testing and, as we have done, it tests it on different operating systems with the four latest versions of Python, to ensure both universality of the code and the correct functioning at every version.
     \item Upload Python Package: This action provides the scripting required to upload the Python package to the PyPi directory.
 \end{itemize}
 All the scripting needed for this workflow to function will be attached in the Appendix.
+\subsection{Quality Assurance}
+\subsubsection{Unitary Tests}
+As part of assuring that our final results will be functional, we will - as previously discussed - develop unitary test, the library will be Pytest, the reason of the choice was predicated on the fact that this library  offers a more detailed analysis if a test has failed as well as it offers coverage reports which will be of great use for the code reviewer and will provide us - the programmers - how many lines of code did we miss in our test.
 
-\subsection{Code Reviewer}
+\subsubsection{Code Reviewer}
 As we indicated in the execution phase, testing or verifying the quality of our project is a critical stage; one of the tools recommended is SonarQube; we will now cover the steps we had to take to correctly develop this Code Reviewer.
 
-We utilized Docker to run Sonarqube (an instance of the service), docker is defined as a set of platform as a service technologies that leverage OS-level virtualization to distribute software in packages called containers\cite{enwiki:1148220158}.To install and run it we have introduced the command into the terminal in order to set up the container and the flow of the container
+We utilized Docker to run Sonarqube (an instance of the service), docker is defined as a set of platform as a service technologies that leverage OS-level virtualization to distribute software in packages called containers\cite{enwiki:1148220158}.To install and run it we have introduced the command into the terminal in order to set up the container and the flow of the container.
 
 \begin{lstlisting}
 docker run -d --name sonarqube -p 9000:9000 sonarqube

@@ -1,0 +1,12 @@
+\paragraph{Example 1}{
+\begin{lstlisting}[language=Python]
+from BNumMet.LinearSystems import qr_solve
+A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
+b = np.array([7, 4, 6])
+solution = qr_solve(A, b)
+display(solution)
+
+>> solution = 
+        array([-3.83634647e-16, -1.00000000e+00,  1.00000000e+00])
+\end{lstlisting}
+}

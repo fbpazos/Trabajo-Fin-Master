@@ -1,0 +1,34 @@
+\paragraph{Example 1}{
+\begin{lstlisting}[language=Python]
+from BNumMet.NonLinear import bisect
+fun = lambda x: x**2 - 2
+interval = [1, 2]
+sol, nIter = bisect(fun, interval, iters = True)
+print("Bisection method: x = %f, nIter = %d" % (sol, nIter))
+
+>> Bisection method: x = 1.414214, nIter = 100
+\end{lstlisting}
+}
+\paragraph{Example 2}{
+\begin{lstlisting}[language=Python]
+from BNumMet.NonLinear import bisect
+f = lambda x: sp.jv(0, x) # Bessel function of the first kind of order 0
+interval = lambda n: [n * np.pi, (n + 1) * np.pi] # Interval for the n-th zero
+
+zeros = [ bisect(f, interval(n)) for n in range(0, 10)]
+
+
+x = np.arange(1, 10 * np.pi, np.pi / 50)
+y = f(x)
+plt.plot(x, y)
+plt.plot(zeros, np.zeros(len(zeros)), "ro")
+plt.axhline(0, color="k")
+plt.show()
+\end{lstlisting}
+\begin{figure}[H]
+    \centering
+    \includegraphics{Include/Images/Thesis/Documentation/NonLinear/Bisect Example 2.png}
+    \caption{Bisect Example 2}
+    \label{fig:Bisect Example 2}
+\end{figure}
+}

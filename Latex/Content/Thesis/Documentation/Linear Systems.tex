@@ -1,6 +1,6 @@
-\section{Linear Systems}
-\subsection{LU Decomposition}
-
+\section*{Linear Systems}
+\subsection*{LU Decomposition}
+The LU Method divides a matrix A into three matrices: P (Permutation Matrix), L (Lower Triangular Matrix), and U (Upper Triangular Matrix).
 \begin{algorithm}[H]
     \SetAlgoLined
     \KwIn{A square matrix $A$}
@@ -27,29 +27,11 @@
     \KwRet{$P$, $L$, $U$}
     \caption{LU decomposition using Gaussian elimination}\label{alg:LU decomposition using Gaussian elimination}
 \end{algorithm}
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet.LinearSystems import lu
-A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
-P, L, U = lu(A)
-display(P, L, U)
-
->> P = array([ [1., 0., 0.],
-               [0., 0., 1.],
-               [0., 1., 0.]])
->> L = array([ [ 1.  ,  0.  ,  0.  ],
-               [ 0.5 ,  1.  ,  0.  ],
-               [-0.3 , -0.04,  1.  ]])
->> U = array([ [10. , -7. ,  0. ],
-               [ 0. ,  2.5,  5. ],
-               [ 0. ,  0. ,  6.2]])
-           
-\end{lstlisting}
-}
+\subsubsection*{BNumMet Examples}
+\input{Content/Thesis/Documentation/Examples/Linear Systems/LU Examples}
 
 
-\subsection{Forward Substitution}
+\subsection*{Forward Substitution}
 \begin{algorithm}[H]
 \SetKwInOut{Input}{Input}
 \SetKwInOut{Output}{Output}
@@ -67,23 +49,11 @@ $x[row] \gets $rhs[row] / lhs[row, row];
 \KwRet{$x$};
 \caption{Forward Substitution}
 \end{algorithm}
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet.LinearSystems import lu, forward_substitution
-A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
-b = np.array([7, 4, 6])
-P, L, U = lu(A)
-solution_aux = forward_substitution(L, P @ b)
-display(solution_aux)
-
->> solution_aux = array([7. , 2.5, 6.2])
-\end{lstlisting}
-}
+\subsubsection*{BNumMet Examples}
+\input{Content/Thesis/Documentation/Examples/Linear Systems/Forward Substitution Examples}
 
 
-
-\subsection{Backward substitution}
+\subsection*{Backward substitution}
 \begin{algorithm}[H]
 \SetAlgoLined
 \KwIn{lhs: an upper triangular matrix, rhs: a vector}
@@ -103,22 +73,10 @@ $x \gets$ np.zeros(n);\\
 }
 \caption{Backward Substitution}
 \end{algorithm}
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet.LinearSystems import lu, forward_substitution, backward_substitution
-A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
-b = np.array([7, 4, 6])
-P, L, U = lu(A)
-solution_aux = forward_substitution(L, P @ b)
-solution = backward_substitution(U, solution_aux)
-display(solution)
+\subsubsection*{BNumMet Examples}
+\input{Content/Thesis/Documentation/Examples/Linear Systems/Backward Substitution Examples}
 
->> solution = array([ 0., -1.,  1.])
-\end{lstlisting}
-}
-
-\subsection{LU Solver}
+\subsection*{LU Solver}
 \begin{algorithm}[H] 
 \SetAlgoLined
 \KwIn{A: a square matrix, b: a vector}
@@ -132,20 +90,10 @@ $x \gets $ backward\_substitution(U, y);\\
 }
 \caption{LU Solver}
 \end{algorithm}
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet.LinearSystems import lu_solve
-A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
-b = np.array([7, 4, 6])
-solution = lu_solve(A, b)
-display(solution)
+\subsubsection*{BNumMet Examples}
+ \input{Content/Thesis/Documentation/Examples/Linear Systems/LU Solver Examples}
 
->> solution = array([ 0., -1.,  1.])
-\end{lstlisting}
-}
-
-\subsection{QR Decomposition}
+\subsection*{QR Decomposition}
 \begin{algorithm}[H]{
 \SetAlgoLined
 \KwIn{$A$: an $m \times n$ matrix}
@@ -169,30 +117,10 @@ $R \gets \text{triu}(R)$\;
 }
 \caption{QR Factorization using Householder reflections}
 \end{algorithm}
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet.LinearSystems import qr_factorization
-A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
-Q, R = qr_factorization(A)
-display(Q,R)
+\subsubsection*{BNumMet Examples}
+\input{Content/Thesis/Documentation/Examples/Linear Systems/QR Decomposition Examples}
 
->> Q  = 
-    array([[-0.86386843,  0.42560398,  0.26943013],
-           [ 0.25916053, -0.08312578,  0.96225045],
-           [-0.43193421, -0.90108343,  0.03849002]])
->> R = 
-    array([[-11.5758369 ,   6.99733425,  -0.6047079 ],
-           [  0.        ,  -2.24439601,  -5.00417184],
-           [  0.        ,   0.        ,   5.96595278]])
->> Q@R = 
-    array([[ 1.00000000e+01, -7.00000000e+00, -4.67352964e-16],
-           [-3.00000000e+00,  2.00000000e+00,  6.00000000e+00],
-           [ 5.00000000e+00, -1.00000000e+00,  5.00000000e+00]])
-\end{lstlisting}
-}
-
-\subsection{QR Solver}
+\subsection*{QR Solver}
 \begin{algorithm}[H]
 \SetAlgoLined
 \DontPrintSemicolon
@@ -212,16 +140,5 @@ $x \gets \text{backward substitution}(R[:n,:n], b[:n])$\\
 \Return $x$
 \caption{QR Solver}
 \end{algorithm}
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet.LinearSystems import qr_solve
-A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
-b = np.array([7, 4, 6])
-solution = qr_solve(A, b)
-display(solution)
-
->> solution = 
-        array([-3.83634647e-16, -1.00000000e+00,  1.00000000e+00])
-\end{lstlisting}
-}
+\subsubsection*{BNumMet Examples}
+\input{Content/Thesis/Documentation/Examples/Linear Systems/QR Solver Examples}

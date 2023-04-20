@@ -1,0 +1,11 @@
+\paragraph{Example 1}{
+\begin{lstlisting}[language=Python]
+from BNumMet.LinearSystems import lu_solve
+A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
+b = np.array([7, 4, 6])
+solution = lu_solve(A, b)
+display(solution)
+
+>> solution = array([ 0., -1.,  1.])
+\end{lstlisting}
+}

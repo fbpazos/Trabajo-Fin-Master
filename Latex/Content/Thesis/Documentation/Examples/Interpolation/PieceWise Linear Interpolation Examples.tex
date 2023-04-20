@@ -1,0 +1,20 @@
+\paragraph{Example 1}{
+\begin{lstlisting}[language=Python]
+from BNumMet . Interpolation import piecewise_linear
+x = list(np.arange(1, 7, 1))
+y = [16, 18, 21, 17, 15, 12]
+u = np.arange(0.8, 6.2, 0.05)
+v = piecewise_linear(x, y, u)
+# Plotting using Matplotlib
+plt.plot(u, v, "b-", label="Interpolated")
+plt.plot(x, y, "ro", label="Original Points")
+plt.legend()
+plt.show()
+\end{lstlisting}
+\begin{figure}[H]
+    \centering
+    \includegraphics{Include/Images/Thesis/Documentation/Interpolation/PieceWise Linear Example 1.png}
+    \caption{PieceWise Linear Example 1}
+    \label{fig:PieceWise Linear Example 1}
+\end{figure}
+}

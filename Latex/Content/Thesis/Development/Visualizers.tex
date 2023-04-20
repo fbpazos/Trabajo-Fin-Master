@@ -1,0 +1,249 @@
+\section{Visualizer Packages}
+One of the most essential goals for BNumMet was to provide a graphical user interface that will allow students to view one or more parts of an underlying algorithm, with the goal of encouraging students to learn such algorithms.
+
+In our quest to create this graphical user interface, we must keep in mind that, while the Python programming language excels in many areas such as data analysis, artificial intelligence, basic scripting, and so on, Python is not currently suitable - in general - for creating the graphical user interfaces that we are accustomed to seeing in our daily lives. It definitely includes modules for such jobs (PyQt, SimpleGUI,...), but Python was not designed with such in mind. To that purpose, as stated in Camilo's work, we will be utilizing Jupyter Notebooks, an external Python Library that offers a more natural view of the code as if it were some class notes. We will leverage the widgets provided by both iPyWidgets and BQPlot in this Jupyter notebook to enhance the capability of the notebook, in our instance, with  interactivity.  The rationale for adopting the same approach as Camilo is that Jupyter is still extensively used in both the scientific and industrial communities for displaying code in an easy-to-read style and for correctly teaching coding skills to students.
+
+Overall, the following packages will be an expansion to the approaches described previously in a format that will improve understanding without requiring an installation outside of what is generally installed and in a format that students will be accustomed to in their professional and academic life.
+
+It is worth mentioning that most of the implementations had the core principles of what Mathworks sought to represent, but we have tried to focus on resolving some of the flaws that may prevent students from seeing the functionality effectively. Furthermore, all of the techniques supplied present default situations in case students just wish to check out the visualizer without thinking about examples.
+
+\subsection{LU Visualizer}
+As both Mathworks and Camilo's work had been implemented, we will strive to improve on the current visualizers made; however, before we start, we must discuss what is the underlying idea and some of the shortcomings that each had before to adopting this new visualizer.
+
+The LU Visualizer's purpose will be to implement a graphical user interface that presents the main steps of the LU decomposition, which are pivot selection and reduction; additionally, at the end of the decomposition, the matrices that represent the permutation and the lower and upper triangular parts must be shown. 
+
+On the one hand, Mathworks performed an excellent job of creating the visualizer, allowing users to pick the pivot for each row and then do computations, as well as displaying an automated LU decomposition with three major methods: diagonal, partial, and complete pivoting. It's worth noting that this visualizer used the standard LU Decomposition without implementing the rank revealing mechanism. Furthermore, it does not specify which pivots are accessible at each step \ref{fig:Mathworks Example 1 - No help in pivots to choose}, not to mention that this work permitted the LU method to use zero as a pivot element, resulting in $NaN$ and $Inf$ values, which are not appropriate for a student to understand \ref{fig:Mathworks Example 1 - No help in pivots to choose}. It also does not display the permutation matrix and does not adequately identify which matrix is the L or U matrix, which is inconvenient for students.
+
+ 
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{Include/Images/Thesis/Development/Visualizers/LU VISUALIZER/Mathworks.LU.Ex1.png}
+    \caption{Mathworks Example 1 - No help in pivots to choose}
+    \label{fig:Mathworks Example 1 - No help in pivots to choose}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{Include/Images/Thesis/Development/Visualizers/LU VISUALIZER/Mathworks.LU.Ex1.1.png}
+    \caption{Mathworks Example 1 - Nan and inf values}
+    \label{fig:Mathworks Example 1 - Nan and inf values}
+\end{figure}
+
+
+On the other side, while several of the issues raised in the Mathworks case were addressed in Camilo's work, such as a visual assistance on which pivots may be clicked on, we were unable to use this visualizer, which appears to be malfunctioning with no error signals given. On that point, a deeper examination of Camilo's code revealed the usage of threading techniques, which may be improper to maintain as well as inadequate for this sort of algorithm, because the LU algorithm does not require an external process to perform the modifications at each step. Furthermore, a timer was provided for the user to pick, which is contrary to acceptable standards in the development of a user G.U.I.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Development/Visualizers/LU VISUALIZER/Camilo.LU.Ex1.png}
+    \caption{Camilo's LU Visualizer Example 1}
+    \label{fig:Camilo's LU Visualizer Example 1}
+\end{figure}
+
+
+Once we know what are the main critiques of previously done work we can proceed by commenting on the proposed solution. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Development/Visualizers/LU VISUALIZER/BNumMet.LU.Ex1.png}
+    \caption{BNumMet Example 1}
+    \label{fig:BNumMet Example}
+\end{figure}
+
+As we can see, unlike Mathworks, the end-user knows which elements can be selected to pivot, and it prevents the user from diving by zero, as well as the current output of the P,L,U matrices at each step (note the asterisk to indicate that we do not know the value at that step and it remains to be calculated). We additionally highlight two buttons, "Previous Step" and "Reset," because a user may miss click a button and not reach their intended aim, and we want pupils to feel comfortable when using our interactive visualizer.
+Furthermore, we indicate the rank we can guarantee the matrix has at each iteration, and the final result will be indicated by a system message \ref{fig:BNumMet Example End Result}. Note that if the LU finds a column of possible pivots to be zero during the iterations, it will send a message as a system message explaining to the user that the algorithm has jumped the column until it finds a suitable one to pivot.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Development/Visualizers/LU VISUALIZER/BNumMet.LU.Ex1.1.png}
+    \caption{BNumMet LU Visualizer Example End Result}
+    \label{fig:BNumMet Example End Result}
+\end{figure}
+
+Overall, the proposed solution corrects the previously done work while also improving it by providing the properties of the LU algorithm at a glance (Rank revealing, matrices at each iteration) and by correcting the majority of the visual aspect of the overall implementation.
+
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/Visualizers/LU Visualizer Examples}
+
+\subsection{Interpolation Visualizer}
+As with the LU Visualizer, we will begin by discussing previous works and potential areas for improvement.
+
+The interpolation visualizer's goal is to demonstrate the viewer how different interpolation methods compare to one another, as well as how moving the dataset or adding points might affect the initial interpolation given.
+
+To begin, we will highlight Mathwork's implementation, which allows the user to select different interpolation methods while also allowing the user to edit the points and observe the changes. Despite the excellent implementation, it lacks the ability to add more points at runtime and does not allow viewing the entire interpolation when the function exceeds the limits set by the initial plot \ref{fig:Mathwork's Interpolation Example - Drawbacks},  it also has some bad contrast between the text and the background (on the text "poly"), and this does not obey the Human-Computer Interaction good practices. We must also emphasize the reset button, which may be useful to students if they accidentally change a point. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{Include/Images/Thesis/Development/Visualizers/INTERPOLATION VISUALIZER/Mathworks.Interpolation.Ex1.png}
+    \caption{Mathwork's Interpolation Example}
+    \label{fig:Mathworks Interpolation Example}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{Include/Images/Thesis/Development/Visualizers/INTERPOLATION VISUALIZER/Mathworks.Interpolation.Ex1.1.png}
+    \caption{Mathwork's Interpolation Example - Drawbacks}
+    \label{fig:Mathwork's Interpolation Example - Drawbacks}
+\end{figure}
+
+
+Second, concentrating on Camilo's effort, we must emphasize that the implementation was not completed, thus any comments will be based on what seems to be implemented. To begin, we should observe that the visualization does not support various interpolation methods; nevertheless, unlike Mathworks, this solution allows for plot movement but not single point movement or addition. \ref{fig:Camilo's Interpolation Visualizer Example - Drawbacks}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Development/Visualizers/INTERPOLATION VISUALIZER/Camilo.Interpolation.Ex1.png}
+    \caption{Camilo's Interpolation Visualizer Example}
+    \label{fig:Camilo's Interpolation Visualizer Example}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Development/Visualizers/INTERPOLATION VISUALIZER/Camilo.Interpolation.Ex1.1.png}
+    \caption{Camilo's Interpolation Visualizer Example - Drawbacks}
+    \label{fig:Camilo's Interpolation Visualizer Example - Drawbacks}
+\end{figure}
+
+
+After understanding the important aspects and critiques of the preceding discussion, we create our own implementation, keeping in mind that numerous interpolating methods should be accessible to pick from, it should be able to move and add points, and it should include a button to undo all changes done.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Development/Visualizers/INTERPOLATION VISUALIZER/BNumMet.Interpolation.Ex1.png}
+    \caption{BNumMet Interpolation Visualizer Example}
+    \label{fig:BNumMet Interpolation Visualizer Example}
+\end{figure}
+As we can see, it has a similar appearance to Mathwork's implementation, but it adds an auto-zoom button in the case of out-of-bounds graphs \ref{fig:BNumMet Interpolation Visualizer Example - Adding points and auto zooming}, as well as two check boxes, one that prevents the user from adding more points if the user decides to move the graph, and "show extrapolation effects", which shows the user what effects the extrapolation has on attempting to predict the "past" or "future"  \ref{fig:BNumMet Interpolation Visualizer Example - Extrapolation}. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Development/Visualizers/INTERPOLATION VISUALIZER/BNumMet.Interpolation.Ex1.1.png}
+    \caption{BNumMet Interpolation Visualizer Example - Adding points and auto zooming}
+    \label{fig:BNumMet Interpolation Visualizer Example - Adding points and auto zooming}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Development/Visualizers/INTERPOLATION VISUALIZER/BNumMet.Interpolation.Ex1.2.png}
+    \caption{BNumMet Interpolation Visualizer Example - Extrapolation}
+    \label{fig:BNumMet Interpolation Visualizer Example - Extrapolation}
+\end{figure}
+
+Overall, we feel that the method supplied corrects some of the minor flaws raised by Mathworks' approach while also extracting the correct concerns raised by Cleve Moller. While also providing some concepts that may assist academics in explaining why interpolation should not be utilized for extrapolation. 
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/Visualizers/Interpolation Visualizer Examples}
+
+\subsection{Non Linear Equation Solver Visualizer}
+Continuing with our visualizers, we have also implemented an interactive visualization for the Non Linear Equation Solver Package. As before, we will first discuss the considerations taken by Mathworks and observe what ideas we have implemented in BNumMet. It is worth noting that Camilo's work will not be considered from this point forward because it lacks implementation of these.
+
+To begin, Mathwork's implementation considers making the Brentt-Dekker method interactive; the user will be able to select which step to choose, bisection, secant, or I.Q.I., and at each step it will automatically perform the necessary calculation and continue moving forward with the user's input; it should be noted that on Mathwork's implementation there is a button that automatically performs all the steps in accordance with the Brentt-Dekker Algorithm. Furthermore, it has two distinct colored points that will be interactive, those being the bisection or the secant/I.Q.I., though it should be noted that while the user can guess which point is which, there is no clear visual aid or text that helps the user make such a decision, and it lacks the graph that grants the next possible point, that is, the secant approach should draw a secant showing where the next point will be. We should also handle the problem that the user may not know if the points are interactive, which may cause some confusion, as well as, the final stage of the visualizer  which the user may not understand when the algorithm has finished \ref{fig:Mathwork's NonLinear Visualizer Example - Ending}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Include/Images/Thesis/Development/Visualizers/NON LINEAR VISUALIZER/Mathworks.NonLinear.Ex1.png}
+    \caption{Mathwork's NonLinear Visualizer Example}
+    \label{fig:Mathwork's NonLinear Visualizer Example}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Include/Images/Thesis/Development/Visualizers/NON LINEAR VISUALIZER/Mathworks.NonLinear.Ex1.1.png}
+    \caption{Mathwork's NonLinear Visualizer Example - Ending}
+    \label{fig:Mathwork's NonLinear Visualizer Example - Ending}
+\end{figure}
+
+We have adopted the same approach as Mathworks by adopting the algorithm established by Brent, Dekker, and his colleagues in our BNumMet implementation. We also took Mathworks' considerations, but extended and corrected the critiques we made previously. To solve the distinction between the points, we added a legend to indicate which point is which, and we moved the "interactivity" of the points to an external button so that the user knows what he is clicking on in every iteration \ref{fig:BNumMet's NonLinear Visualizer Example}. We've also included a checkbox to the left of those buttons to enable the user choose whether to display the graph linked with the secant, I.Q.I, or bisection \ref{fig:BNumMet's NonLinear Visualizer Example - Graphs for points }. It is also worth noting that we present what the original algorithm would be using, as well as information on the current solution the user has discovered and the amount of iterations the user has taken.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Development/Visualizers/NON LINEAR VISUALIZER/BNumMet.NonLinear.Ex1.png}
+    \caption{BNumMet's NonLinear Visualizer Example 1 }
+    \label{fig:BNumMet's NonLinear Visualizer Example}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Development/Visualizers/NON LINEAR VISUALIZER/BNumMet.NonLinear.Ex1.1.png}
+    \caption{BNumMet's NonLinear Visualizer Example 1 - Graphs for points }
+    \label{fig:BNumMet's NonLinear Visualizer Example - Graphs for points }
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Development/Visualizers/NON LINEAR VISUALIZER/BNumMet.NonLinear.Ex1.2.png}
+    \caption{BNumMet's NonLinear Visualizer Example - Ending }
+    \label{fig:BNumMet's NonLinear Visualizer Example - Ending }
+\end{figure}
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/Visualizers/Non Linear Visualizer Examples}
+
+
+\subsection{Least Squares Problem Visualizer}
+Although no mention of Least Squares was made during the discussion of the multiple numerical methods that BNumMet has, this is because it is not strictly a numerical method as LU decomposition is, but this problem is one of the pinnacles of data fitting and a complex problem with a simple approach to solve. As a result, we felt it was necessary to create a visualizer to give students with a complete and interactive tool to examine what least squares perform.
+
+The main idea of the visualizer is to give the student a set of points (or allow them to enter their own data) and show them how to solve the least squares problem using various types of functions. All of the calculations will be done in the background while the final plot will be shown to demonstrate that in these types of problems, the goal is not to interpolate but to find a function that minimizes the error.
+
+As with the previous visualizer, we will begin by discussing Mathwork's implementation; in this case, Cleve Moller's work is outstanding; he provides data from the US Census and presents the user with a selector of two functions for applying least squares and another two that interpolate the points. It also offers an estimate of the inaccuracy for each approach. It should be noted that it does not include the resultant equation that yields the least squares solution, which may be valuable for any learner checking their own hand-made computations.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Include/Images/Thesis/Development/Visualizers/LSP/Mathworks.LSP.Ex1.png}
+    \caption{Mathwork's LSP Visualizer Example 1 - Data}
+    \label{fig:Mathwork's NonLinear Visualizer Example - Data}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Include/Images/Thesis/Development/Visualizers/LSP/Mathworks.LSP.Ex1.2.png}
+    \caption{Mathwork's LSP Visualizer Example - Exponential}
+    \label{fig:Mathwork's Least Squares Visualizer Example - Exponential}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Include/Images/Thesis/Development/Visualizers/LSP/Mathworks.LSP.Ex1.3.png}
+    \caption{Mathwork's LSP Visualizer Example - Polynomial}
+    \label{fig:Mathwork's Least Squares Visualizer Example- Polynomial}
+\end{figure}
+
+We generalized this approach in BNumMet's implementation by implementing just the techniques that relate to the real least squares issue, rather than the interpolating methods supplied in the interpolation package. We also noticed that, while Mathwork's approach demonstrated an interesting application about predicting the future of the census, it lacked the ability for the user to input their own dataset, which we fixed in BNumMet's implementation and it may be regarded as a more interesting approach for students while learning.  In addition, we added a little note indicating the output function as well as the inaccuracy that the solution presents. We would also like to mention that we added the Sines and Cosines Basis for this problem since we thought it would provide insight into the fact that the least squares problem is not limited to a small set of functions but includes many more.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Include/Images/Thesis/Development/Visualizers/LSP/BNumMet.LSP.Ex1.png}
+    \caption{BNumMet's LSP Visualizer Example }
+    \label{fig:BNumMet's Least Squares Visualizer Example}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Include/Images/Thesis/Development/Visualizers/LSP/BNumMet.LSP.Ex1.1.png}
+    \caption{BNumMet's LSP Visualizer Example - Exponential}
+    \label{fig:BNumMet's Least Squares Visualizer Example- Exponential}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Include/Images/Thesis/Development/Visualizers/LSP/BNumMet.LSP.Ex1.2.png}
+    \caption{BNumMet's LSP Visualizer Example - Polynomial}
+    \label{fig:BNumMet's Least Squares Visualizer Example- Polynomial}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Include/Images/Thesis/Development/Visualizers/LSP/BNumMet.LSP.Ex1.3.png}
+    \caption{BNumMet's LSP Visualizer Example - Sines and Cosines}
+    \label{fig:BNumMet's Least Squares Visualizer Example- Sines and Cosines}
+\end{figure}
+As we can see we have removed the error estimates that Mathwork's implementation presents, we believed it may be confusing and without a proper definition of how it is calculated.
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/Visualizers/LSP Visualizer Examples}
+
+\subsection{Random Visualizer}
+A part of mathematical outreach is a common application is the following, throw at random n-number of darts inside a square with an inner circle with diameter the size of the square, when computing the number of darts that are inside the circle and the ones outside, one can with more or less accuracy find the value of $\pi$. For this reason we will implement this simple game as part of the random visualization package, to show students the power of Montecarlo's Simulation, that is, we will implement a target and using a random number generator we will simulate the throwing of darts to then observe how we obtain pi.
+
+First, as with the other visualizers, we examine Mathwork's implementation; in this case, Cleve Moller chose a 3D version of the game; the method allows for the input of different types of generators; however, we must note that this implementation does not allow for varying the number of points, but it does allow for the simulation to be repeated.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Include/Images/Thesis/Development/Visualizers/RANDOMNESS/Mathworks.Random.Ex1.png}
+    \caption{Mathwork's Random Visualizer Example}
+    \label{fig:Mathwork's Random Visualizer Example}
+\end{figure}
+
+A similar implementation was done in BNumMet, but in this instance we used the 2D method since we believe the students would find it easier to grasp, observe, and even write it themselves. We allowed the user to select the number of points they wanted to toss as part of the implementation. We have provided a graph that depicts how the simulation approaches $\pi$. To address the major issue with Mathwork's, we created a button that allows the user to run the simulation with the specified number of points anytime they want. And, as Cleve Moller suggested, we included the value of pi obtained when the program iterated. One disadvantage of BNumMet's implementation over Cleve's is that we must restrict the number of points to 1000 since it may take a long time to fully animate.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{Include/Images/Thesis/Development/Visualizers/RANDOMNESS/BNumMet.Random.Ex1.png}
+    \caption{BNumMet's Random Visualizer Example}
+    \label{fig:BNumMet's Random Visualizer Example}
+\end{figure}
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/Visualizers/Random Visualizer Examples}

@@ -1,19 +1,31 @@
 \section{Interpolation}
-In this package, we have built various methods for interpolating a function; however, despite the simplicity of the methods' implementation, a general analysis has been conducted on a specific method of implementing the function evaluation; this analysis will be presented after a brief description of the methods.
+In this package, we have built various methods for interpolating a function; however, despite the simplicity of the method's implementation, a general analysis has been conducted on a specific method of implementing the function evaluation; this analysis will be presented after a brief description of the methods.
 
 The following are the methods used:
 
 \subsection{Polynomial Interpolation}
-This approach performs a polynomial of a given collection of points; it is one of the fundamental ways of interpolation and is widely taught in institutions.
+This approach performs a polynomial interpolation of a given collection of points; it is one of the fundamental ways of interpolation and is widely taught in institutions.
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/Interpolation/Polinomial Interpolation Examples}
+
 
 \subsection{Piecewise linear interpolation}
 Following the polynomial interpolation approach, the next step is to extend this notion to piecewise functions; in this manner, we accomplished the first step to utilizing a linear function.
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/Interpolation/PieceWise Linear Interpolation Examples}
 
 \subsection{Piecewise Cubic Hermite interpolation}
 As a continuation of the previous method, we extended the concept of interpolating by Linear function to interpolating by a degree three polynomial with Hermite conditions, that is, by its values and first derivatives at the domain interval end points. \cite{kreyszig11}.
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/Interpolation/PCHIP Examples}
+
 
 \subsection{Piecewise cubic interpolation}
 Following the Hermite interpolation, a more general approach in which we impose the slopes given by the not-a-knot end conditions, that is, at the first and last interior break, even the third derivative is continuous (up to round-off error). \cite{PCHIP}
+
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/Interpolation/Splines Examples}
+
 \subsection{Interpolation implementation analysis}
 
 Similar to the discussion in the linear systems package, we discovered various ways a student could implement one part of the method, specifically interpolation, by referring to the lines of code that calculate what value a point of the mesh (without the interpolation points) has as a y-coordinate. The code section may be summarized as follows: 
@@ -49,17 +61,17 @@ To correctly test the implementations we will fix 6 interpolation pairs and then
     \label{fig:Interpolation Timings}
 \end{figure}
 
-As we can visually observer, the use of List Comprehesions is by far the worst of the two, and should be discarded for this particular case. We can also see how much the \textit{fancy} indexing improves the overall speed; that is why applying linear regression on the data, we have:
+As we can visually observe, the use of List Comprehensions is by far the worst of the two, and should be discarded for this particular case. We can also see how much the \textit{fancy} indexing improves the overall speed; that is why applying linear regression on the data, we have:
 \begin{enumerate}
     \item \textbf{Linear Regression Indexed List}: \\
-        $y = 3.4812e-08x + 0.0002$ \\
-        Slope: $3.48119e-08$
+        $y = 3.4812\cdot10^{-08}x + 0.0002$ \\
+        Slope: $3.48119\cdot10^{-08}$
     \item \textbf{Linear Regression List Compresion}: \\
-        $y = 2.0237e-06x + 0.0003$ \\
-        Slope: $2.02374e-06$
+        $y = 2.0237\cdot10^{-06}x + 0.0003$ \\
+        Slope: $2.02374\cdot10^{-06}$
 \end{enumerate}
 
-Overall, not only does the choice of \textit{fancy} indexing is by far the fastest (around 2 order of magnitude) but it also provides students a syntax that will be used during their learning of numerical methods, though it must be noted, the use of for-loops might be ideal for didactic purposes to teach students what could be behind the notation of this \textit{fancy} indexing.
+Overall, not only does the choice of \textit{fancy} indexing is by far the fastest (around 2 orders of magnitude) but it also provides students a syntax that will be used during their learning of numerical methods, though it must be noted, the use of for-loops might be ideal for didactic purposes to teach students what could be behind the notation of this \textit{fancy} indexing.
 
 
 

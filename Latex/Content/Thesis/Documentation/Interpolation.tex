@@ -1,6 +1,6 @@
 
-\section{Interpolation}
-\subsection{Polinomial Interpolation}
+\section*{Interpolation}
+\subsection*{Polinomial Interpolation}
 
 \begin{algorithm}[H]
 \SetAlgoLined
@@ -21,28 +21,9 @@ $v \gets v + w * y_i$
 \Return $v$
 \caption{Polinomial Interpolation}
 \end{algorithm}
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet.Interpolation import polinomial
-x = list(np.arange(1, 7, 1))
-y = [16, 18, 21, 17, 15, 12]
-u = np.arange(0.8, 6.2, 0.05)
-v = polinomial(x, y, u)
-# Plotting using Matplotlib
-plt.plot(u, v, "b-", label="Interpolated")
-plt.plot(x, y, "ro", label="Original Points")
-plt.legend()
-plt.show()
-\end{lstlisting}
-\begin{figure}[H]
-    \centering
-    \includegraphics{Include/Images/Thesis/Documentation/Interpolation/Polinomial Example 1.png}
-    \caption{Polinomial Linear Example 1}
-    \label{fig:Polinomial Linear Example 1}
-\end{figure}
-}
-\subsection{Piecewise Linear Interpolation}
+\subsubsection*{BNumMet Examples}
+\input{Content/Thesis/Documentation/Examples/Interpolation/Polinomial Interpolation Examples}
+\subsection*{Piecewise Linear Interpolation}
 
 \begin{algorithm}[H]
 \SetAlgoLined
@@ -67,29 +48,10 @@ $v \gets y_k + s * \Delta_k$\\
 \Return $v$
 \caption{Piecewise Linear Interpolation}
 \end{algorithm}
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet . Interpolation import piecewise_linear
-x = list(np.arange(1, 7, 1))
-y = [16, 18, 21, 17, 15, 12]
-u = np.arange(0.8, 6.2, 0.05)
-v = piecewise_linear(x, y, u)
-# Plotting using Matplotlib
-plt.plot(u, v, "b-", label="Interpolated")
-plt.plot(x, y, "ro", label="Original Points")
-plt.legend()
-plt.show()
-\end{lstlisting}
-\begin{figure}[H]
-    \centering
-    \includegraphics{Include/Images/Thesis/Documentation/Interpolation/PieceWise Linear Example 1.png}
-    \caption{PieceWise Linear Example 1}
-    \label{fig:PieceWise Linear Example 1}
-\end{figure}
-}
+\subsubsection*{BNumMet Examples}
+\input{Content/Thesis/Documentation/Examples/Interpolation/PieceWise Linear Interpolation Examples}
 
-\subsection{Piecewise Cubic Hermite Interpolation Polynomial (P.C.H.I.P.)}
+\subsection*{Piecewise Cubic Hermite Interpolation Polynomial (P.C.H.I.P.)}
 The pchip function is a Python implementation of the Piecewise Cubic Hermite Interpolation Polynomial (P.C.H.I.P.) based on an old Fortran program by Fritsch and Carlson.
 
 \begin{algorithm}[H]
@@ -140,30 +102,10 @@ $d \leftarrow 0$
 \caption{Piecewise Cubic Hermite Interpolation}
 \end{algorithm}
 
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet.Interpolation import pchip
-x = list(np.arange(1, 7, 1))
-y = [16, 18, 21, 17, 15, 12]
-u = np.arange(0.8, 6.2, 0.05)
-v = pchip(x, y, u)
-# Plotting using Matplotlib
-plt.plot(u, v, "b-", label="Interpolated")
-plt.plot(x, y, "ro", label="Original Points")
-plt.legend()
-plt.show()
-\end{lstlisting}
+\subsubsection*{BNumMet Examples}
+\input{Content/Thesis/Documentation/Examples/Interpolation/PCHIP Examples}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics{Include/Images/Thesis/Documentation/Interpolation/PCHIP Example 1.png}
-    \caption{PCHIP Example 1}
-    \label{fig:PCHIP Example 1}
-\end{figure}
-}
-
-\subsection{Piecewise cubic Interpolatory Splines}
+\subsection*{Piecewise cubic Interpolatory Splines}
 \begin{algorithm}[H]
 \SetAlgoLined
 \KwIn{List of x coordinates $x$, list of y coordinates $y$, list of points where the interpolation is computed $u$, and parameter to specify if the points are already sorted $sorted$}
@@ -204,25 +146,5 @@ $res \leftarrow \mathrm{lu\_solve}(\mathrm{diag}(a, -1) + \mathrm{diag}(b) + \ma
 \caption{Piecewise cubic Interpolatory Splines}
 \end{algorithm}
 
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet.Interpolation import splines
-x = list(np.arange(1, 7, 1))
-y = [16, 18, 21, 17, 15, 12]
-u = np.arange(0.8, 6.2, 0.05)
-v = splines(x, y, u)
-# Plotting using Matplotlib
-plt.plot(u, v, "b-", label="Interpolated")
-plt.plot(x, y, "ro", label="Original Points")
-plt.legend()
-plt.show()
-\end{lstlisting}
-\begin{figure}[H]
-    \centering
-    \includegraphics{Include/Images/Thesis/Documentation/Interpolation/Splines Example 1.png}
-    \caption{Splines Example 1}
-    \label{fig:Splines Example 1}
-\end{figure}
-
-}
+\subsubsection*{BNumMet Examples}
+\input{Content/Thesis/Documentation/Examples/Interpolation/Splines Examples}

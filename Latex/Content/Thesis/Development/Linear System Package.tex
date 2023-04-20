@@ -4,7 +4,7 @@ The (P)LU decomposition, developed in this package, factors a matrix into a prod
 
 During the development of such method, some considerations have been taken into account; firstly, we put all the variables in the English language as well as a choosing a naming that will provide the future student some hints on what each variable is doing. 
 
-Second, we established an auxiliary function that would execute the permutation; this option was made mostly for students to comprehend the stages prior to the use of notation; the notation for permuting was \lstinline|matrix_to_permute[[i, j], :] = matrix_to_permute[[j,i], :]|,so the development of a function that performs that will be easier for students.
+Second, we established an auxiliary function that would execute the permutation; this option was made mostly for students to comprehend the stages prior to the use of notation; the notation for permuting was \lstinline|matrix_to_permute[[i, j], :] = matrix_to_permute[[j,i], :]|,so the development of a function that performs it will be easier for students.
 
 Finally, we examine three main approaches that a student may take to develop lines 11–15 from [Algorithm \ref{alg:LU decomposition using Gaussian elimination}], we will explore the various ways as well as the one built utilizing the well-known Scipy package in the next subsection, where we confirm that the choice of a for-loop is more efficient and easier to read.
 
@@ -77,7 +77,7 @@ on a visual plot:
 
 As we can observe from the tabular data and the plot, Scipy's method is by far the fastest, that is, due to the implementation using LAPACK's library, and the slowest is using the Submatrices syntax; surprisingly, the syntax using a for-loop improves over the other implementations as size increases, therefore even though this works for large sizes, using a for-loop that implements the reduction is the best choice overall the other methods (without accounting for Scipy's) 
 
-For mere due diligence, we should also calculate the slope polynomial complexity using simple linear regression.
+For mere due diligence, we should also calculate the slopes using  linear regression.
 \begin{table}[H]
     \centering
     \begin{tabular}{|l|l|l|l|l|l|}
@@ -87,8 +87,10 @@ For mere due diligence, we should also calculate the slope polynomial complexity
     \end{tabular}
     \caption{LU Data slopes of Linear Regression}
 \end{table}
-In this last table, we can see that although the submatrices syntax was the slowest in the previous plots,is better than using the New Axis syntax, it must be noted that this will only be seen when the size of the matrix is humongous, and barely reachable in a sort span of time. 
+In this last table, we can see that although the submatrices syntax was the slowest in the previous plots, is better than using the New Axis syntax, it must be noted that this will only be seen when the size of the matrix is humongous, and barely reachable in a sort span of time. 
 
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/Linear Systems/LU Examples}
 
 
 \subsection{Forward and Backward Substitution}
@@ -97,19 +99,29 @@ Undoubtedly, one of the key steps in solving a linear system is substitution, wh
 The first approach, forward substitution, substitutes the first row and then moves "forward" in the next variables using the already computed values. Backward substitution is analogous, but instead of starting with the first variable, it starts with the last (since this method takes an upper triangular matrix) and moves backwards until it has reached the first variable.
 
 The reason of implementing this method is that independently of the decomposition, these methods are also taught in universities and is a good exercise for any student to try.
-
+\subsubsection{Examples}
+\textbf{Forward Substitution}
+	\input{Content/Thesis/Documentation/Examples/Linear Systems/Forward Substitution Examples}
+ \textbf{Backward Substitution}
+	\input{Content/Thesis/Documentation/Examples/Linear Systems/Backward Substitution Examples}
 \subsection{QR Decomposition}
 Alongside the LU decomposition, there exists another decomposition known as the QR Decomposition, similarly to the LU decomposition, the concept behind QR is decompose a matrix into a product of two, in this case, it will be a product of an orthogonal matrix (Q) and an upper triangular (R). We have implemented this technique using Householder reflectors which is the fundamental method that is taught in universities when QR is being introduced.
 
 The reason of implementing these method as a standalone is to give an additional feature to BNumMet and also to the students. Though a QR solver is used to solve the Least Squares problem, these method as an autonomous is not used, only an optimized variant for the solver which takes into consideration the independent terms.
+\subsubsection{Examples}
+\input{Content/Thesis/Documentation/Examples/Linear Systems/QR Decomposition Examples}
 
 \subsection{LU Solver}
 We implemented the function that solves a linear system $Ax=b$ using the LU factorization and forward and backward substitution as part of the Linear Systems Package. The reason for implementing these is to add extra features to BNumMet as well as give the student a written version of the solver, as it is trivial to implement once you have the aforementioned methods. Apart from appropriately commenting the code, no other considerations have been made.
+\subsubsection{Examples}
+	\input{Content/Thesis/Documentation/Examples/Linear Systems/LU Solver Examples}
 
 \subsection{QR Solver}
 Similarly to the LU Solver, we have added a functionality that will be critical on solving the Least Squares Problem, that is the QR solver. The reason for the QR solver, aside from being used in the Least Squares Problem to avoid the ill-conditioning of solving the Least Squares Problem using the well-known formula of $A T A x= A T b$, is that we find it curious because it implements an optimized version of QR taking into account the fact that we are solving a Linear System, in this optimized version, the algorithm does not compute the Q matrix but rather it applies it to the independent terms and then uses the backward substitution on R (which is computed).
 
 Not only does this method will provide student with another approach on solving linear systems or the Least Squares Problem, but it also grants the underlying procedure of the well-known Matlab Backslash.
 
+\subsubsection{Examples}
+\input{Content/Thesis/Documentation/Examples/Linear Systems/QR Solver Examples}
 
 

@@ -1,14 +1,14 @@
-\section{General Overview}
-\subsection{What is BNumMet?}
+\section*{General Overview}
+\subsection*{What is BNumMet?}
 BNumMet ($'/bi:\ num\ m\varepsilon t/'$) is short for Basic Numerical Methods, it is a self-contained library to provide students a scholarly implementation of numerical methods alongside a visual interface that captures the essence of the methods explained.
 
 The intend and purpose of this library is to provide students an introduction to both Python and numerical methods that will serve for their future in the academic and enterprise world. It uses NumPy, as students will find it in their daily life, while using numerical methods in Python. 
 
 
 
-\subsection{How to install?}
+\subsection*{How to install?}
 There are two main ways to install the package, using the pypi package installer or manual installation
-\subsubsection{PyPi Package Manager}
+\subsubsection*{PyPi Package Manager}
 Since the package is publicly available in the PyPi webpage ( \href{https://pypi.org/project/BNumMet/}{https://pypi.org/project/BNumMet/} ), we can use the 'pip' command.
 
 Assuming a correct installation of Python and/or pip, the following command will install all dependencies and the package:
@@ -16,7 +16,7 @@ Assuming a correct installation of Python and/or pip, the following command will
 pip install BNumMet
 \end{lstlisting}
 
-\subsubsection{Manual Installation}
+\subsubsection*{Manual Installation}
 Alternatively, you can download the repository and install the package manually. To do so, the following manual installation instructions will be proposed:
 \begin{enumerate}
     \item Clone the repository: \href{https://github.com/fbpazos/Trabajo-Fin-Master}{https://github.com/fbpazos/Trabajo-Fin-Master}, there is two ways, using git and a manual cloning
@@ -35,7 +35,7 @@ Alternatively, you can download the repository and install the package manually.
 \end{enumerate}
 
 
-\subsection{How to continue development?}
+\subsection*{How to continue development?}
 If anyone desires to continue the development, respecting the license provided, we recommend the use of virtual environments to externalize the current installation of other libraries when developping BNumMet. 
 
 \begin{enumerate}
@@ -57,17 +57,92 @@ If anyone desires to continue the development, respecting the license provided, 
 \end{enumerate}
 
 When continuing development, make sure to add tests to new/old functions as well as passing a SonarQube's analysis, therefore we assure good-quality standards to the students.
-\subsubsection{Run tests}
+\subsubsection*{Run tests}
 In order to properly run the tests, we recommend using one of the following commands:
 \begin{itemize}
     \item Vanilla Pytest: Inside the folder of the project run \lstinline|pytest|.
     \item Pytest with Black-Formatting and Coverage: Inside the project folder run \lstinline|python tests/__init__.py|.
 \end{itemize}
 
+\subsection*{Library Structure Brief}
+\textbf{BNumMet.}
+
+\textbf{LinearSystems.}
+
+\begin{itemize}
+\item \texttt{lu(matrix)} $\rightarrow$ P,L,U matrices as \texttt{np.array}
+\item \texttt{permute(matrix, row\_1, row\_2)} $\rightarrow$ Permuted Matrix as \texttt{np.array}
+\item \texttt{forward\_substitution(matrix\_L, matrix\_b)} $\rightarrow$ Solution to Lx=b as \texttt{np.array}
+\item \texttt{backward\_substitution(matrix\_U, matrix\_b)} $\rightarrow$ Solution to Ux=b as \texttt{np.array}
+\item \texttt{lu\_solve(matrix\_A, matrix\_b)} $\rightarrow$ Solution to Ax=b as \texttt{np.array} using LU Decomposition
+\item \texttt{qr\_factorization(matrix\_A)} $\rightarrow$ Q,R Matrices as \texttt{np.array}
+\item \texttt{qr\_solve(matrix\_A, matrix\_b)} $\rightarrow$ Solution to Ax=b as \texttt{np.array} using QR decomposition
+\item \texttt{interactive\_lu(matrix\_p, matrix\_l, matrix\_u, col, row, pivot\_row)} $\rightarrow$ An iteration of LU Decomposition
+\end{itemize}
+
+\textbf{Interpolation.}
+
+\begin{itemize}
+\item \texttt{polynomial(interpolation\_x, interpolation\_y, mesh)} $\rightarrow$ Polynomial-Interpolated values over mesh
+\item \texttt{piecewise\_linear(interpolation\_x, interpolation\_y, mesh)} $\rightarrow$ Piecewise Linear-Interpolated values over mesh
+\item \texttt{pchip(interpolation\_x, interpolation\_y, mesh)} $\rightarrow$ Piecewise Cubic Hermite-Interpolated values over mesh
+\item \texttt{splines(interpolation\_x, interpolation\_y, mesh)} $\rightarrow$ Piecewise Cubic-Interpolated values over mesh
+\end{itemize}
+
+\textbf{NonLinear.}
+
+\begin{itemize}
+\item \texttt{bisect(function, interval:tuple, stop\_iters:int, iters:bool, *args)} $\rightarrow$ x-value of where the zero is at and, as optional, the number of iterations taken
+\item \texttt{secant(function, interval:tuple, stop\_iters:int, iters:bool, *args)} $\rightarrow$ x-value of where the zero is at and, as optional, the number of iterations taken
+\item \texttt{newton(function, derivative, interval:tuple, stop\_iters:int, iters:bool, *args)} $\rightarrow$ x-value of where the zero is at and, as optional, the number of iterations taken
+\item \texttt{IQI(function, values\_of\_x:tuple, stop\_iters:int, iters:bool, *args)} $\rightarrow$ x-value of where the zero is at and, as optional, the number of iterations taken
+\item \texttt{zBrentDekker(function, interval:tuple, tol, stop\_iters:int, iters:bool, *args)} $\rightarrow$ x-value of where the zero is at and, as optional, the number of iterations taken
+\end{itemize}
+
+\textbf{Random.}
+\begin{itemize}
+\item \texttt{clear\_lehmers\_vars()} $\rightarrow$ Cleans the initiated values of the Lehmers random number generator
+\item \texttt{lehmers\_init(a, c, m, x)} $\rightarrow$ Initializes Lehmers R.N.G. with values given
+\item \texttt{lehmers\_rand(a, c, m, x)} $\rightarrow$ Initializes and produces a random number every time it is called
+\item \texttt{clear\_marsaglia\_vars()}$\rightarrow$ Cleans the initiated values of the Marsaglia's random number generator
+\item \texttt{marsaglia\_init(base, lag\_r, lag\_s, carry, seed\_tuple)} $\rightarrow$ Initializes Marsaglia's R.N.G. with values given
+\item \texttt{marsaglia\_rand(base, lag\_r, lag\_s, carry, seed\_tuple)} $\rightarrow$ Initializes and produces a random number every time it is called
+\item \texttt{clear\_mt\_vars()} $\rightarrow$ Cleans the initiated values of the Mersenne Twister random number generator
+\item \texttt{sgenrand(seed:int)} $\rightarrow$ Initializes and produces a random number every time it is called
+\end{itemize}
+
+\textbf{Visualizers.}
+
+Every class can be executed after initializing the class constructor and using the ".run()" method withing a jupyter cell
+\begin{lstlisting}
+variable = Class()
+varibal.run()
+\end{lstlisting}
+\begin{itemize}
+\item \textbf{LUVisualizer.}
+\begin{itemize}
+\item \texttt{LUVisualizer:Class}
+\end{itemize}
+\item \textbf{InterpolationVisualizer.}
+\begin{itemize}
+\item \texttt{InterpolVisualizer:Class}
+\end{itemize}
+\item \textbf{NonLinearVisualizer.}
+\begin{itemize}
+\item \texttt{NonLinearVisualizer:Class}
+\end{itemize}
+\item \textbf{LeastSquaresVisualizer.}
+\begin{itemize}
+\item \texttt{LSPVisualizer:Class}
+\end{itemize}
+\item \textbf{RandomVisualizer.}
+\begin{itemize}
+\item \texttt{RandomVisualizer:Class}
+\end{itemize}
+\end{itemize}
 
 
-
-\subsection{Folder Structure}
+\subsection*{Folder Structure}
 From now on, we will draw our attention to the folder 'Python\_BNumMet' and we will tear down the main structure we have followed.
 
 \begin{forest}
@@ -109,7 +184,7 @@ for tree={
               [xml : xml output files]]]]
   ]
 \end{forest}
-\subsection{Files Structure}
+\subsection*{Files Structure}
 
 \begin{forest}
 for tree={

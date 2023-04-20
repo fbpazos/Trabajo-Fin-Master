@@ -1,5 +1,5 @@
-\section{NonLinear}
-\subsection{Bisection Method}
+\section*{NonLinear}
+\subsection*{Bisection* Method}
 \begin{algorithm}[H]
 \SetAlgoLined
     \SetKwInOut{Input}{Input}
@@ -31,47 +31,14 @@
   }
   \KwRet{$x$} \;
   }
-  \caption{Bisection Method}
+  \caption{Bisection* Method}
 \end{algorithm}
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet.NonLinear import bisect
-fun = lambda x: x**2 - 2
-interval = [1, 2]
-sol, nIter = bisect(fun, interval, iters = True)
-print("Bisection method: x = %f, nIter = %d" % (sol, nIter))
-
->> Bisection method: x = 1.414214, nIter = 100
-\end{lstlisting}
-}
-\paragraph{Example 2}{
-\begin{lstlisting}[language=Python]
-from BNumMet.NonLinear import bisect
-f = lambda x: sp.jv(0, x) # Bessel function of the first kind of order 0
-interval = lambda n: [n * np.pi, (n + 1) * np.pi] # Interval for the n-th zero
-
-zeros = [ bisect(f, interval(n)) for n in range(0, 10)]
-
-
-x = np.arange(1, 10 * np.pi, np.pi / 50)
-y = f(x)
-plt.plot(x, y)
-plt.plot(zeros, np.zeros(len(zeros)), "ro")
-plt.axhline(0, color="k")
-plt.show()
-\end{lstlisting}
-\begin{figure}[H]
-    \centering
-    \includegraphics{Include/Images/Thesis/Documentation/NonLinear/Bisect Example 2.png}
-    \caption{Bisect Example 2}
-    \label{fig:Bisect Example 2}
-\end{figure}
-}
+\subsubsection*{BNumMet Examples}
+\input{Content/Thesis/Documentation/Examples/NonLinear/Bisection Examples}
 
 
 
-\subsection{Secant Method}
+\subsection*{Secant Method}
 \begin{algorithm}[H]
 \SetAlgoLined
     \SetKwInOut{Input}{Input}
@@ -100,42 +67,10 @@ plt.show()
   }}
  \caption{Secant Method}
 \end{algorithm}
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet.NonLinear import secant
-fun = lambda x: x**2 - 2
-interval = [1, 2]
-sol, nIter = secant(fun, interval, iters = True)
-print("Secant method: x = %f, nIter = %d" % (sol, nIter))
+\subsubsection*{BNumMet Examples}
+\input{Content/Thesis/Documentation/Examples/NonLinear/Secant Examples}
 
->> Secant method: x = 1.414214, nIter = 7
-\end{lstlisting}
-}
-\paragraph{Example 2}{
-\begin{lstlisting}[language=Python]
-f = lambda x: sp.jv(0, x) # Bessel function of the first kind of order 0
-interval = lambda n: [n * np.pi, (n + 1) * np.pi] # Interval for the n-th zero
-
-zeros = [ secant(f, interval(n)) for n in range(0, 10)]
-
-
-x = np.arange(1, 10 * np.pi, np.pi / 50)
-y = f(x)
-plt.plot(x, y)
-plt.plot(zeros, np.zeros(len(zeros)), "ro")
-plt.axhline(0, color="k")
-plt.show()
-\end{lstlisting}
-\begin{figure}[H]
-    \centering
-    \includegraphics{Include/Images/Thesis/Documentation/NonLinear/Secant Example 2.png}
-    \caption{Secant Example 2}
-    \label{fig:Secant Example 2}
-\end{figure}
-}
-
-\subsection{Newton's Method}
+\subsection*{Newton's Method}
 \begin{algorithm}[H]
 \SetAlgoLined
     \SetKwInOut{Input}{Input}
@@ -166,41 +101,11 @@ initialization: previous\_x = start\_point - 1\;
   }}
  \caption{Newton-Raphson Method}
 \end{algorithm}
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet.NonLinear import newton
-fun = lambda x: x**2 - 2
-derivative = lambda x: 2 * x
-interval = [1, 2]
-sol, nIter = newton(fun, derivative, start_point=2, iters = True)
-print("Newton's method: x = %f, nIter = %d" % (sol, nIter))
-\end{lstlisting}
-}
-\paragraph{Example 2}{
-\begin{lstlisting}[language=Python]
-f = lambda x: sp.jv(0, x) # Bessel function of the first kind of order 0
-derivative = lambda x: sp.jvp(0, x, 1) # Derivative of the Bessel function
-interval = lambda n: [n * np.pi, (n + 1) * np.pi] # Interval for the n-th zero
-
-zeros = [ newton(f, derivative, start_point = interval(n)[0]) for n in range(1, 11)]
+\subsubsection*{BNumMet Examples}
+\input{Content/Thesis/Documentation/Examples/NonLinear/Newtons Examples}
 
 
-x = np.arange(1, 10 * np.pi, np.pi / 50)
-y = f(x)
-plt.plot(x, y)
-plt.plot(zeros, np.zeros(len(zeros)), "ro")
-plt.axhline(0, color="k")
-plt.show()
-\end{lstlisting}
-}
-\begin{figure}[H]
-    \centering
-    \includegraphics{Include/Images/Thesis/Documentation/NonLinear/Newtons Example 2.png}
-    \caption{Newton's Method Example 2}
-    \label{fig:Newton's Method Example 2}
-\end{figure}
-\subsection{Inverse Quadratic Interpolation (I.Q.I.)}
+\subsection*{Inverse Quadratic Interpolation (I.Q.I.)}
 \begin{algorithm}[H]
 \SetAlgoLined
     \SetKwInOut{Input}{Input}
@@ -228,44 +133,10 @@ plt.show()
     }
      \caption{Inverse Quadratic Interpolation}
 \end{algorithm}
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet.NonLinear import IQI
-fun = lambda x: x**2 - 2
-points = [1, 1.5 ,2]
-sol, nIter = IQI(fun, points, iters = True)
-print("IQI method: x = %f, nIter = %d" % (sol, nIter))
+\subsubsection*{BNumMet Examples}
+\input{Content/Thesis/Documentation/Examples/NonLinear/IQI Examples}
 
->> IQI method: x = 1.414214, nIter = 6
-\end{lstlisting}
-}
-\paragraph{Example 2}{
-\begin{lstlisting}[language=Python]
-from BNumMet.NonLinear import IQI
-f = lambda x: sp.jv(0, x) # Bessel function of the first kind of order 0
-interval = lambda n: [n * np.pi, (((n + 1) * np.pi)-n * np.pi)/2 ,(n + 1) * np.pi] # Interval for the n-th zero
-
-zeros = [ IQI(f, interval(n)) for n in range(0, 8)]
-
-
-x = np.arange(1, 10 * np.pi, np.pi / 50)
-y = f(x)
-plt.plot(x, y)
-plt.plot(zeros, np.zeros(len(zeros)), "ro")
-plt.axhline(0, color="k")
-plt.show()
-\end{lstlisting}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics{Include/Images/Thesis/Documentation/NonLinear/IQI Example 2.png}
-    \caption{IQI Example 2}
-    \label{fig:IQI Example 2}
-\end{figure}
-}
-
-\subsection{Brentt-Dekker}
+\subsection*{Brentt-Dekker}
 Multiple implementations with small differences exist, we opted for the original one publish by Brent \cite{brent2002algorithms}, the reason behind the naming of Brent-Dekker Algorithm is because at first Dekker in conjunction with Wingartenn and their respective colleagues proposed an initial version, later Brent came an offer a better approach and convergence \cite{Press2007}, in some references like Scipy's they will call this algorithm Brent-Wingartenn-Dekker Algorithm.
 
 
@@ -343,37 +214,5 @@ $zero \gets b$\\
 
 \label{algo:zBrentDekker} 
 \end{algorithm}
-\subsubsection{BNumMet Examples}
-\paragraph{Example 1}{
-\begin{lstlisting}[language=Python]
-from BNumMet.NonLinear import zBrentDekker
-fun = lambda x: x**2 - 2
-interval = [1, 2]
-sol, nIter = zBrentDekker(fun, interval, iters = True)
-print("Brent-Dekker method: x = %f, nIter = %d" % (sol, nIter))
-
->> Brent-Dekker method: x = 1.414214, nIter = 7
-\end{lstlisting}
-}
-\paragraph{Example 2}{
-\begin{lstlisting}[language=Python]
-f = lambda x: sp.jv(0, x) # Bessel function of the first kind of order 0
-interval = lambda n: [n * np.pi, (n + 1) * np.pi] # Interval for the n-th zero
-
-zeros = [ zBrentDekker(f, interval(n)) for n in range(0, 10)]
-
-
-x = np.arange(1, 10 * np.pi, np.pi / 50)
-y = f(x)
-plt.plot(x, y)
-plt.plot(zeros, np.zeros(len(zeros)), "ro")
-plt.axhline(0, color="k")
-plt.show()
-\end{lstlisting}
-\begin{figure}[H]
-    \centering
-    \includegraphics{Include/Images/Thesis/Documentation/NonLinear/Brentt-Dekker Example 2.png}
-    \caption{Brentt-Dekker Example 2}
-    \label{fig:Brentt-Dekker Example 2}
-\end{figure}
-}
+\subsubsection*{BNumMet Examples}
+\input{Content/Thesis/Documentation/Examples/NonLinear/Brent Dekker Examples}

@@ -1,0 +1,12 @@
+\paragraph{Example 1}{
+\begin{lstlisting}[language=Python]
+from BNumMet.LinearSystems import lu, forward_substitution
+A = np.array([[10, -7, 0], [-3, 2, 6], [5, -1, 5]])
+b = np.array([7, 4, 6])
+P, L, U = lu(A)
+solution_aux = forward_substitution(L, P @ b)
+display(solution_aux)
+
+>> solution_aux = array([7. , 2.5, 6.2])
+\end{lstlisting}
+}
