@@ -1,6 +1,9 @@
 \section*{Random Number Generators}
 \subsection*{Lehmers Random}
 \begin{algorithm}[H]
+
+\label{alg:lehmersrand}
+
 \SetAlgoLined
 \KwIn{a, c, m, x}
 \KwOut{Random number between 0 and 1}
@@ -24,7 +27,7 @@
     \KwRet $x/m$\;
 }
 \caption{Lehmer's Random Number Generator}
-\label{alg:lehmersrand}
+
 \end{algorithm}
 \subsubsection*{BNumMet Examples}
 \input{Content/Thesis/Documentation/Examples/Random/Lehmers Examples}
@@ -33,6 +36,9 @@
 The algorithm is based of \cite{10.1214/aoap/1177005878} the original paper where Gearge Marsaglia and Arif Zaman discussed it.
 
 \begin{algorithm}[H]
+
+ \label{alg:Marsaglia Random Number Generator Algorithm}
+
 \SetAlgoLined
  \SetKwInOut{Input}{Input}
  \SetKwInOut{Output}{Output}
@@ -61,6 +67,7 @@ The algorithm is based of \cite{10.1214/aoap/1177005878} the original paper wher
  \Return $x_{new} / base$\;
  }
  \caption{Marsaglia Random Number Generator Algorithm}
+
 \end{algorithm}
 
 \subsubsection*{BNumMet Examples}
@@ -69,6 +76,8 @@ The algorithm is based of \cite{10.1214/aoap/1177005878} the original paper wher
 The algorithm was based of \cite{10.5555/148286} which is an implementation of the Mersnne Twister in the programming language of C. The implementation has been tested using the NIST Random test suite \cite{smid2010statistical}, more on this on the Analaysis of Solutions section*
 
 \begin{algorithm}[H]
+
+\label{alg:Mersenne Twister Random Number Generator}
 \SetAlgoLined
 \SetKwFunction{sgenrand}{sgenrand}
 \SetKwFunction{genrand}{genrand}
@@ -115,6 +124,7 @@ global mt, mti, mag01\\
     \KwRet y / 0xFFFFFFFF\;
 }
 \caption{Mersenne Twister Random Number Generator}
+
 \end{algorithm}
 \remark{
 \begin{enumerate}

@@ -284,7 +284,7 @@ class test_RandomVisualizer(TestCase):
 
         rv.iterations_widget.value = 10000
         self.assertEqual(
-            rv.iterations_widget.value, 1000
+            rv.iterations_widget.value, 10000
         )  # Should be 1000 because of the max value
 
         rv.iterations_widget.value = 0

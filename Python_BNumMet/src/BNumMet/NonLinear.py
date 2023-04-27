@@ -315,7 +315,7 @@ def zBrentDekker(
         m = 0.5 * (c - b)
 
         iterations += 1
-
+        # print(b,e)
     zero = b
     if steps and iters:
         return zero, iterations, procedure_stack

@@ -201,3 +201,10 @@ hmargin=3cm
 \usepackage{pdflscape}
 \usepackage{pdfpages}
 \usepackage{rotating}
+
+
+\newcommand{\imgref}[1]{\hyperref[#1]{[Figure~\ref*{#1}\nameref*{#1}}]}
+\newcommand{\algoref}[1]{\hyperref[#1]{[Algorithm~\ref*{#1}\nameref*{#1}}]}
+
+
+

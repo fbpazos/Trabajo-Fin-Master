@@ -12,10 +12,14 @@ print("IQI method: x = %f, nIter = %d" % (sol, nIter))
 \paragraph{Example 2}{
 \begin{lstlisting}[language=Python]
 from BNumMet.NonLinear import IQI
-f = lambda x: sp.jv(0, x) # Bessel function of the first kind of order 0
-interval = lambda n: [n * np.pi, (((n + 1) * np.pi)-n * np.pi)/2 ,(n + 1) * np.pi] # Interval for the n-th zero
+f = lambda x: sp.jv(0, x)  # Bessel function of the first kind of order 0
+interval = lambda n: [
+    n * np.pi,
+    (((n + 1) * np.pi) - n * np.pi) / 2,
+    (n + 1) * np.pi,
+]  # Interval for the n-th zero
 
-zeros = [ IQI(f, interval(n)) for n in range(0, 8)]
+zeros = [IQI(f, interval(n)) for n in range(0, 7)]
 
 
 x = np.arange(1, 10 * np.pi, np.pi / 50)
@@ -23,6 +27,9 @@ y = f(x)
 plt.plot(x, y)
 plt.plot(zeros, np.zeros(len(zeros)), "ro")
 plt.axhline(0, color="k")
+plt.title("Zeros of $J_0(x)$ with IQI method")
+plt.xlabel("$x$")
+plt.ylabel("$J_0(x)$")
 plt.show()
 \end{lstlisting}
 

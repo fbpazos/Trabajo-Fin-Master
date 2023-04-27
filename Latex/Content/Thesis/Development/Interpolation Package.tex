@@ -1,8 +1,15 @@
 \section{Interpolation}
 In this package, we have built various methods for interpolating a function; however, despite the simplicity of the method's implementation, a general analysis has been conducted on a specific method of implementing the function evaluation; this analysis will be presented after a brief description of the methods.
 
-The following are the methods used:
+The following algorithm implementations that we have realized will be detailed in this section:
+\begin{itemize}
+    \item Polinomial Interpolation \algoref{alg:Polinomial Interpolation}
+    \item Piecewise Linear Interpolation \algoref{alg:Piecewise Linear Interpolation}
+    \item Piecewise Cubic Hermite Interpolation \algoref{alg:Piecewise Cubic Hermite Interpolation}
+    \item Piecewise Cubic Interpolatory Splines \algoref{alg:Piecewise cubic Interpolatory Splines}
+\end{itemize}
 
+All this algorithms were based uppon Cleve's work \cite{doi:10.1137/1.9780898717952}
 \subsection{Polynomial Interpolation}
 This approach performs a polynomial interpolation of a given collection of points; it is one of the fundamental ways of interpolation and is widely taught in institutions.
 \subsubsection{Examples}

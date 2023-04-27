@@ -2,6 +2,7 @@
 \subsection*{LU Decomposition}
 The LU Method divides a matrix A into three matrices: P (Permutation Matrix), L (Lower Triangular Matrix), and U (Upper Triangular Matrix).
 \begin{algorithm}[H]
+\label{alg:LU decomposition using Gaussian elimination}
     \SetAlgoLined
     \KwIn{A square matrix $A$}
     \KwOut{A permutation matrix $P$, lower triangular matrix $L$, and upper triangular matrix $U$}
@@ -25,7 +26,8 @@ The LU Method divides a matrix A into three matrices: P (Permutation Matrix), L 
     $L \gets$ lower triangular part of $A'$ with ones on the diagonal \\
     $U \gets$ upper triangular part of $A'$ \\
     \KwRet{$P$, $L$, $U$}
-    \caption{LU decomposition using Gaussian elimination}\label{alg:LU decomposition using Gaussian elimination}
+    \caption{LU decomposition using Gaussian elimination}
+    
 \end{algorithm}
 \subsubsection*{BNumMet Examples}
 \input{Content/Thesis/Documentation/Examples/Linear Systems/LU Examples}
@@ -33,6 +35,7 @@ The LU Method divides a matrix A into three matrices: P (Permutation Matrix), L 
 
 \subsection*{Forward Substitution}
 \begin{algorithm}[H]
+\label{alg:Forward Substitution}
 \SetKwInOut{Input}{Input}
 \SetKwInOut{Output}{Output}
 \Input{$lhs$: np.array, a lower triangular matrix\newline $rhs$: np.array, a vector}
@@ -48,6 +51,7 @@ $x[row] \gets $rhs[row] / lhs[row, row];
 }
 \KwRet{$x$};
 \caption{Forward Substitution}
+
 \end{algorithm}
 \subsubsection*{BNumMet Examples}
 \input{Content/Thesis/Documentation/Examples/Linear Systems/Forward Substitution Examples}
@@ -55,6 +59,7 @@ $x[row] \gets $rhs[row] / lhs[row, row];
 
 \subsection*{Backward substitution}
 \begin{algorithm}[H]
+\label{alg:Backward Substitution}
 \SetAlgoLined
 \KwIn{lhs: an upper triangular matrix, rhs: a vector}
 \KwOut{x: a vector}
@@ -72,12 +77,15 @@ $x \gets$ np.zeros(n);\\
 \KwRet{x}\;
 }
 \caption{Backward Substitution}
+
+
 \end{algorithm}
 \subsubsection*{BNumMet Examples}
 \input{Content/Thesis/Documentation/Examples/Linear Systems/Backward Substitution Examples}
 
 \subsection*{LU Solver}
 \begin{algorithm}[H] 
+\label{alg:LU Solver}
 \SetAlgoLined
 \KwIn{A: a square matrix, b: a vector}
 \KwOut{x: a vector}
@@ -89,12 +97,14 @@ $x \gets $ backward\_substitution(U, y);\\
 \KwRet{x};
 }
 \caption{LU Solver}
+
 \end{algorithm}
 \subsubsection*{BNumMet Examples}
  \input{Content/Thesis/Documentation/Examples/Linear Systems/LU Solver Examples}
 
 \subsection*{QR Decomposition}
 \begin{algorithm}[H]{
+\label{alg:QR Factorization using Householder reflections}
 \SetAlgoLined
 \KwIn{$A$: an $m \times n$ matrix}
 \KwOut{$Q$: an orthogonal matrix, $R$: an upper triangular matrix}
@@ -116,12 +126,14 @@ $R \gets \text{triu}(R)$\;
 \Return{$Q, R$}\;
 }
 \caption{QR Factorization using Householder reflections}
+
 \end{algorithm}
 \subsubsection*{BNumMet Examples}
 \input{Content/Thesis/Documentation/Examples/Linear Systems/QR Decomposition Examples}
 
 \subsection*{QR Solver}
 \begin{algorithm}[H]
+\label{alg:QR Solver}
 \SetAlgoLined
 \DontPrintSemicolon
 \KwIn{$A$: a square matrix, $b$: a vector}
@@ -139,6 +151,7 @@ $R \gets$ upper triangular part of $R$;\\
 $x \gets \text{backward substitution}(R[:n,:n], b[:n])$\\
 \Return $x$
 \caption{QR Solver}
+
 \end{algorithm}
 \subsubsection*{BNumMet Examples}
 \input{Content/Thesis/Documentation/Examples/Linear Systems/QR Solver Examples}

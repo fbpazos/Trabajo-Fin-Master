@@ -161,7 +161,7 @@ class LSPVisualizer:
         if (
             change["new"] == "Only data"
         ):  # if the function type is "Only data"  then we don't need to draw anything else
-            ...
+            self.remarks.value = ""  # clear the remarks
         elif (
             change["new"] == "Polynomial"
         ):  # if the function type is "Polynomial" then we need to

@@ -3,6 +3,7 @@
 \subsection*{Polinomial Interpolation}
 
 \begin{algorithm}[H]
+\label{alg:Polinomial Interpolation}
 \SetAlgoLined
 \DontPrintSemicolon
 \KwIn{$x$: list of x coordinates, $y$: list of y coordinates, $u$: list of points where the interpolation is computed}
@@ -20,12 +21,14 @@ $v \gets v + w * y_i$
 }
 \Return $v$
 \caption{Polinomial Interpolation}
+
 \end{algorithm}
 \subsubsection*{BNumMet Examples}
 \input{Content/Thesis/Documentation/Examples/Interpolation/Polinomial Interpolation Examples}
 \subsection*{Piecewise Linear Interpolation}
 
 \begin{algorithm}[H]
+\label{alg:Piecewise Linear Interpolation}
 \SetAlgoLined
 \DontPrintSemicolon
 \KwIn{$x$: list of x coordinates, $y$: list of y coordinates, $u$: list of points where the interpolation is computed, $sorted$: if the points are sorted or not (default: False)}
@@ -47,6 +50,7 @@ $s \gets u - x_k$\\
 $v \gets y_k + s * \Delta_k$\\
 \Return $v$
 \caption{Piecewise Linear Interpolation}
+
 \end{algorithm}
 \subsubsection*{BNumMet Examples}
 \input{Content/Thesis/Documentation/Examples/Interpolation/PieceWise Linear Interpolation Examples}
@@ -55,6 +59,8 @@ $v \gets y_k + s * \Delta_k$\\
 The pchip function is a Python implementation of the Piecewise Cubic Hermite Interpolation Polynomial (P.C.H.I.P.) based on an old Fortran program by Fritsch and Carlson.
 
 \begin{algorithm}[H]
+
+\label{alg:Piecewise Cubic Hermite Interpolation}
 \SetAlgoLined
 \KwIn{List of x coordinates $x$, list of y coordinates $y$, list of points where the interpolation is computed $u$, and parameter to specify if the points are already sorted $sorted$}
 \KwOut{List of values of the interpolation at the points $u$}
@@ -100,6 +106,7 @@ $d \leftarrow 0$
 \KwRet{$d$}
 }
 \caption{Piecewise Cubic Hermite Interpolation}
+
 \end{algorithm}
 
 \subsubsection*{BNumMet Examples}
@@ -107,6 +114,9 @@ $d \leftarrow 0$
 
 \subsection*{Piecewise cubic Interpolatory Splines}
 \begin{algorithm}[H]
+
+\label{alg:Piecewise cubic Interpolatory Splines}
+
 \SetAlgoLined
 \KwIn{List of x coordinates $x$, list of y coordinates $y$, list of points where the interpolation is computed $u$, and parameter to specify if the points are already sorted $sorted$}
 \KwOut{List of values of the interpolation at the points $u$}
@@ -144,6 +154,7 @@ $res \leftarrow \mathrm{lu\_solve}(\mathrm{diag}(a, -1) + \mathrm{diag}(b) + \ma
 \KwRet $res.\mathrm{astype}(float)$ ;
 }
 \caption{Piecewise cubic Interpolatory Splines}
+
 \end{algorithm}
 
 \subsubsection*{BNumMet Examples}

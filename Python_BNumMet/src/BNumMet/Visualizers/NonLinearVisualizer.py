@@ -294,8 +294,8 @@ class NonLinearVisualizer:
             else self.b + np.sign(0.5 * (self.c - self.b)) * self.tolerance
         )  # If the new point is too close to the current point, move it a little bit
         self.fb = self.f(self.b)  # Set f(b) = f(newB)
-        self.e = self.errs[b.pointIndex]  # Set e = error
-
+        if b.pointIndex != 1:
+            self.e = self.errs[b.pointIndex]  # Set e = error
         self.iterations += 1  # Increment the number of iterations
 
         # Section: Ext
@@ -468,9 +468,25 @@ class NonLinearVisualizer:
         )
 
         if self.hint_step is None:  # If the hint step is None
+            # set the original function
+            self.x = np.linspace(min(self.original_data), max(self.original_data), 1000)
+            self.default_lines()
+            # Adjust the scales
+            self.x_sc.min = min(self.original_data)
+            self.x_sc.max = max(self.original_data)
+            self.y_sc.min = min(self.function_line.y)
+            self.y_sc.max = max(self.function_line.y)
+
             self.fig.marks = [
                 self.horizontal_line,
                 self.function_line,
+                draw_point(  # Draw the current solution
+                    self.b,
+                    0,
+                    "red",
+                    "Current Solution",
+                    "circle",
+                ),
             ]  # Set the marks to the function and the horizontal line
             return
 
@@ -491,7 +507,7 @@ class NonLinearVisualizer:
             self.widen = True  # Set widen to True
         elif self.widen:  # If widen is True
             self.x = np.linspace(
-                min(self.original_data), max(self.original_data), 1000
+                min(self.original_data), max(self.original_data), 10000
             )  # Set the x values to the min and max of the original data
             self.default_lines()  # Set the default lines
             self.widen = False  # Set widen to False
@@ -607,7 +623,7 @@ class NonLinearVisualizer:
             print(f"Iterations: {self.iterations}")  # Print the iterations
         with self.helper_output:  # Print the helper text
             print(  # Print the helper text
-                f"Next Step suggestion: {self.hint_step if self.hint_step is not None else 'FINISHED'}"
+                f"Next Step suggested by Brent-Dekker: {self.hint_step if self.hint_step is not None else 'FINISHED'}"
             )
 
     def run(self):
@@ -684,6 +700,8 @@ class NonLinearVisualizer:
                 p2 = -p2
 
             pq_pair = (p2, q2)
+
+            self.s = self.e
 
         if p1 > 0:
             q1 = -q1

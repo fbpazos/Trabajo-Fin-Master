@@ -1,10 +1,21 @@
 \section{Non Linear Equation Solver Package}
 As part of extending BNumMet's functionality, we decided to implement the numerical methods associated with solving nonlinear equations because it is a topic that, like the others, is widely taught in a numerical methods course and is a fundamental approach to solving most equations that may not be solvable using a linear approach.
 
+The following algorithm implementations that we have realized will be detailed in this section:
+\begin{itemize}
+    \item Bisection method \algoref{alg:Bisection Method}
+    \item Secant  method \algoref{alg:Secant method}
+    \item Newton-Raphson \algoref{alg:Newton-Raphson Method}
+    \item Inverse Quadratic Interpolation \algoref{alg:IQI Method}
+    \item Brent-Dekker \algoref{alg:zBrentDekker} 
+\end{itemize}
+
 Except for the last method, all of the approaches are quite straightforward, with the main exception being that the input function may be multidimensional, but only the zero will be located in one of the dimensions. In addition, an iteration counter has been introduced for student study of the efficiency of the various methods.
 
 \subsection{Bisection}
 We have implemented the well known method of the bisection method, a method that at every iteration divides the search interval into two half's and takes the one whose sign at the extremes change. No extra considerations have been taken into account except for adding the appropriate comments for any student to know what every step is doing.
+
+The algorithm is based upon Cleve's implementation \cite{doi:10.1137/1.9780898717952}.
 \subsubsection{Examples}
 	\input{Content/Thesis/Documentation/Examples/NonLinear/Bisection Examples}
 
@@ -16,12 +27,15 @@ Most numerical methods classes use this approach to illustrate the secant method
 
 \subsection{Secant Method}
 As a continuation of Newton's approach, it is critical to apply the Secant method, which generalizes Newton's method by approximating the derivative and eliminating the necessity for the derivative that Newton's method requires. 
+
+The algorithm is based upon Cleve's implementation \cite{doi:10.1137/1.9780898717952}.
 \subsubsection{Examples}
 	\input{Content/Thesis/Documentation/Examples/NonLinear/Secant Examples}
 
 \subsection{Inverse Quadratic Interpolation (I.Q.I.)}
 The aim is to utilize quadratic interpolation to approximate the inverse of f, and further iterations will result in the zero we want. It should be noted that this method is often used as part of another method that we will examine later \cite{10.5555/2553197}, that is why we created it as a standalone to offer students with a glimpse of what the method is about without additional code that may interfere with the learning process.
 
+The algorithm is primarily based upon \cite{kreyszig11}  as well as Moller's implementation \cite{doi:10.1137/1.9780898717952}.
 \subsubsection{Examples}
 	\input{Content/Thesis/Documentation/Examples/NonLinear/IQI Examples}
 
@@ -32,7 +46,7 @@ Brent Dekkers algorithm is one of the methods that combines the previously discu
 The fundamental idea of Brent-Dekker's Algorithm is to apply the bisection, secant, and if possible the I.Q.I. method, the fundamental criteria of choice is firstly the availability of the application of I.Q.I. which requires three distinct points, after checking that, if it applies I.Q.I is saved, otherwise the secant is saved to then be compared with the bisection algorithm, whichever of the two passes a tolerance criteria given then they will be applied and the next iteration will commence.
 
 
-In BNumMet, we mostly used Brent's original approach \cite{Press2007} rather than Matlab's for a variety of reasons. One of them is the license under which Matlab allows the code to be used; since our goal was to follow open source initiatives, we needed to use the original one. We also wanted to show students the historical accuracy of the algorithm and present a method that preserves the historical context as well as its current properties. 
+In BNumMet, we used Brent's original approach \cite{Press2007} which has a Fortran implementation of the algorithm. The use of this work rather than Matlab's was for a variety of reasons, one of them is the license under which Matlab allows the code to be used; since our goal was to follow open source initiatives, we needed to use the original one. We also wanted to show students the historical accuracy of the algorithm and present a method that preserves the historical context as well as its current properties. 
 
 In the next paragraph, we will examine the several implementations we discovered, including Matlab's implementation, the original implementation, and Scipy's implementation.
 
@@ -143,44 +157,44 @@ To test it we will implement the thought experiment in code and proceed in the f
 
 Our goal with this test will be firstly to prove the effectiveness of the original algorithm and the implementation in python with respect to the other two, as well as, observing if we have an algorithmic advantage or not with these aforementioned methods.
 
-We will then take the number of evaluations and the value of x at where the zero is found in order to measure the relative error.
+We will then take the number of evaluations and the value of x at where the zero is found in order to measure the relative error. The plots will not be in the whole range of step sizes but a smaller sample size of 75 step sizes
 
 \subparagraph{For $a=1$}
-As we can observe in the first plot of [fig \ref{fig:NonLinear 3 method Results for a=1 same tolerance}] Scipy's implementation of Brent-Dekker's Algorithm is the worst in term of number of evaluations, and Matlab's has almost everywhere a similar behaviour in number of evaluations. Looking at the second plot, we see that even though BNumMet's implementation was better in terms of evaluations, it is the worst in terms of relative error, and Matlab's is similar to Scipy's but slightly worst.
+As we can observe in the first plot of\imgref{fig:NonLinear 3 method Results for a=1 same tolerance} Scipy's implementation of Brent-Dekker's Algorithm is the worst in term of number of evaluations, and Matlab's has almost everywhere a similar behaviour in number of evaluations. Looking at the second plot, we see that even though BNumMet's implementation was better in terms of evaluations, it is the worst in terms of relative error, and Matlab's is similar to Scipy's but slightly worst.
 
-One question rises from here: will BNumMets implementation improve - in terms of having a lower number of function evaluations - if we reduce the tolerance, at the risk of number of evaluations - but as seen, we still have room for tweaking. In fact, we can improve the relative error of BNumMets by decreasing the tolerance and still have an advantage over Scipy's implementation almost everywhere [fig \ref{fig:NonLinear 3 method Results for a=1 BNumMet smaller tolerance}]
+One question rises from here: will BNumMets implementation improve - in terms of having a lower number of function evaluations - if we reduce the tolerance, at the risk of number of evaluations - but as seen, we still have room for tweaking. In fact, we can improve the relative error of BNumMets by decreasing the tolerance and still have an advantage over Scipy's implementation almost everywhere \imgref{fig:NonLinear 3 method Results for a=1 BNumMet smaller tolerance}
 
 This results proves that the original implementation of Brent-Dekker is better than Scipy's, because at a lower number of function evaluations we achieve a better relative error. 
 
 \subparagraph{For $a=0.1$}
-The same discussion of $a=1$ remains valid to the case $a=0.1$, it must be noted that in this case the plots show a extravagant behaviour, with the number of evaluations, at certain points, the evaluations remain the same regardless of the interval size. On the first plot [fig \ref{fig:NonLinear 3 method Results for a=0.1 same tolerance}] we observe that BNumMet takes the leading position while on the second plot, there remains a high relative error but closer to Matlab's on the overall scheme.
+The same discussion of $a=1$ remains valid to the case $a=0.1$, it must be noted that in this case the plots show a extravagant behaviour, with the number of evaluations, at certain points, the evaluations remain the same regardless of the interval size. On the first plot \imgref{fig:NonLinear 3 method Results for a=0.1 same tolerance} we observe that BNumMet takes the leading position while on the second plot, there remains a high relative error but closer to Matlab's on the overall scheme.
 
-Incrementing the input tolerance to BNumMet's implementation, we observe [fig \ref{fig:NonLinear 3 method Results for a=0.1 BNumMet smaller tolerance}] that not only does BNumMet's implementation offer a lower number of function evaluations but also it provides a better relative error in comparison to Scipy's implementation.
+Incrementing the input tolerance to BNumMet's implementation, we observe \imgref{fig:NonLinear 3 method Results for a=0.1 BNumMet smaller tolerance} that not only does BNumMet's implementation offer a lower number of function evaluations but also it provides a better relative error in comparison to Scipy's implementation.
 
 All in all, the decision to implement the original Brent-Dekker was a good choice; not only does it preserve the historical algorithm but also improves on the well-known library of Scipy.
 
-\begin{sidewaysfigure}[htbp]
+\begin{sidewaysfigure}[H]
     \centering
     \includegraphics[width=\textwidth]{Include/Images/Thesis/Analysis of Solutions/NonLinear AS/NonLinear 3 method Results a-1.png}
     \caption{NonLinear 3 method Results for $a=1$ same tolerance}
     \label{fig:NonLinear 3 method Results for a=1 same tolerance}
 \end{sidewaysfigure}
 
-\begin{sidewaysfigure}[htbp]
+\begin{sidewaysfigure}[H]
     \centering
     \includegraphics[width=\textwidth]{Include/Images/Thesis/Analysis of Solutions/NonLinear AS/NonLinear 3 method Results Small Tol Bnum a-1.png}
     \caption{NonLinear 3 method Results for $a=1$ BNumMet smaller tolerance}
     \label{fig:NonLinear 3 method Results for a=1 BNumMet smaller tolerance}
 \end{sidewaysfigure}
 
-\begin{sidewaysfigure}[htbp]
+\begin{sidewaysfigure}[H]
     \centering
     \includegraphics[width=\textwidth]{Include/Images/Thesis/Analysis of Solutions/NonLinear AS/NonLinear 3 method Results a-0.1.png}
     \caption{NonLinear 3 method Results for $a=0.1$ same tolerance}
     \label{fig:NonLinear 3 method Results for a=0.1 same tolerance}
 \end{sidewaysfigure}
 
-\begin{sidewaysfigure}[htbp]
+\begin{sidewaysfigure}[H]
     \centering
     \includegraphics[width=\textwidth]{Include/Images/Thesis/Analysis of Solutions/NonLinear AS/NonLinear 3 method Results Small Tol Bnum a-0.1.png}
     \caption{NonLinear 3 method Results for $a=0.1$ BNumMet smaller tolerance}

@@ -1,6 +1,7 @@
 \section*{NonLinear}
 \subsection*{Bisection* Method}
 \begin{algorithm}[H]
+\label{alg:Bisection Method}
 \SetAlgoLined
     \SetKwInOut{Input}{Input}
     \SetKwInOut{Output}{Output}
@@ -31,7 +32,8 @@
   }
   \KwRet{$x$} \;
   }
-  \caption{Bisection* Method}
+  \caption{Bisection Method}
+  
 \end{algorithm}
 \subsubsection*{BNumMet Examples}
 \input{Content/Thesis/Documentation/Examples/NonLinear/Bisection Examples}
@@ -40,6 +42,7 @@
 
 \subsection*{Secant Method}
 \begin{algorithm}[H]
+\label{alg:Secant method}
 \SetAlgoLined
     \SetKwInOut{Input}{Input}
     \SetKwInOut{Output}{Output}
@@ -66,12 +69,15 @@
    }
   }}
  \caption{Secant Method}
+ 
 \end{algorithm}
 \subsubsection*{BNumMet Examples}
 \input{Content/Thesis/Documentation/Examples/NonLinear/Secant Examples}
 
 \subsection*{Newton's Method}
 \begin{algorithm}[H]
+
+\label{alg:Newton-Raphson Method}
 \SetAlgoLined
     \SetKwInOut{Input}{Input}
     \SetKwInOut{Output}{Output}
@@ -100,6 +106,7 @@ initialization: previous\_x = start\_point - 1\;
    }
   }}
  \caption{Newton-Raphson Method}
+ 
 \end{algorithm}
 \subsubsection*{BNumMet Examples}
 \input{Content/Thesis/Documentation/Examples/NonLinear/Newtons Examples}
@@ -107,6 +114,8 @@ initialization: previous\_x = start\_point - 1\;
 
 \subsection*{Inverse Quadratic Interpolation (I.Q.I.)}
 \begin{algorithm}[H]
+\label{alg:IQI Method}
+
 \SetAlgoLined
     \SetKwInOut{Input}{Input}
     \SetKwInOut{Output}{Output}
@@ -132,6 +141,7 @@ initialization: previous\_x = start\_point - 1\;
         \Return $x_0$\;
     }
      \caption{Inverse Quadratic Interpolation}
+     
 \end{algorithm}
 \subsubsection*{BNumMet Examples}
 \input{Content/Thesis/Documentation/Examples/NonLinear/IQI Examples}
@@ -141,6 +151,9 @@ Multiple implementations with small differences exist, we opted for the original
 
 
 \begin{algorithm}[H] 
+
+\label{alg:zBrentDekker} 
+
 \DontPrintSemicolon 
 \SetKwInOut{Input}{Input}
 \SetKwInOut{Output}{Output} 
@@ -212,7 +225,7 @@ $zero \gets b$\\
 
 \caption{Brent-Dekker's Algorithm}
 
-\label{algo:zBrentDekker} 
+
 \end{algorithm}
 \subsubsection*{BNumMet Examples}
 \input{Content/Thesis/Documentation/Examples/NonLinear/Brent Dekker Examples}

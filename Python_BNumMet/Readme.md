@@ -93,6 +93,51 @@ python tests/__init__.py # Run tests
 # It will generate a coverage report in the Tests/coverage folder in different formats (html, xml, lcov). 
 # It will also format the code using the Black Library (I Might've forgottent to do so :) )
 ```
+## BNumMet Library Structure
+
+```
+BNumMet
+	* LinearSystems
+		- lu( matrix ) --> P,L,U matrices as np.array
+		- permute( matrix, row_1, row_2) --> Permuted Matrix as np.array
+		- forward_substitution( matrix_L, matrix_b ) --> Solution to Lx=b as np.array
+		- backward_substitution( matrix_U, matrix_b ) --> Solution to Ux=b as np.array
+		- lu_solve ( matrix_A, matrix_b ) --> Solution to Ax=b as np.array using LU Decomposition
+		- qr_factorization ( matrix_A ) --> Q,R Matrices as np.array
+		- qr_solve( matrix_A, matrix_b ) --> Solution to Ax=b as np.array using QR decomposition
+ 		- interactive_lu( matrix_p, matrix_l, matrix_u, col, row, pivot_row) --> An iteration of LU Decomposition
+	* Interpolation
+		- polinomial(interpolation_x, interpolation_y, mesh) --> Polinomial-Interpolated values over mesh
+		- piecewise_linear(interpolation_x, interpolation_y, mesh) --> Piecewise Linear-Interpolated values over mesh
+		- pchip(interpolation_x, interpolation_y, mesh) --> Piecewise Cubic Hermite-Interpolated values over mesh
+		- splines(interpolation_x, interpolation_y, mesh) --> Piecewise Cubix-Interpolated values over mesh
+	* NonLinear
+		- bisect( function, interval:tuple, stop_iters:int, iters:bool, *args) --> x-value of where the zero is at and as optional the number of iterations taken
+		- secant( function, interval:tuple, stop_iters:int, iters:bool, *args) --> x-value of where the zero is at and as optional the number of iterations taken
+		- newton( function, derivative, interval:tuple, stop_iters:int, iters:bool, *args) --> x-value of where the zero is at and as optional the number of iterations taken
+		- IQI( function, values_of_x:tuple, stop_iters:int, iters:bool, *args) --> x-value of where the zero is at and as optional the number of iterations taken
+		- zBrentDekker( function, interval:tuple, tol, stop_iters:int, iters:bool, *args) --> x-value of where the zero is at and as optional the number of iterations taken	
+	* Random
+		- clear_lehmers_vars() --> Cleans the initiated values of the Lehmers random number generator
+		- lehmers_init(a, c, m, x) --> Initializes Lehmers R.N.G. with values given
+		- lehmers_rand(a, c, m, x) --> Initializes and produces a random number every time it is called
+		- clear_marsaglia_vars() --> Cleans the initiated values of the Marsaglia's random number generator
+		- marsaglia_init(base, lag_r, lag_s, carry, seed_tuple) --> Initializes Marsaglia's R.N.G. with values given
+		- marsaglia_rand(base, lag_r, lag_s, carry, seed_tuple) --> Initializes and produces a random number every time it is called
+		- clear_mt_vars() --> Cleans the initiated values of the Mersenne Twister random number generator
+		- sgenrand(seed:int) --> Initializes and produces a random number every time it is called
+	* Visualizers
+		- LUVisualizer
+			- LUVisualizer:Class 
+		- InterpolationVisualizer
+			- InterpolVisualizer:Class 
+		- NonLinearVisualizer
+			- NonLinearVisualizer:Class 
+		- LeastSquaresVisualizer
+			- LSPVisualizer:Class 
+		- RandomVisualizer
+			- RandomVisualizer:Class 
+```
 
 ## BNumMet - Structure
 ----

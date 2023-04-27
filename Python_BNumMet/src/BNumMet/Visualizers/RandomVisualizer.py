@@ -62,7 +62,11 @@ class RandomVisualizer:
         x = np.concatenate((x, (x[::-1])))  # x
 
         self.circle = bq.Lines(
-            x=x, y=y, scales={"x": self.x_sc, "y": self.y_sc}, colors=["red"]
+            x=x,
+            y=y,
+            scales={"x": self.x_sc, "y": self.y_sc},
+            colors=["red"],
+            stroke_width=5,
         )
         self.figure1.marks = [self.square, self.circle]
 
@@ -72,9 +76,9 @@ class RandomVisualizer:
             y=[],
             scales={"x": self.x_sc, "y": self.y_sc},
             colors=["blue"],
-            default_size=5,
+            default_size=2,
         )
-        self.figure1.marks = [self.square, self.circle, self.points]
+        self.figure1.marks = [self.points, self.square, self.circle]
 
         # Figure 2: (Current value and Pi) vs. (Number of iterations)
         # =================================================================================================
@@ -130,7 +134,7 @@ class RandomVisualizer:
         self.iterations_widget = widgets.BoundedIntText(
             value=self.iterations,
             min=1,
-            max=1000,
+            max=10000,
             description="Iterations:",
             disabled=False,
         )
@@ -147,7 +151,7 @@ class RandomVisualizer:
         # Observer: Button for running the algorithm
         self.run_button.on_click(self.play_montecarlo)
 
-        self.pi_value = widgets.FloatText( # Widget: Pi value
+        self.pi_value = widgets.FloatText(  # Widget: Pi value
             value=0,
             description="$\pi$:",
             disabled=True,
@@ -157,8 +161,8 @@ class RandomVisualizer:
         self.grid = widgets.GridspecLayout(4, 4)
         self.grid[0:2, 0:2] = self.figure1
         self.grid[2:4, 0:4] = self.figure2
-        self.grid[0:1, 2:4] = widgets.VBox([self.iterations_widget,self.run_button])
-        
+        self.grid[0:1, 2:4] = widgets.VBox([self.iterations_widget, self.run_button])
+
         self.grid[1:2, 2:4] = self.pi_value
 
     def number_of_iterations(self):
@@ -182,30 +186,48 @@ class RandomVisualizer:
         self.points.y = []
         self.current_value_line.x = []
         self.current_value_line.y = []
-
+        self.total_points = 0
         self.run_button.disabled = True
+
+        batch_coords = []
+        batch_current_value = []
+        batch_current_iteration = []
+        batch_size = int(self.iterations / 100) * (2 if self.iterations < 2000 else 5)
 
         for self.current_iteration in range(self.iterations):
             new_x = self.random_generator()
             new_y = self.random_generator()
-            self.generated_numbers.append([new_x, new_y])
-            with self.points.hold_sync():  # Animation for the points
-                self.points.x = [x[0] for x in self.generated_numbers]
-                self.points.y = [x[1] for x in self.generated_numbers]
+            self.total_points += 1
+
+            batch_coords.append([new_x, new_y])
             if ((new_x - 0.5) ** 2 + (new_y - 0.5) ** 2) <= 0.25:
                 self.inside_circle += 1
-            # sleep(0.0001)
-            self.current_value = 4 * self.inside_circle / len(self.generated_numbers)
+            batch_current_value.append(4 * self.inside_circle / self.total_points)
 
-            with self.current_value_line.hold_sync():  # Animation for the current value
-                self.current_value_line.x = [x for x in self.current_value_line.x] + [
-                    self.current_iteration
-                ]
-                self.current_value_line.y = [y for y in self.current_value_line.y] + [
-                    self.current_value
-                ]
-                self.pi_value.value = self.current_value
-            sleep(0.0001)
+            batch_current_iteration.append(self.current_iteration)
+
+            if (
+                len(batch_coords) >= batch_size
+                or self.current_iteration == self.iterations - 1
+            ):
+                aux = self.generated_numbers + batch_coords
+                with self.grid.hold_sync():
+                    with self.points.hold_sync():
+                        self.points.x = [x[0] for x in aux]
+                        self.points.y = [x[1] for x in aux]
+                    with self.current_value_line.hold_sync():
+                        self.current_value_line.x = (
+                            list(self.current_value_line.x) + batch_current_iteration
+                        )  # [x for x in self.current_value_line.x] + batch_current_iteration
+                        self.current_value_line.y = (
+                            list(self.current_value_line.y) + batch_current_value
+                        )  # [x for x in self.current_value_line.y] + batch_current_value
+                    self.pi_value.value = batch_current_value[-1]
+                    self.generated_numbers += batch_coords
+
+                batch_coords = []
+                batch_current_value = []
+                batch_current_iteration = []
 
         self.run_button.disabled = False
 

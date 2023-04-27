@@ -3,6 +3,13 @@ To expand the techniques available in BNumMet even further, we will incorporate 
 
 Many of the suggested techniques rely on specific values being initialized, so we used a Python dictionary to help students understand the meaning of each variable by associating a key with its value; this dictionary is then used as a global dictionary in the appropriate method.
 
+In this section the following algorithms had been implemented by the author of this work:
+\begin{itemize}
+    \item Lehmers Random Number Generator \ref{alg:lehmersrand}
+    \item Marsaglia Random Number Generator \ref{alg:Marsaglia Random Number Generator Algorithm}
+    \item Mersenne Twister Random Number Generator \ref{alg:Mersenne Twister Random Number Generator}
+\end{itemize}
+
 \subsection{Lehmer's Generator}
 Lehmer's Random Number Generator is one of the simplest yet most elegant generators available. This type of generator is a Linear Congruential generator, which is defined by the following recurrence relation. \cite{payne1969coding} \cite{park1988random}
 \[x_{n+1} = k\cdot x_n \mod{n}\]
@@ -13,6 +20,8 @@ The selection of $a,c,n$ and $x_0$ is critical, and some values have been propos
 \[a= 7^5, c=0, m=2^{31}-1, x_0 = 1 \]
 
 These values ensure that this generator works properly, but some bad generators can be found, which is an interesting exercise for the student to search for or come up with. Additionally it is worth mentioning that the developped function allows for input parameters to be set.
+
+The algorithm implementation was based upon Moller's work \cite{doi:10.1137/1.9780898717952}.
 \subsubsection{Examples}
 	\input{Content/Thesis/Documentation/Examples/Random/Lehmers Examples}
 
@@ -24,6 +33,8 @@ In the original paper \cite{10.1214/aoap/1177005878} Marsaglia expands on random
 One of the complexities of this method is that it generates primarily integer numbers and is limited to the base it accepts as input; however, dividing by the base (the largest number in the generator) produces a decimal number between 0 and 1. Some input arguments were proposed, but as we saw in Lehmer's generator, some default parameters were provided. 
 \[base = 2^{31}-1, lag_r=19, lag_s=7, carry=1, seed\_tuple = (1,1)\]
 This set of values was proposed in the original paper; it is also worth noting that we used the subtract with borrow method, despite the fact that the addition with carry method is analogous. We strongly encourage students to try to find ill-inputs that generate patterns in their output.
+
+We have implemented the algorithm using the original approach of Marsaglia \cite{10.1214/aoap/1177005878}.
 \subsubsection{Examples}
 	\input{Content/Thesis/Documentation/Examples/Random/Marsaglias Examples}
 
@@ -35,6 +46,7 @@ We opted to implement the technique due to its popularity, even if the mathemati
 
 As Makoto and Takuji did, they ran a battery of tests to prove the generation of random numbers; similarly, we will assess the efficacy of this method.
 
+The implementation of the method was based upon the original work \cite{matsumoto1998mersenne} which contains a C implementation.
 \subsubsection{Analysis of solution}
 One question that arises in Random Number Generators is, how can we make sure our generator is actually random?, in this section we will dive into how we have tested our Mersenne Twister function.
 
