@@ -5,13 +5,13 @@ Many of the suggested techniques rely on specific values being initialized, so w
 
 In this section the following algorithms had been implemented by the author of this work:
 \begin{itemize}
-    \item Lehmers Random Number Generator \ref{alg:lehmersrand}
-    \item Marsaglia Random Number Generator \ref{alg:Marsaglia Random Number Generator Algorithm}
-    \item Mersenne Twister Random Number Generator \ref{alg:Mersenne Twister Random Number Generator}
+    \item Lehmers Random Number Generator \algoref{alg:lehmersrand}
+    \item Marsaglia Random Number Generator \algoref{alg:Marsaglia Random Number Generator Algorithm}
+    \item Mersenne Twister Random Number Generator \algoref{alg:Mersenne Twister Random Number Generator}
 \end{itemize}
 
 \subsection{Lehmer's Generator}
-Lehmer's Random Number Generator is one of the simplest yet most elegant generators available. This type of generator is a Linear Congruential generator, which is defined by the following recurrence relation. \cite{payne1969coding} \cite{park1988random}
+Lehmer's Random Number Generator is one of the simplest yet most elegant generators available. This type of generator is a Linear Congruential generator, which is defined by the following recurrence relation~\cite{payne1969coding,park1988random}.
 \[x_{n+1} = k\cdot x_n \mod{n}\]
 
 In the case of Lehmer's generator it follows:
@@ -21,36 +21,36 @@ The selection of $a,c,n$ and $x_0$ is critical, and some values have been propos
 
 These values ensure that this generator works properly, but some bad generators can be found, which is an interesting exercise for the student to search for or come up with. Additionally it is worth mentioning that the developped function allows for input parameters to be set.
 
-The algorithm implementation was based upon Moller's work \cite{doi:10.1137/1.9780898717952}.
+The algorithm implementation was based upon Moller's work~\cite{doi:10.1137/1.9780898717952}.
 \subsubsection{Examples}
 	\input{Content/Thesis/Documentation/Examples/Random/Lehmers Examples}
 
 
 \subsection{Marsaglia's Generator}
 
-In the original paper \cite{10.1214/aoap/1177005878} Marsaglia expands on random number generators by providing a generator that is born from a type of relation such as Fibonacci, those generators that add or subtract previous values from the current value, but in Marsaglia's case this generator has some \textit{lag} added to it, that is it extends the appearance of the value that would be expected without \textit{lag}. It is accomplished by introducing two parameters know as $lag_s$ and $lag_r$ as well as a $carry$ variable which will be $1$ if the generated number is negative - to which the $base$ will be added - and $0$ if the generator produced a positive number. This $carry$ variable is what gives the name to this type of generator which are known as $add-with-carry$ or $subtract-with-borrow$
+In the original paper~\cite{10.1214/aoap/1177005878} Marsaglia expands on random number generators by providing a generator that is born from a type of relation such as Fibonacci, those generators that add or subtract previous values from the current value, but in Marsaglia's case this generator has some \textit{lag} added to it, that is it extends the appearance of the value that would be expected without \textit{lag}. It is accomplished by introducing two parameters know as $lag_s$ and $lag_r$ as well as a $carry$ variable which will be $1$ if the generated number is negative - to which the $base$ will be added - and $0$ if the generator produced a positive number. This $carry$ variable is what gives the name to this type of generator which are known as $add-with-carry$ or $subtract-with-borrow$
 
 One of the complexities of this method is that it generates primarily integer numbers and is limited to the base it accepts as input; however, dividing by the base (the largest number in the generator) produces a decimal number between 0 and 1. Some input arguments were proposed, but as we saw in Lehmer's generator, some default parameters were provided. 
 \[base = 2^{31}-1, lag_r=19, lag_s=7, carry=1, seed\_tuple = (1,1)\]
 This set of values was proposed in the original paper; it is also worth noting that we used the subtract with borrow method, despite the fact that the addition with carry method is analogous. We strongly encourage students to try to find ill-inputs that generate patterns in their output.
 
-We have implemented the algorithm using the original approach of Marsaglia \cite{10.1214/aoap/1177005878}.
+We have implemented the algorithm using the original approach of Marsaglia~\cite{10.1214/aoap/1177005878}.
 \subsubsection{Examples}
 	\input{Content/Thesis/Documentation/Examples/Random/Marsaglias Examples}
 
 
 \subsection{Mersenne Twister Generator}
-The Mersenne Twister is an algorithm first introduced by Makoto Matsumoto and Takuji Nishimura \cite{matsumoto1998mersenne}. According to the creators, the choice of parameters may produce a period (repetitions of random numbers) of $2^{19937}-1$ while only requiring 624 words of memory and every word is made up of 32 bits - on the original implementation, newer ones exists with 64 bits. Most notably, it is the most often used generator, serving as the default generator for the Python and R programming languages.
+The Mersenne Twister is an algorithm first introduced by Makoto Matsumoto and Takuji Nishimura~\cite{matsumoto1998mersenne}. According to the creators, the choice of parameters may produce a period (repetitions of random numbers) of $2^{19937}-1$ while only requiring 624 words of memory and every word is made up of 32 bits - on the original implementation, newer ones exists with 64 bits. Most notably, it is the most often used generator, serving as the default generator for the Python and R programming languages.
 
 We opted to implement the technique due to its popularity, even if the mathematics behind it are outside the scope of this project. We reckon the code is simple and does not require a lot of focus to comprehend what it is doing. Furthermore, we wanted to give students with commonly utilized approaches, and the Mersenne Twister is unquestionably one of them.
 
 As Makoto and Takuji did, they ran a battery of tests to prove the generation of random numbers; similarly, we will assess the efficacy of this method.
 
-The implementation of the method was based upon the original work \cite{matsumoto1998mersenne} which contains a C implementation.
+The implementation of the method was based upon the original work~\cite{matsumoto1998mersenne} which contains a C implementation.
 \subsubsection{Analysis of solution}
 One question that arises in Random Number Generators is, how can we make sure our generator is actually random?, in this section we will dive into how we have tested our Mersenne Twister function.
 
-The reference we have followed is \cite{smid2010statistical}, which develops a suite of tests to check different random number generators, and we have used an already developed version of this suite for Python\cite{InsaneMonster2022}, since it was out of the scope of this project. 
+The reference we have followed is~\cite{smid2010statistical}, which develops a suite of tests to check different random number generators, and we have used an already developed version of this suite for Python~\cite{InsaneMonster2022}, since it was out of the scope of this project. 
 
 Some discussion of the test we are eligible to test are the following.
 

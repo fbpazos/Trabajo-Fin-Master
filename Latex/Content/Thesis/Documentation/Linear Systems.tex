@@ -1,6 +1,7 @@
 \section*{Linear Systems}
 \subsection*{LU Decomposition}
 The LU Method divides a matrix A into three matrices: P (Permutation Matrix), L (Lower Triangular Matrix), and U (Upper Triangular Matrix).
+
 \begin{algorithm}[H]
 \label{alg:LU decomposition using Gaussian elimination}
     \SetAlgoLined
@@ -34,6 +35,8 @@ The LU Method divides a matrix A into three matrices: P (Permutation Matrix), L 
 
 
 \subsection*{Forward Substitution}
+The forward substitution method implementets the necessary steps that are used to solve a system of linear equations of the form $Lx = b$, where $L$ is a lower triangular matrix and $b$ is a vector of constants.
+
 \begin{algorithm}[H]
 \label{alg:Forward Substitution}
 \SetKwInOut{Input}{Input}
@@ -58,6 +61,8 @@ $x[row] \gets $rhs[row] / lhs[row, row];
 
 
 \subsection*{Backward substitution}
+The backward substitution method implementets the necessary steps that are used to solve a system of linear equations of the form $Ux = b$, where $U$ is an upper triangular matrix and $b$ is a vector of constants.
+
 \begin{algorithm}[H]
 \label{alg:Backward Substitution}
 \SetAlgoLined
@@ -84,6 +89,8 @@ $x \gets$ np.zeros(n);\\
 \input{Content/Thesis/Documentation/Examples/Linear Systems/Backward Substitution Examples}
 
 \subsection*{LU Solver}
+The LU Solver implements all the required steps to solve a system of linear equations of the form $Ax = b$, where $A$ is a square matrix and $b$ is a vector of constants. The LU Solver uses the LU Decomposition, Forward Substitution, and Backward Substitution methods to solve the system of linear equations.
+
 \begin{algorithm}[H] 
 \label{alg:LU Solver}
 \SetAlgoLined
@@ -103,6 +110,9 @@ $x \gets $ backward\_substitution(U, y);\\
  \input{Content/Thesis/Documentation/Examples/Linear Systems/LU Solver Examples}
 
 \subsection*{QR Decomposition}
+The QR Decomposition method implements the necessary steps to decompose a matrix $A$ into the product of an orthogonal matrix $Q$ and an upper triangular matrix $R$. The QR Decomposition method uses the Householder Reflections method to compute the orthogonal matrix $Q$ and the upper triangular matrix $R$.
+
+
 \begin{algorithm}[H]{
 \label{alg:QR Factorization using Householder reflections}
 \SetAlgoLined
@@ -132,6 +142,8 @@ $R \gets \text{triu}(R)$\;
 \input{Content/Thesis/Documentation/Examples/Linear Systems/QR Decomposition Examples}
 
 \subsection*{QR Solver}
+The QR Solver method implements the necessary steps to solve a system of linear equations of the form $Ax = b$, where $A$ is a square matrix and $b$ is a vector of constants. The QR Solver method uses the QR Decomposition with the fact that we are solving a system of linear equations.
+
 \begin{algorithm}[H]
 \label{alg:QR Solver}
 \SetAlgoLined

@@ -9,7 +9,7 @@ The following algorithm implementations that we have realized will be detailed i
     \item Piecewise Cubic Interpolatory Splines \algoref{alg:Piecewise cubic Interpolatory Splines}
 \end{itemize}
 
-All this algorithms were based uppon Cleve's work \cite{doi:10.1137/1.9780898717952}
+All this algorithms were based uppon Cleve's work~\cite{doi:10.1137/1.9780898717952}.
 \subsection{Polynomial Interpolation}
 This approach performs a polynomial interpolation of a given collection of points; it is one of the fundamental ways of interpolation and is widely taught in institutions.
 \subsubsection{Examples}
@@ -22,13 +22,13 @@ Following the polynomial interpolation approach, the next step is to extend this
 	\input{Content/Thesis/Documentation/Examples/Interpolation/PieceWise Linear Interpolation Examples}
 
 \subsection{Piecewise Cubic Hermite interpolation}
-As a continuation of the previous method, we extended the concept of interpolating by Linear function to interpolating by a degree three polynomial with Hermite conditions, that is, by its values and first derivatives at the domain interval end points. \cite{kreyszig11}.
+As a continuation of the previous method, we extended the concept of interpolating by Linear function to interpolating by a degree three polynomial with Hermite conditions, that is, by its values and first derivatives at the domain interval end points~\cite{kreyszig11}.
 \subsubsection{Examples}
 	\input{Content/Thesis/Documentation/Examples/Interpolation/PCHIP Examples}
 
 
 \subsection{Piecewise cubic interpolation}
-Following the Hermite interpolation, a more general approach in which we impose the slopes given by the not-a-knot end conditions, that is, at the first and last interior break, even the third derivative is continuous (up to round-off error). \cite{PCHIP}
+Following the Hermite interpolation, a more general approach in which we impose the slopes given by the not-a-knot end conditions, that is, at the first and last interior break, even the third derivative is continuous (up to round-off error) ~\cite{PCHIP}.
 
 \subsubsection{Examples}
 	\input{Content/Thesis/Documentation/Examples/Interpolation/Splines Examples}
@@ -54,7 +54,7 @@ It should be noted that other algorithms may have different calculations, howeve
 
 We might implement this section of code in a variety of ways, including:
 \begin{enumerate}
-    \item List Comprehension: Python offers a compact form for adding items to a list, in particular list comprehension, for a general reader a list comprehension is based on mathematical notation that is $\left\{ 3n\ |\ \forall n\in 0...25\right\}$ can be written in Python as \lstinline|[3*n for n in range(0,26)]|, generally speaking list comprehension is faster than classical loops\cite{PythonSpeedPerformanceTips}, however, a better approach would be using functional maps which are cognitively more difficult to understand, thus not the purpose of this project.
+    \item List Comprehension: Python offers a compact form for adding items to a list, in particular list comprehension, for a general reader a list comprehension is based on mathematical notation that is $\left\{ 3n\ |\ \forall n\in 0...25\right\}$ can be written in Python as \lstinline|[3*n for n in range(0,26)]|, generally speaking list comprehension is faster than classical loops~\cite{PythonSpeedPerformanceTips}, however, a better approach would be using functional maps which are cognitively more difficult to understand, thus not the purpose of this project.
 
     \item Using NumPy's \textit{fancy} Indexing: Similarly to Matlab, NumPy offers a way to broadcast a list, that is we can access the items of a list using another list, even though it is cognitively more complicated than list comprehensions; it is a syntax that is widely used in the numerical methods realm and might be a fair competitor over list comprehensions.
     
@@ -70,7 +70,7 @@ To correctly test the implementations we will fix 6 interpolation pairs and then
 
 As we can visually observe, the use of List Comprehensions is by far the worst of the two, and should be discarded for this particular case. We can also see how much the \textit{fancy} indexing improves the overall speed; that is why applying linear regression on the data, we have:
 \begin{enumerate}
-    \item \textbf{Linear Regression Indexed List}: \\
+    \item \textbf{Linear Regression \textit{fancy} indexing}: \\
         $y = 3.4812\cdot10^{-08}x + 0.0002$ \\
         Slope: $3.48119\cdot10^{-08}$
     \item \textbf{Linear Regression List Compresion}: \\

@@ -1,5 +1,5 @@
 \section{Linear Systems}
-During this section, the following algorithms that we have implemented will be discussed:
+During this section, the following algorithms that we have carefully implemented will be discussed:
 \begin{itemize}
     \item LU Decomposition \algoref{alg:LU decomposition using Gaussian elimination} 
     \item Forward Decomposition \algoref{alg:Forward Substitution}
@@ -18,12 +18,12 @@ Second, we established an auxiliary function that would execute the permutation,
 
 Finally, we examine three main approaches that a student may take to develop lines 11–15 from \algoref{alg:LU decomposition using Gaussian elimination}, we will explore the various ways as well as the one built utilizing the well-known Scipy package in the next subsection, where we confirm that the choice of a for-loop is more efficient and easier to read.
 
-This algorithm was primarly based upon Camilo's work \cite{bucheli2020}.
+This algorithm was primarly based upon Camilo's work~\cite{bucheli2020}.
 
 \subsubsection{Matrix reduction implmentation analysis}
-We observed numerous methods a student may implement the LU Decomposition when designing it, which is why some discussion about whose implementation is superior should be addressed.
+Whilst implementing this method, we observed numerous methods a student may implement the LU Decomposition when designing it, which is why some discussion about whose implementation is superior should be addressed.
 
-The multiple ways refers to the critical calculation of the reduction $ A'[row, col+1:n] \gets A'[row, col+1:n] - multiplier \cdot A'[col, col+1:n] $ , those ways could be enumerated as :
+The multiple ways refers to the critical calculation of the reduction $ A'[row, col+1:n] \gets A'[row, col+1:n] - multiplier \cdot A'[col, col+1:n] $ , those ways could be enumerated as:
 
 \begin{enumerate}
     \item By Submatrices Syntax
@@ -112,7 +112,7 @@ The first approach, forward substitution, substitutes the first row and then mov
 
 The reason of implementing this method is that independently of the decomposition, these methods are also taught in universities and is a good exercise for any student to try.
 
-The algorithms were based upon Fernando Terán de Vergara's course notes for the Master in Applied \& Computational Mathematics \cite{Vergara}.
+The algorithms were based upon Fernando Terán de Vergara's course notes for the Master in Applied \& Computational Mathematics~\cite{Vergara}.
 \subsubsection{Examples}
 \textbf{Forward Substitution}
 	\input{Content/Thesis/Documentation/Examples/Linear Systems/Forward Substitution Examples}
@@ -123,7 +123,7 @@ Alongside the LU decomposition, there exists another decomposition known as the 
 
 The reason of implementing these method as a standalone is to give an additional feature to BNumMet and also to the students. Though a QR solver is used to solve the Least Squares problem, these method as an autonomous is not used, only an optimized variant for the solver which takes into consideration the independent terms.
 
-The algorithm was based upon Fernando Terán de Vergara's course notes for the Master in Applied \& Computational Mathematics \cite{Vergara}.
+The algorithm was based upon Fernando Terán de Vergara's course notes for the Master in Applied \& Computational Mathematics~\cite{Vergara}.
 \subsubsection{Examples}
 \input{Content/Thesis/Documentation/Examples/Linear Systems/QR Decomposition Examples}
 
@@ -137,7 +137,7 @@ Similarly to the LU Solver, we have added a functionality that will be critical 
 
 Not only does this method will provide student with another approach on solving linear systems or the Least Squares Problem, but it also grants the underlying procedure of the well-known Matlab Backslash.
 
-The algorithm is based upon Cleve's and Fernando Terán's work \cite{Vergara,doi:10.1137/1.9780898717952}
+The algorithm is based upon Cleve's and Fernando Terán's work~\cite{Vergara, doi:10.1137/1.9780898717952}
 \subsubsection{Examples}
 \input{Content/Thesis/Documentation/Examples/Linear Systems/QR Solver Examples}
 

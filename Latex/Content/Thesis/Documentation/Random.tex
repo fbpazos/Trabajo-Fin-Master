@@ -1,5 +1,11 @@
 \section*{Random Number Generators}
 \subsection*{Lehmers Random}
+Lehmers Random Number Generator is a congruential algorithm using the following formula:
+\begin{equation*}
+    x_{n+1} = (a\cdot x_n +c) \mod{m}
+\end{equation*}
+
+
 \begin{algorithm}[H]
 
 \label{alg:lehmersrand}
@@ -33,7 +39,7 @@
 \input{Content/Thesis/Documentation/Examples/Random/Lehmers Examples}
 
 \subsection*{Marsaglia's Random Generator}
-The algorithm is based of \cite{10.1214/aoap/1177005878} the original paper where Gearge Marsaglia and Arif Zaman discussed it.
+The algorithm is based of~\cite{10.1214/aoap/1177005878} the original paper where Gearge Marsaglia and Arif Zaman discussed it. It is based on the subtract with borrow generator. 
 
 \begin{algorithm}[H]
 
@@ -73,7 +79,7 @@ The algorithm is based of \cite{10.1214/aoap/1177005878} the original paper wher
 \subsubsection*{BNumMet Examples}
 \input{Content/Thesis/Documentation/Examples/Random/Marsaglias Examples}
 \subsection*{Mersenne Twister Random Generator}
-The algorithm was based of \cite{10.5555/148286} which is an implementation of the Mersnne Twister in the programming language of C. The implementation has been tested using the NIST Random test suite \cite{smid2010statistical}, more on this on the Analaysis of Solutions section*
+The algorithm was based of~\cite{10.5555/148286} which is an implementation of the Mersnne Twister in the programming language of C. The implementation has been tested using the NIST Random test suite~\cite{smid2010statistical}.
 
 \begin{algorithm}[H]
 

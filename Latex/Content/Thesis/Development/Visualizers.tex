@@ -8,7 +8,7 @@ Overall, the following packages will be an expansion to the approaches described
 It is worth mentioning that most of the implementations had the core principles of what Mathworks sought to represent, but we have tried to focus on resolving some of the flaws that may prevent students from seeing the functionality effectively. Furthermore, all of the techniques supplied present default situations in case students just wish to check out the visualizer without thinking about examples.
 
 \subsection{LU Visualizer}
-As both Mathworks and Camilo's work had been implemented, we will strive to improve on the current visualizers made; however, before we start, we must discuss what is the underlying idea and some of the shortcomings that each had before to adopting this new visualizer.
+As both Mathworks and Camilo's work had implemented, we will strive to improve on the current visualizers made; however, before we start, we must discuss what is the underlying idea and some of the shortcomings that each had before to adopting this new visualizer.
 
 The LU Visualizer's purpose will be to implement a graphical user interface that presents the main steps of the LU decomposition, which are pivot selection and reduction; additionally, at the end of the decomposition, the matrices that represent the permutation and the lower and upper triangular parts must be shown. 
 
@@ -49,7 +49,7 @@ Once we know what are the main critiques of previously done work we can proceed 
 \end{figure}
 
 As we can see, unlike Mathworks, the end-user knows which elements can be selected to pivot, and it prevents the user from diving by zero, as well as the current output of the P,L,U matrices at each step (note the asterisk to indicate that we do not know the value at that step and it remains to be calculated). We additionally highlight two buttons, "Previous Step" and "Reset," because a user may miss click a button and not reach their intended aim, and we want pupils to feel comfortable when using our interactive visualizer.
-Furthermore, we indicate the rank we can guarantee the matrix has at each iteration, and the final result will be indicated by a system message \imgref{fig:BNumMet Example End Result}. Note that if the LU finds a column of possible pivots to be zero during the iterations, it will send a message as a system message explaining to the user that the algorithm has jumped the column until it finds a suitable one to pivot.
+Furthermore, we indicate the rank we can guarantee the matrix has at each iteration by implementing the rank revealing mechanism, and the final result will be indicated by a system message \imgref{fig:BNumMet Example End Result}. Note that if the LU finds a column of possible pivots to be zero during the iterations, it will send a message as a system message explaining to the user that the algorithm has jumped the column until it finds a suitable one to pivot.
 
 \begin{figure}[H]
     \centering
@@ -84,7 +84,7 @@ To begin, we will highlight Mathwork's implementation, which allows the user to 
 \end{figure}
 
 
-Second, concentrating on Camilo's effort, we must emphasize that the implementation was not completed, thus any comments will be based on what seems to be implemented. To begin, we should observe that the visualization does not support various interpolation methods; nevertheless, unlike Mathworks, this solution allows for plot movement but not single point movement or addition. \imgref{fig:Camilo's Interpolation Visualizer Example - Drawbacks}
+Secondly, concentrating on Camilo's effort, we must emphasize that the implementation was not completed, thus any comments will be based on what seems to be implemented. To begin, we should observe that the visualization does not support various interpolation methods; nevertheless, unlike Mathworks, this solution allows for plot movement but not single point movement or addition \imgref{fig:Camilo's Interpolation Visualizer Example - Drawbacks}.
 
 \begin{figure}[H]
     \centering
@@ -122,7 +122,7 @@ As we can see, it has a similar appearance to Mathwork's implementation, but it 
     \label{fig:BNumMet Interpolation Visualizer Example - Extrapolation}
 \end{figure}
 
-Overall, we feel that the method supplied corrects some of the minor flaws raised by Mathworks' approach while also extracting the correct concerns raised by Cleve Moller. While also providing some concepts that may assist academics in explaining why interpolation should not be utilized for extrapolation. 
+Overall, we feel that the method supplied corrects some of the minor flaws raised by Mathwork's approach while also extracting the correct concerns raised by Cleve Moller. While also providing some concepts that may assist academics in explaining why interpolation should not be utilized for extrapolation. 
 \subsubsection{Examples}
 	\input{Content/Thesis/Documentation/Examples/Visualizers/Interpolation Visualizer Examples}
 
@@ -145,7 +145,7 @@ To begin, Mathwork's implementation considers making the Brentt-Dekker method in
     \label{fig:Mathwork's NonLinear Visualizer Example - Ending}
 \end{figure}
 
-We have adopted the same approach as Mathworks by adopting the algorithm established by Brent, Dekker, and his colleagues in our BNumMet implementation. We also took Mathworks' considerations, but extended and corrected the critiques we made previously. To solve the distinction between the points, we added a legend to indicate which point is which, and we moved the "interactivity" of the points to an external button so that the user knows what he is clicking on in every iteration \imgref{fig:BNumMet's NonLinear Visualizer Example}. We've also included a checkbox to the left of those buttons to enable the user choose whether to display the graph linked with the secant, I.Q.I, or bisection \imgref{fig:BNumMet's NonLinear Visualizer Example - Graphs for points }. It is also worth noting that we present what the original algorithm would be using, as well as information on the current solution the user has discovered and the amount of iterations the user has taken.
+We have adopted the same approach as Mathworks by adopting the algorithm established by Brent, Dekker, and his colleagues in our BNumMet implementation. We also took Mathwork's considerations, but extended and corrected the critiques we made previously. To solve the distinction between the points, we added a legend to indicate which point is which, and we moved the "interactivity" of the points to an external button so that the user knows what he is clicking on in every iteration \imgref{fig:BNumMet's NonLinear Visualizer Example}. We've also included a checkbox to the left of those buttons to enable the user choose whether to display the graph linked with the secant, I.Q.I, or bisection \imgref{fig:BNumMet's NonLinear Visualizer Example - Graphs for points }. It is also worth noting that we present what the original algorithm would be using, as well as information on the current solution the user has discovered and the amount of iterations the user has taken. It is worth noting that during each step the graph will resize accordingly for the user to properly visualize it. 
 
 
 \begin{figure}[H]

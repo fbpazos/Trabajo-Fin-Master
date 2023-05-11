@@ -1,5 +1,7 @@
 \section*{NonLinear}
-\subsection*{Bisection* Method}
+\subsection*{Bisection Method}
+The bisection method bisects in half the interval given and then it keeps the subinterval that has opposing sign and reiterates the process with the subinterval until it has reach a certain number of iterations or the function value is close enough to zero. 
+
 \begin{algorithm}[H]
 \label{alg:Bisection Method}
 \SetAlgoLined
@@ -41,6 +43,8 @@
 
 
 \subsection*{Secant Method}
+The secant method is a root finding procedure that using the secant line in the form of the approximate derivative iteratively to find the root of a function. 
+
 \begin{algorithm}[H]
 \label{alg:Secant method}
 \SetAlgoLined
@@ -75,6 +79,8 @@
 \input{Content/Thesis/Documentation/Examples/NonLinear/Secant Examples}
 
 \subsection*{Newton's Method}
+Newton's method is a root finding procedure that uses the tangent line in the form of the exact derivative iteratively to find the root of a function.
+
 \begin{algorithm}[H]
 
 \label{alg:Newton-Raphson Method}
@@ -113,6 +119,8 @@ initialization: previous\_x = start\_point - 1\;
 
 
 \subsection*{Inverse Quadratic Interpolation (I.Q.I.)}
+The inverse quadratic interpolation method is a root finding procedure that uses the inverse quadratic interpolation formula to find the root of a function. 
+
 \begin{algorithm}[H]
 \label{alg:IQI Method}
 
@@ -147,7 +155,7 @@ initialization: previous\_x = start\_point - 1\;
 \input{Content/Thesis/Documentation/Examples/NonLinear/IQI Examples}
 
 \subsection*{Brentt-Dekker}
-Multiple implementations with small differences exist, we opted for the original one publish by Brent \cite{brent2002algorithms}, the reason behind the naming of Brent-Dekker Algorithm is because at first Dekker in conjunction with Wingartenn and their respective colleagues proposed an initial version, later Brent came an offer a better approach and convergence \cite{Press2007}, in some references like Scipy's they will call this algorithm Brent-Wingartenn-Dekker Algorithm.
+Multiple implementations with small differences exist, we opted for the original one publish by Brent~\cite{brent2002algorithms}, the reason behind the naming of Brent-Dekker Algorithm is because at first Dekker in conjunction with Wingartenn and their respective colleagues proposed an initial version, later Brent came an offer a better approach and convergence~\cite{Press2007}, in some references like Scipy's they will call this algorithm Brent-Wingartenn-Dekker Algorithm.
 
 
 \begin{algorithm}[H] 

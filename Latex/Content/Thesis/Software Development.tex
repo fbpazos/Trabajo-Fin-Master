@@ -1,7 +1,7 @@
 \chapter{Software Development: The Process}
 This project focuses on the creation of BNumMet, a library that implements scientific numerical methods in conjunction with a graphical interface to help students learn, because of this it is essential to mention the fundamental steps we are going to take on the software development front, since the project is primarily a software development one. 
 
-To do this, we will discuss the following aspects using \cite{PMBOK2013} as our project management guide:
+To do this, we will discuss the following aspects using~\cite{PMBOK2013} as our project management guide:
 \begin{enumerate}
     \item Initiation: We will establish the framework where BNumMet will take place, indicating the basic roles and the development framework.
     \item Planning: We will discuss the scope of the project, the timeline, the required resources, and milestones that indicate progress toward completion.
@@ -53,18 +53,18 @@ Software has an intrinsic problem, it cannot be tested, and its correct function
 \begin{enumerate}
     \item Unitary Tests: Is a type of software testing in which individual units or components of a software are tested. The purpose is to validate that each unit of the software code performs as expected.  Unit tests isolate a section of code and verify its correctness. 
     
-    \item Code Reviewer: In particular, we will use the tool known as SonarQube. SonarQube is a self-managed automatic code review tool that systematically helps you deliver clean code. It integrates into your existing workflow and detects issues in your code to help you perform continuous code inspections of your projects. The tool performs an analysis to the adherence to coding standards and core values such as comment percentage, cognitive, and cyclomatic complexity to ensure that your code meets high-quality standards \cite{sonarsource} \cite{sonarqube}. At the end of this document the latest report of SonarQube from the latest version of BNumMet will be attached.
+    \item Code Reviewer: In particular, we will use the tool known as SonarQube. SonarQube is a self-managed automatic code review tool that systematically helps to deliver clean code. It integrates into our existing workflow and detects issues in our code to help us perform continuous code inspections of our projects. The tool performs an analysis to the adherence to coding standards and core values such as comment percentage, cognitive, and cyclomatic complexity to ensure that our code meets high-quality standards~\cite{sonarsource, sonarqube}. At the end of this document the latest report of SonarQube from the latest version of BNumMet will be attached.
 \end{enumerate}
 
 
 \subsection{Software configuration management}
-Software configuration management is the task of tracking and controlling changes in the software, part of the larger cross-disciplinary field of configuration management.\cite{Pre94}
+Software configuration management is the task of tracking and controlling changes in the software, part of the larger cross-disciplinary field of configuration management~\cite{Pre94}.
 
 To do such task, we will proceed by using GitHub, which is defined as an internet hosting service for software development and version control using Git (distributed version control). To such an extent, we will define our general base line for the project.
 \begin{itemize}
-    \item .github : Folder dedicated to Github Actions
-    \item Latex : Folder dedicated to Latex files or other closeyly related to the generation of the written thesis.
-    \item Python\_BNumMet : Folder dedicated to coding BNumMet
+    \item .github: Folder dedicated to Github Actions
+    \item Latex: Folder dedicated to Latex files or other closeyly related to the generation of the written thesis.
+    \item Python\_BNumMet: Folder dedicated to coding BNumMet
 \end{itemize}
 
 All files within the directories will be added/removed accordingly to the execution phase, all backups will be provided by GitHub and, in the case of latex files, by saving the current state of the 'commit' inside another folder on a separate disk drive
