@@ -1,0 +1,26 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {algocf}{\numberline {1}{\ignorespaces Extract from Interpolation's algorithm\relax }}{27}{algocf.1}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {algocf}{\numberline {2}{\ignorespaces LU decomposition using Gaussian elimination\relax }}{112}{algocf.2}%
+\contentsline {algocf}{\numberline {3}{\ignorespaces Forward Substitution\relax }}{113}{algocf.3}%
+\contentsline {algocf}{\numberline {4}{\ignorespaces Backward Substitution\relax }}{114}{algocf.4}%
+\contentsline {algocf}{\numberline {5}{\ignorespaces LU Solver\relax }}{115}{algocf.5}%
+\contentsline {algocf}{\numberline {6}{\ignorespaces QR Factorization using Householder reflections\relax }}{116}{algocf.6}%
+\contentsline {algocf}{\numberline {7}{\ignorespaces QR Solver\relax }}{117}{algocf.7}%
+\contentsline {algocf}{\numberline {8}{\ignorespaces Polinomial Interpolation\relax }}{118}{algocf.8}%
+\contentsline {algocf}{\numberline {9}{\ignorespaces Piecewise Linear Interpolation\relax }}{120}{algocf.9}%
+\contentsline {algocf}{\numberline {10}{\ignorespaces Piecewise Cubic Hermite Interpolation\relax }}{122}{algocf.10}%
+\contentsline {algocf}{\numberline {11}{\ignorespaces Piecewise cubic Interpolatory Splines\relax }}{124}{algocf.11}%
+\contentsline {algocf}{\numberline {12}{\ignorespaces Bisection Method\relax }}{126}{algocf.12}%
+\contentsline {algocf}{\numberline {13}{\ignorespaces Secant Method\relax }}{129}{algocf.13}%
+\contentsline {algocf}{\numberline {14}{\ignorespaces Newton-Raphson Method\relax }}{131}{algocf.14}%
+\contentsline {algocf}{\numberline {15}{\ignorespaces Inverse Quadratic Interpolation\relax }}{133}{algocf.15}%
+\contentsline {algocf}{\numberline {16}{\ignorespaces Brent-Dekker's Algorithm\relax }}{135}{algocf.16}%
+\contentsline {algocf}{\numberline {17}{\ignorespaces Lehmer's Random Number Generator\relax }}{138}{algocf.17}%
+\contentsline {algocf}{\numberline {18}{\ignorespaces Marsaglia Random Number Generator Algorithm\relax }}{141}{algocf.18}%
+\contentsline {algocf}{\numberline {19}{\ignorespaces Mersenne Twister Random Number Generator\relax }}{144}{algocf.19}%
