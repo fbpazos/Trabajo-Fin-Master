@@ -9,10 +9,10 @@
 name: Upload Python Package
 
 on:
-  workflow_run:
-    workflows: ["Python Tests"]
-    types:
-      - completed # Only run, when the tests workflow Python Tests is completed
+  #workflow_run:
+    #workflows: ["Python Tests"]
+    #types:
+      #- completed # Only run, when the tests workflow Python Tests is completed
   push:
     branches:
       - main
