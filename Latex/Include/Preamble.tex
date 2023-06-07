@@ -205,6 +205,19 @@ hmargin=3cm
 
 \newcommand{\imgref}[1]{\hyperref[#1]{[Figure~\ref*{#1}~\nameref*{#1}]}}
 \newcommand{\algoref}[1]{\hyperref[#1]{[Algorithm~\ref*{#1}\nameref*{#1}]}}
+%\newcommand{\chapref}[1]{\hyperref[#1]{Chapter~\ref*{#1} Section~\ref*{#1}:~\nameref*{#1}}}
+\makeatletter
+\newcommand{\chapref}[1]{%
+  \hyperref[#1]{%
+    \ifcsname phantomsection\endcsname\phantomsection\fi%
+    \textbf{Chapter~\ref*{#1}}%
+    \ifnum\pdfstrcmp{\@currentlabelname}{\@currentlabel}=\z@\else%
+      \space Section~\ref*{#1}:%
+    \fi%
+    \space\nameref*{#1}%
+  }%
+}
+\makeatother
 
 
 

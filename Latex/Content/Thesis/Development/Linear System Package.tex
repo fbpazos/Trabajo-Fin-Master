@@ -10,7 +10,7 @@ During this section, the following algorithms that we have carefully implemented
 \end{itemize}
 
 \subsection{LU Decomposition}
-The (P)LU decomposition, developed in this package, factors a matrix into a product of three matrices PLU, P being the permutation matrix, L a lower triangular matrix and finally U an upper triangular matrix. This approach is usually used to solve linear problems; however, it may be applied in a variety of ways.
+The (P)LU decomposition, developed in this package, factors a matrix into a product of three matrices PLU, P being a permutation matrix, L a lower triangular matrix and finally U an upper triangular matrix. This approach is usually used to solve linear problems; however, it may be applied in a variety of ways.
 
 During the development of such method, some considerations have been taken into account; firstly, we put all the variables in the English language as well as a choosing a naming that will provide the future student some hints on what each variable is doing. 
 
@@ -18,37 +18,140 @@ Second, we established an auxiliary function that would execute the permutation,
 
 Finally, we examine three main approaches that a student may take to develop lines 11–15 from \algoref{alg:LU decomposition using Gaussian elimination}, we will explore the various ways as well as the one built utilizing the well-known Scipy package in the next subsection, where we confirm that the choice of a for-loop is more efficient and easier to read.
 
-This algorithm was primarly based upon Camilo's work~\cite{bucheli2020}.
+This algorithm was primarly based upon J.C. Bucheli's work~\cite{bucheli2020}.
 
-\subsubsection{Matrix reduction implmentation analysis}
+\subsubsection{Matrix reduction implementation analysis}
 Whilst implementing this method, we observed numerous methods a student may implement the LU Decomposition when designing it, which is why some discussion about whose implementation is superior should be addressed.
 
-The multiple ways refers to the critical calculation of the reduction $ A'[row, col+1:n] \gets A'[row, col+1:n] - multiplier \cdot A'[col, col+1:n] $ , those ways could be enumerated as:
+The multiple ways refer to the critical calculation of the reduction $ A'[row, col+1:n] \gets A'[row, col+1:n] - multiplier \cdot A'[col, col+1:n] $, this operation can be visualized as follows:
+
+Suppose we have the following matrix, where the red-colored elements are already calculated, and the rest will be the next iteration
+\begin{center}
+    \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+    \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+    %uncomment if require: \path (0,324); %set diagram left start at 0, and has height of 324
+    
+    %Shape: Square [id:dp5718523963116733] 
+    \draw   (239,57) -- (407.28,57) -- (407.28,225.28) -- (239,225.28) -- cycle ;
+    %Shape: Square [id:dp8609898911567822] 
+    \draw  [fill={rgb, 255:red, 255; green, 101; blue, 101 }  ,fill opacity=1 ] (239,57) -- (274.97,57) -- (274.97,92.97) -- (239,92.97) -- cycle ;
+    %Shape: Rectangle [id:dp1778431402239684] 
+    \draw  [fill={rgb, 255:red, 255; green, 101; blue, 101 }  ,fill opacity=1 ] (275.12,57) -- (407.28,57) -- (407.28,92.8) -- (275.12,92.8) -- cycle ;
+    %Shape: Rectangle [id:dp6200482171661257] 
+    \draw  [fill={rgb, 255:red, 255; green, 101; blue, 101 }  ,fill opacity=1 ] (275.12,92.8) -- (275.12,225.11) -- (239,225.11) -- (239,92.8) -- cycle ;
+    %Shape: Rectangle [id:dp5567096500887732] 
+    \draw  [fill={rgb, 255:red, 141; green, 194; blue, 255 }  ,fill opacity=1 ] (311.09,128.94) -- (311.09,224.81) -- (274.97,224.81) -- (274.97,128.94) -- cycle ;
+    %Shape: Square [id:dp7106049913134598] 
+    \draw  [fill={rgb, 255:red, 255; green, 199; blue, 115 }  ,fill opacity=1 ] (274.97,92.97) -- (310.94,92.97) -- (310.94,128.94) -- (274.97,128.94) -- cycle ;
+    %Shape: Rectangle [id:dp6402838940394686] 
+    \draw  [fill={rgb, 255:red, 141; green, 194; blue, 255 }  ,fill opacity=1 ] (310.94,92.82) -- (406.81,92.82) -- (406.81,128.94) -- (310.94,128.94) -- cycle ;
+    %Shape: Square [id:dp8611002911103105] 
+    \draw  [fill={rgb, 255:red, 194; green, 194; blue, 194 }  ,fill opacity=1 ] (310.94,128.94) -- (407.02,128.94) -- (407.02,225.02) -- (310.94,225.02) -- cycle ;
+    
+    
+    % Text Node
+    \draw (284.31,98.68) node [anchor=north west][inner sep=0.75pt]  [font=\Large] [align=left] {X};
+    % Text Node
+    \draw (352.07,98.68) node [anchor=north west][inner sep=0.75pt]  [font=\Large] [align=left] {A};
+    % Text Node
+    \draw (283.81,157.77) node [anchor=north west][inner sep=0.75pt]  [font=\Large] [align=left] {C};
+    % Text Node
+    \draw (352.39,158.73) node [anchor=north west][inner sep=0.75pt]  [font=\Large] [align=left] {B};
+    
+    
+    \end{tikzpicture}
+
+\end{center}
+The operation we are focused in is the following:
+\[
+    [C|B]-\frac{[C]}{X}\cdot [X|A]
+\]
+
+Visually, this can be seen as:
+
+\begin{center}
+
+    \tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+    \begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+    %uncomment if require: \path (0,245); %set diagram left start at 0, and has height of 245
+    
+    %Shape: Rectangle [id:dp9607747510695368] 
+    \draw  [fill={rgb, 255:red, 141; green, 194; blue, 255 }  ,fill opacity=1 ] (143.47,80.29) -- (143.47,202.32) -- (97.5,202.32) -- (97.5,80.29) -- cycle ;
+    %Shape: Square [id:dp21312629022980478] 
+    \draw  [fill={rgb, 255:red, 194; green, 194; blue, 194 }  ,fill opacity=1 ] (143.01,80.29) -- (265.31,80.29) -- (265.31,202.59) -- (143.01,202.59) -- cycle ;
+    %Shape: Rectangle [id:dp7300626917834647] 
+    \draw  [fill={rgb, 255:red, 141; green, 194; blue, 255 }  ,fill opacity=1 ] (396.5,79.47) -- (396.5,201.5) -- (350.53,201.5) -- (350.53,79.47) -- cycle ;
+    %Shape: Rectangle [id:dp23600064291235356] 
+    \draw  [fill={rgb, 255:red, 255; green, 199; blue, 115 }  ,fill opacity=1 ] (417.56,111.35) -- (463.34,111.35) -- (463.34,157.13) -- (417.56,157.13) -- cycle ;
+    %Shape: Rectangle [id:dp0803219872663885] 
+    \draw  [fill={rgb, 255:red, 141; green, 194; blue, 255 }  ,fill opacity=1 ] (463.34,111.16) -- (585.38,111.16) -- (585.38,157.13) -- (463.34,157.13) -- cycle ;
+    
+    % Text Node
+    \draw (111.07,120.53) node [anchor=north west][inner sep=0.75pt]  [font=\Large] [align=left] {C};
+    % Text Node
+    \draw (198.23,121.76) node [anchor=north west][inner sep=0.75pt]  [font=\Large] [align=left] {B};
+    % Text Node
+    \draw (364.1,119.71) node [anchor=north west][inner sep=0.75pt]  [font=\Large] [align=left] {C};
+    % Text Node
+    \draw (431.64,122.17) node [anchor=north west][inner sep=0.75pt]  [font=\Large] [align=left] {X};
+    % Text Node
+    \draw (517.89,122.17) node [anchor=north west][inner sep=0.75pt]  [font=\Large] [align=left] {A};
+    % Text Node
+    \draw (295.46,115.55) node [anchor=north west][inner sep=0.75pt]    {$-\frac{1}{X} \cdot $};
+    % Text Node
+    \draw (399.21,126.24) node [anchor=north west][inner sep=0.75pt]    {$\cdot $};
+    
+    
+    \end{tikzpicture}
+    
+\end{center}
+The main problem with this operation is within how Python's Numpy interprets the matrices $[C]$ and $[X|A]$, it interprets it as a vector, not as a column/row matrix. This is a problem because the operation for multipliying matrices and vectors are different.
+
+In order to solve the problem we have multiple options to choose from:
+
 
 \begin{enumerate}
     \item By Submatrices Syntax
+    
+    The first option is to use the submatrices syntax, which can be summirized as taking a submatrix of a matrix using numpy syntax, doing so it will preserve the form of the matrix and not as a vector.
+
     \begin{lstlisting}[language=Python]
 A[col + 1 :, col] = A[col + 1 :, col] / pivot
-A[col + 1 :, col + 1 :] = A[col + 1 :, col + 1 :] - (A[col + 1 :, :][:, [col]] @ A[[col], :][:, col + 1 :])
+A[col + 1 :, col + 1 :] -= A[col + 1 :, :][:, [col]] @ A[[col], :][:, col + 1 :]
     \end{lstlisting}
 
+    Note: The `@' symbol is the matrix multiplication operation in numpy.
     \item By New Axis Syntax
+    
+    The second option is to use the new axis syntax, which can be summirized as tacking directly the vector and making numpy to add a new axis to it, this way we transform the vector into a matrix and we can use the matrix multiplication operation.
+    
     \begin{lstlisting}[language=Python]
 A[col + 1 :, col] = A[col + 1 :, col] / pivot
-A[col + 1 :, col + 1 :] = A[col + 1 :, col][:, np.newaxis] @ A[col, col + 1 :][np.newaxis, :]
+A[col + 1 :, col + 1 :] -= A[col + 1 :, col][:, np.newaxis] @ A[col, col + 1 :][np.newaxis, :]
     \end{lstlisting}
 
+
+    Note: The `@' symbol is the matrix multiplication operation in numpy.
     \item By using the Outer Product
+    
+    The outer product is a matrix operation that takes two vectors and returns a matrix, this operation is the same as the new axis syntax but it is more explicit and easier to understand.
+
+
     \begin{lstlisting}[language=Python]
 A[col + 1 :, col] = A[col + 1 :, col] / pivot
-A[col + 1 :, col + 1 :] = np.outer(A[col + 1 :, col], A[col, col + 1 :])
+A[col + 1 :, col + 1 :] -= np.outer(A[col + 1 :, col], A[col, col + 1 :])
     \end{lstlisting}
 
     \item Using a for loop
+    
+    The last option is to use a for loop to iterate over the rows and columns of the matrix, this way we can avoid the problem of the vector interpretation and we can use the normal multiplication operation of elements. This option is by far the first one that comes to mind and the most intuitive one, generally speaking.
+
     \begin{lstlisting}[language=Python]
 for row in range(col + 1, n):
     A[row, col] = A[row, col] / A[col, col]  # Calculate the multiplier and store in A for later use
-    A[row, col + 1 :] = A[row, col + 1 :] - A[row, col] * A[col, col + 1 :]  # Update the remaining elements in the row using the multiplier
+    A[row, col + 1 :] -= A[row, col] * A[col, col + 1 :]  # Update the remaining elements in the row using the multiplier
     \end{lstlisting} 
 \end{enumerate}
 
@@ -72,24 +175,24 @@ The results of the mean of those 100 iterations for each size in seconds are as 
     \caption{LU Methods Data in seconds}
 \end{table}
 
-on a visual plot:
+On a visual plot:
 
 \begin{figure}[H]
   \centering
     \includegraphics[scale=0.75]{Include/Images/Thesis/Analysis of Solutions/Linear Systems/LU Timings.png}
-    \caption{LU Methods comparison}
+    \caption{LU Methods timings comparison}
     \label{fig:LU Methods comparison}
 \end{figure}
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.75]{Include/Images/Thesis/Analysis of Solutions/Linear Systems/LU Timings LOG.png}
-    \caption{Log plot of LU methods}
+    \caption{Log plot of LU methods timings}
     \label{fig:Log plot of LU methods}
 \end{figure}
 
-As we can observe from the tabular data and the plot, Scipy's method is by far the fastest, that is, due to the implementation using LAPACK's library, and the slowest is using the Submatrices syntax; surprisingly, the syntax using a for-loop improves over the other implementations as size increases, therefore even though this works for large sizes, using a for-loop that implements the reduction is the best choice overall the other methods (without accounting for Scipy's) 
+As we can observe from the tabular data and the plot, Scipy's method is by far the fastest, that is, due to the implementation using LAPACK's library~\cite{lapack99} which is compiled amongst other things, and the slowest is using the Submatrices syntax; surprisingly, the syntax using a for-loop improves over the other implementations as size increases, therefore even though this works for large sizes, using a for-loop that implements the reduction is the best choice overall the other methods (without accounting for Scipy's) since it is more readable and easier to understand, which is a key aspect in this work since we are trying to make the code as readable as possible for pupils.
 
-For mere due diligence, we should also calculate the slopes using  linear regression.
+For mere due diligence, we have calculate the slopes using  linear regression.
 \begin{table}[H]
     \centering
     \begin{tabular}{|l|l|l|l|l|l|}
@@ -110,7 +213,7 @@ Undoubtedly, one of the key steps in solving a linear system is substitution, wh
 
 The first approach, forward substitution, substitutes the first row and then moves "forward" in the next variables using the already computed values. Backward substitution is analogous, but instead of starting with the first variable, it starts with the last (since this method takes an upper triangular matrix) and moves backwards until it has reached the first variable.
 
-The reason of implementing this method is that independently of the decomposition, these methods are also taught in universities and is a good exercise for any student to try.
+The reason of implementing this method is that we want BNumMet to be self-contained, that is, we want to have all the necessary tools to solve a linear system without the need of external libraries.
 
 The algorithms were based upon Fernando Terán de Vergara's course notes for the Master in Applied \& Computational Mathematics~\cite{Vergara}.
 \subsubsection{Examples}
@@ -119,9 +222,9 @@ The algorithms were based upon Fernando Terán de Vergara's course notes for the
  \textbf{Backward Substitution}
 	\input{Content/Thesis/Documentation/Examples/Linear Systems/Backward Substitution Examples}
 \subsection{QR Decomposition}
-Alongside the LU decomposition, there exists another decomposition known as the QR Decomposition, similarly to the LU decomposition, the concept behind QR is decompose a matrix into a product of two, in this case, it will be a product of an orthogonal matrix (Q) and an upper triangular (R). We have implemented this technique using Householder reflectors which is the fundamental method that is taught in universities when QR is being introduced.
+Alongside the LU decomposition, there exists another decomposition known as the QR Decomposition, similarly to the LU decomposition, the concept behind QR is decompose a matrix into a product of two, in this case, it will be a product of an orthogonal matrix (Q) and an upper triangular matrix(R). We have implemented this technique using Householder reflectors which is the fundamental method to implement this decomposition.
 
-The reason of implementing these method as a standalone is to give an additional feature to BNumMet and also to the students. Though a QR solver is used to solve the Least Squares problem, these method as an autonomous is not used, only an optimized variant for the solver which takes into consideration the independent terms.
+The reason of implementing these method as a standalone is to give an additional feature to BNumMet and also to the students. %Though a QR solver is used to solve the Least Squares problem, these method as an autonomous is not used, only an optimized variant for the solver which takes into consideration the independent terms.
 
 The algorithm was based upon Fernando Terán de Vergara's course notes for the Master in Applied \& Computational Mathematics~\cite{Vergara}.
 \subsubsection{Examples}
@@ -133,11 +236,11 @@ We implemented the function that solves a linear system $Ax=b$ using the LU fact
 	\input{Content/Thesis/Documentation/Examples/Linear Systems/LU Solver Examples}
 
 \subsection{QR Solver}
-Similarly to the LU Solver, we have added a functionality that will be critical on solving the Least Squares Problem, that is the QR solver. The reason for the QR solver, aside from being used in the Least Squares Problem to avoid the ill-conditioning of solving the Least Squares Problem using the well-known formula of $A^T A x= A^T b$, is that we find it curious because it implements an optimized version of QR taking into account the fact that we are solving a Linear System, in this optimized version, the algorithm does not compute the Q matrix but rather it applies it to the independent terms and then uses the backward substitution on R (which is computed).
+Similarly to the LU Solver, we have added a functionality that will be critical on solving the Least Squares Problem, that is the QR solver. The reason for the QR solver, aside from being used in the Least Squares Problem to avoid the ill-conditioning of solving the Least Squares Problem using the well-known formula of $A^T A x= A^T b$, is that it implements an optimized version of QR taking into account the fact that we are solving a Linear System, in this optimized version, the algorithm does not compute the Q matrix but rather it applies it to the independent terms wihtout storing such matrix and then uses the backward substitution on R (which is computed).
 
 Not only does this method will provide student with another approach on solving linear systems or the Least Squares Problem, but it also grants the underlying procedure of the well-known Matlab Backslash.
 
-The algorithm is based upon Cleve's and Fernando Terán's work~\cite{Vergara, doi:10.1137/1.9780898717952}
+The algorithm is based upon C.Moller's~\cite{doi:10.1137/1.9780898717952} and Fernando Terán's work~\cite{Vergara}
 \subsubsection{Examples}
 \input{Content/Thesis/Documentation/Examples/Linear Systems/QR Solver Examples}
 

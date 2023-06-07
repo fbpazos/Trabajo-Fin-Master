@@ -3,7 +3,7 @@ To expand the techniques available in BNumMet even further, we will incorporate 
 
 Many of the suggested techniques rely on specific values being initialized, so we used a Python dictionary to help students understand the meaning of each variable by associating a key with its value; this dictionary is then used as a global dictionary in the appropriate method.
 
-In this section the following algorithms had been implemented by the author of this work:
+In this section the following algorithms have been implemented by the author of this work:
 \begin{itemize}
     \item Lehmers Random Number Generator \algoref{alg:lehmersrand}
     \item Marsaglia Random Number Generator \algoref{alg:Marsaglia Random Number Generator Algorithm}
@@ -28,11 +28,11 @@ The algorithm implementation was based upon Moller's work~\cite{doi:10.1137/1.97
 
 \subsection{Marsaglia's Generator}
 
-In the original paper~\cite{10.1214/aoap/1177005878} Marsaglia expands on random number generators by providing a generator that is born from a type of relation such as Fibonacci, those generators that add or subtract previous values from the current value, but in Marsaglia's case this generator has some \textit{lag} added to it, that is it extends the appearance of the value that would be expected without \textit{lag}. It is accomplished by introducing two parameters know as $lag_s$ and $lag_r$ as well as a $carry$ variable which will be $1$ if the generated number is negative - to which the $base$ will be added - and $0$ if the generator produced a positive number. This $carry$ variable is what gives the name to this type of generator which are known as $add-with-carry$ or $subtract-with-borrow$
+In the original paper~\cite{10.1214/aoap/1177005878} Marsaglia expands on random number generators by providing a generator that is born from a type of relation such as Fibonacci, those generators that add or subtract previous values from the current value. But in Marsaglia's case this generator has some \textit{lag} added to it, that is, it extends the appearance of the value that would be expected without \textit{lag}. It is accomplished by introducing two parameters know as $lag_s$ and $lag_r$ as well as a $carry$ variable which will be $1$ if the generated number is negative - to which the $base$ will be added - and $0$ if the generator produced a positive number. This $carry$ variable is what gives the name to this type of generator which are known as $add-with-carry$ or $subtract-with-borrow$
 
 One of the complexities of this method is that it generates primarily integer numbers and is limited to the base it accepts as input; however, dividing by the base (the largest number in the generator) produces a decimal number between 0 and 1. Some input arguments were proposed, but as we saw in Lehmer's generator, some default parameters were provided. 
 \[base = 2^{31}-1, lag_r=19, lag_s=7, carry=1, seed\_tuple = (1,1)\]
-This set of values was proposed in the original paper; it is also worth noting that we used the subtract with borrow method, despite the fact that the addition with carry method is analogous. We strongly encourage students to try to find ill-inputs that generate patterns in their output.
+This set of values was proposed in the original paper; it is also worth noting that we used the subtract with borrow method, despite the fact that the addition with carry method is analogous. One of the aims of these implementation is that students find combinations of numbers that give rise to patterns and therefore that dont lead to appropiate random number generators.
 
 We have implemented the algorithm using the original approach of Marsaglia~\cite{10.1214/aoap/1177005878}.
 \subsubsection{Examples}
@@ -50,9 +50,9 @@ The implementation of the method was based upon the original work~\cite{matsumot
 \subsubsection{Analysis of solution}
 One question that arises in Random Number Generators is, how can we make sure our generator is actually random?, in this section we will dive into how we have tested our Mersenne Twister function.
 
-The reference we have followed is~\cite{smid2010statistical}, which develops a suite of tests to check different random number generators, and we have used an already developed version of this suite for Python~\cite{InsaneMonster2022}, since it was out of the scope of this project. 
+The reference we have followed is~\cite{smid2010statistical}, which develops a suite of tests to check different random number generators, and we have used an already developed version of this suite for Python~\cite{InsaneMonster2022}, since it was out of the scope of this project to implement it. 
 
-Some discussion of the test we are eligible to test are the following.
+Some discussion of the test we are eligible to test, since the test-suite has more tests than the ones presented, are the following.
 
 
 \begin{enumerate}
@@ -74,7 +74,7 @@ If the lengths are the ones one could expect from a random number, then the test
 
 \item  \textbf{Discrete Fourier Spectral Test}: It tries to detect periodic features of the run, it applies the Discrete Fourier Transform and count the peaks, the main goal is to find if the peaks that exceed the 95\% threshold are less than 5\%.
 
-\item  \textbf{Non-overlapping Template Matching:} The test tries to find generators that produce many occurrences of a aperiodic pattern, it searches on blocks of m bits for these types of patterns.
+\item  \textbf{Non-overlapping Template Matching:} The test tries to find generators that produce many occurrences of an aperiodic pattern, it searches on blocks of m bits for these types of patterns.
 
 \item \textbf{ Serial test}: This test focuses on determining the number of occurrences of the $2^m$ length of bit patterns and checking if they are one that is to be expected, since random sequences have uniformity, so each sequence has the same probability of appearing. Were we to take $m=1$ we would have the same results as in the monobit test.
 

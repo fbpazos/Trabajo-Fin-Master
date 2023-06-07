@@ -1,5 +1,5 @@
 \chapter{Software Development: The Process}
-This project focuses on the creation of BNumMet, a library that implements scientific numerical methods in conjunction with a graphical interface to help students learn, because of this it is essential to mention the fundamental steps we are going to take on the software development front, since the project is primarily a software development one. 
+This project focuses on the creation of BNumMet, a library that implements scientific numerical methods in conjunction with a graphical interface to help students learn. Because of this it is essential to mention the fundamental steps we are going to take on the software development front, since the project is primarily a software development one. 
 
 To do this, we will discuss the following aspects using~\cite{PMBOK2013} as our project management guide:
 \begin{enumerate}
@@ -24,7 +24,7 @@ The development of BNumMet will use an \textbf{Iterative Life Cycle}, that is, a
 The reason of this choice was predicated on the fact that the requirements were not or could not be a priori estimated, we only had the main objectives which were general and not specific, they also were client-orientated, that is, the client after each iteration would provide suggestions on what he wanted or how he would want to have the end product.
 
 \subsection{Development framework}
-The main framework for the code during the development will be \textbf{Python $\ge$ 3.8}, the reason of this choice was mainly the work previously done by the end-of-degree's thesis by Juan Camilo in which he stated the wide use of python in the current job market but also because the fundamental goal of the project is to help students, that is why, even though Cleve Moller has made an extensive work on Matlab, Matlab Home Licence is priced at 119€, a price that a vast majority of users will not be able to pay if they want to learn independently, not to mention that as per discussed in Camilo's work most business use python or other programming languages leaving Matlab in the background. Overall, the choice of Python remains a decent choice for its practicality, readability, future-proof, and economical value.
+The main framework for the code during the development will be \textbf{Python $\ge$ 3.8}, the reason of this choice was primarly due to being one of the most popular (\cite{tiobe,PYPL} ) programming languages in the market todays and also because the fundamental goal of the project is to help students, that is why, even though C. Moller has made an extensive work on Matlab, Matlab Home Licence is priced at 119€, a price that a vast majority of users will not be able to pay if they want to learn independently. Overall, the choice of Python remains a decent choice for its practicality, readability, future-proof, and economical value.
 
 \subsection{Licensing}
 It is imperative that we discuss the licence so that the project is supported by the law. We must first address the general consensus on the categories of licences.
@@ -45,7 +45,7 @@ As stated, we are using an Iterative Life Cycle; therefore, we must indicate how
 
 Each iteration will have the project manager present the changes made to the client and then the client will provide feedback and next steps. In between iterations, the feedback must be implemented as well as ensuring its quality.
 
-The project originally started on October 2022 with iterations starting on the 6th of that month, the ending will be limited to the end of the Master and the deadline for the thesis to be presented; therefore, every iteration must be ended before May 2023, from then on only small fixes will be applied to the project.
+The project originally started on October 2022 with iterations starting on the 6th of that month, the ending will be limited to the end of the Master and the deadline for the thesis to be presented; therefore, it must be ended before May 2023, from then on only small fixes will be applied to the project.
 
 \section{Execution}
 \subsection{Quality Assurance}
@@ -53,7 +53,7 @@ Software has an intrinsic problem, it cannot be tested, and its correct function
 \begin{enumerate}
     \item Unitary Tests: Is a type of software testing in which individual units or components of a software are tested. The purpose is to validate that each unit of the software code performs as expected.  Unit tests isolate a section of code and verify its correctness. 
     
-    \item Code Reviewer: In particular, we will use the tool known as SonarQube. SonarQube is a self-managed automatic code review tool that systematically helps to deliver clean code. It integrates into our existing workflow and detects issues in our code to help us perform continuous code inspections of our projects. The tool performs an analysis to the adherence to coding standards and core values such as comment percentage, cognitive, and cyclomatic complexity to ensure that our code meets high-quality standards~\cite{sonarsource, sonarqube}. At the end of this document the latest report of SonarQube from the latest version of BNumMet will be attached.
+    \item Code Reviewer: In particular, we will use the tool known as SonarQube. SonarQube is a self-managed automatic code review tool that systematically helps to deliver clean code. It integrates into our existing workflow and detects issues in our code to help us perform continuous code inspections of our projects. The tool performs an analysis to the adherence to coding standards and core values such as comment percentage, cognitive, and cyclomatic complexity to ensure that our code meets high-quality standards~\cite{sonarsource, sonarqube}. At the end of this document the latest report of SonarQube from the latest version of BNumMet will be attached~\hyperlink{Appendix:Documentation}{[Appendix: Documentation]}.
 \end{enumerate}
 
 
@@ -69,7 +69,7 @@ To do such task, we will proceed by using GitHub, which is defined as an interne
 
 All files within the directories will be added/removed accordingly to the execution phase, all backups will be provided by GitHub and, in the case of latex files, by saving the current state of the 'commit' inside another folder on a separate disk drive
 \subsubsection{Versioning}
-As part of configuration management, we should proceed to define how are we going to keep track of changes and to stavlish which is the latest version of them all
+As part of configuration management, we should proceed to define how are we going to keep track of changes and to establish which is the latest version of them all
 \paragraph{Development Versioning}
 During the first stages of the execution phase, the versioning will be done by using the date of the year in the following format DD-MM-YYYY.
 

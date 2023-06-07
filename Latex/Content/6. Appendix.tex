@@ -1,16 +1,13 @@
 \addcontentsline{toc}{chapter}{Appendix}
-\chapter*{Appendix}
+%\chapter*{Appendix}
 %\pagenumbering{gobble} % Appendix pages are not numbered
-
-
-\addcontentsline{toc}{section}{Appendix A}
 \input{Content/Thesis/Documentation}
 
 
-
-\section*{Github Actions}
+\chapter*{Appendix: Github Actions}
+\hypertarget{Appendix:GithubActions}{}
 \subsection*{Latex Compilation}
-\addcontentsline{toc}{section}{Appendix B}
+\addcontentsline{toc}{section}{Github Actions}
 \begin{lstlisting}
   name: Latex Compilation
 
@@ -167,7 +164,7 @@ jobs:
 \end{lstlisting}
 
 
-\includepdf[pages=1,scale=1,pagecommand=\section*{SonarQube Report}]{Include/PDFs/BNumMet-analysis-report.pdf}
-\addcontentsline{toc}{section}{Appendix C}
+\includepdf[pages=1,scale=1,pagecommand=\chapter*{Appendix: SonarQube Report}]{Include/PDFs/BNumMet-analysis-report.pdf} \hypertarget{Appendix:SonarqubeReport}{}
+\addcontentsline{toc}{section}{SonarQube Report}
 \includepdf[pages=2-,scale=1]{Include/PDFs/BNumMet-analysis-report.pdf}
 

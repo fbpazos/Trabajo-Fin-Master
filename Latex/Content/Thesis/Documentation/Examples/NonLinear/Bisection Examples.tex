@@ -3,10 +3,10 @@
 from BNumMet.NonLinear import bisect
 fun = lambda x: x**2 - 2
 interval = [1, 2]
-sol, nIter = bisect(fun, interval, iters = True)
-print("Bisection method: x = %f, nIter = %d" % (sol, nIter))
+sol = bisect(fun, interval, iters = False)
+print("Bisection method: x = %f" % sol)
 
->> Bisection method: x = 1.414214, nIter = 100
+>> Bisection method: x = 1.414214
 \end{lstlisting}
 }
 \paragraph{Example 2}{
