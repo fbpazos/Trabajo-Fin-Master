@@ -1,5 +1,5 @@
 \section{Interpolation}
-Undoubtedly, one of the pinnacles of numerical methods is trying to find a function that passes through a fixed set of points, in hopes of understading how the this points are related to each other, all this using what is known as an `Interpolating Function' which is a function that passes through all the points of a given set. Many different functions exists for a given set of points, in this package, we have built some of the various methods for interpolating a function; however, despite the simplicity of the method's implementation, a general analysis has been conducted on a specific method of implementing the function evaluation; this analysis will be presented after a brief description of the methods.
+Undoubtedly, one of the pinnacles of numerical methods is trying to find a function that passes through a fixed set of points, in hopes of understading how these points are related to each other, all this using what is known as an `Interpolating Function' which is a function that passes through all the points of a given set. Many different functions exists for a given set of points. In this package, we have built some of the various methods for interpolating a function; however, despite the simplicity of the method's implementation, a general analysis has been conducted on a specific method of implementing the function evaluation; this analysis will be presented after a brief description of the methods.
 
 The following algorithm implementations that we have realized will be detailed in this section:
 \begin{itemize}
@@ -22,7 +22,7 @@ Some of the above algorithms were based uppon C. Moller's reference~\cite{doi:10
 \subsection{Polynomial Interpolation}
 This approach performs a polynomial interpolation of a given collection of points; it is one of the fundamental ways of interpolation and the root in the solutions of many error estimation problems. 
 
-The main goal of this interpolation is to find create a polynomial of degree $n-1$ (being $n$ the number of points) that passes through all the points of the set. The algorithm implemented uses the Lagrange interpolation formula~\cite{mathworldLagrange}.
+The main goal of this interpolation is to obtain a polynomial of degree $n-1$ (being $n$ the number of points) that passes through all the points of the set. The algorithm implemented uses the Lagrange interpolation formula~\cite{mathworldLagrange}.
 \subsubsection{Examples}
 	\input{Content/Thesis/Documentation/Examples/Interpolation/Polinomial Interpolation Examples}
 
@@ -36,9 +36,9 @@ The way the algorithms works is to find the closest two points from the the poin
 	\input{Content/Thesis/Documentation/Examples/Interpolation/PieceWise Linear Interpolation Examples}
 
 \subsection{Piecewise cubic interpolation}
-Following the Piecewise Linear interpolation we are going to use the same idea but with a cubic function, that is, we will interpolate the points using a cubic function that passes through four points, this is known as piecewise cubic interpolation. 
+Following the Piecewise Linear interpolation we are going to use the same idea but with a cubic function. The way this interpolating method works is between to points we try to obtain a cubic function, to do so we have four parameters that we needed to determine a cubic polynomial we will need extra information, in this case we require the second derivatives (using an approximation). 
 
-This interpolating polynomial is twice continuously differentiable, and hence each piecewise function is a cubic spline, as well as, having the boundary conditions know as `not-a-knot'~\cite{doi:10.1137/1.9780898717952} which as Mathwork's states at the first and last interior break, the third derivative of the interpolating function is continuous (up to round-off error)~\cite{notAknot}.
+This interpolating polynomial is twice continuously differentiable, and hence each piecewise function is a cubic spline, as well as, having the boundary conditions known as `not-a-knot'~\cite{doi:10.1137/1.9780898717952} which as Mathwork's states at the first and last interior break, the third derivative of the interpolating function is continuous (up to round-off error)~\cite{notAknot}.
 
 
 \subsubsection{Examples}
@@ -46,7 +46,7 @@ This interpolating polynomial is twice continuously differentiable, and hence ea
 
 
 \subsection{Piecewise Cubic Hermite interpolation}
-To end this section, we will present a different approach to piecewise cubic interpolation, this time we will use the Piecewise Cubic Hermite Interpolation Polynomial (P.C.H.I.P.) which is a form of cubic spline interpolation that uses, as per the name indicates, cubic polynomials but whose slopes are explicitly given (in the case of this algorithm they are calcutated according to Mathworks implementation), in the algorithm this is done by looking at the sign of the slopes (using an approximation to the derivative) and then using the harmonic mean to calculate the slope of the interpolating polynomial, this works for the interior points, for the exterior ones . 
+To end this section, we will present a different approach to piecewise cubic interpolation, this time we will use the Piecewise Cubic Hermite Interpolation Polynomial (P.C.H.I.P.) which is a form of cubic spline interpolation that uses, as per the name indicates, cubic polynomials but whose slopes are explicitly given (in the case of this algorithm they are calcutated according to Mathworks implementation), in the algorithm this is done by looking at the sign of the slopes (using an approximation to the derivative) and then using the harmonic mean to calculate the slope of the interpolating polynomial. This works for the interior points, for the exterior ones it uses a non-center, shape-preserving, three-point formula . 
 
 The `pchip' function is a Python implementation of the Piecewise Cubic Hermite Interpolation Polynomial (P.C.H.I.P.) based on an old Fortran program by Fritsch and Carlson~\cite{doi:10.1137/0717021}.
 
@@ -59,7 +59,7 @@ The `pchip' function is a Python implementation of the Piecewise Cubic Hermite I
 
 Similar to the discussion in the linear systems package, we discovered numerous ways a student could implement one part of the method, this one part refers to the lines of code that evaluates the value ($f(x)$) of the points of the mesh. 
 
-In short, for interpolating, one needs to compute the interpolating polynomial as well as evaluating it. The following piece of code is related with the evaluation of piecewise interpolation methods. Particularly, one needs to find in which subinterval a point of the mesh is in, all done to then properly evaluate the interpolating function of that point
+In short, for interpolating, one needs to compute the interpolating polynomial as well as evaluating it. The following piece of code is related with the evaluation of piecewise interpolation methods. Particularly, one needs to find in which subinterval a point of the mesh is in, all done to then properly evaluate the interpolating function at that point
 
 The code section may be summarized as follows: 
 
@@ -74,9 +74,9 @@ $v \gets y_k + s * \Delta_k$
 
 \caption{Extract from Interpolation's algorithm}
 \end{algorithm}
-As one can see, this portion of the code assign values to an array $k$ which is then used to access the index of the array $y$ and $x$, this is done in order to apply the specific formula to the approiate section of the mesh. But, we know for a fact that $k$ is an array and we cannot use it as index, per se, thus we need to find a way to access the index of the array $y$ and $x$ using the values of $k$.
+As one can see, this portion of the code assign values to an array $k$ which is then used to access the index of the array $y$ and $x$. This is done in order to apply the specific formula to the appropiate section of the mesh. But, we know for a fact that $k$ is an array and we cannot use it as index, per se, thus we need to find a way to access the index of the array $y$ and $x$ using the values of $k$.
 
-Note: It should be noted that other algorithms may have different calculations, however for the sake of simplicity, we are generalizing the portion of code.
+Note: It should be noted that other algorithms may have different calculations, however for the sake of simplicity, we are generalizing lines 4 and 5  of code, since all piecewise interpolating functions chooses different formulas for this step.
 
 
 

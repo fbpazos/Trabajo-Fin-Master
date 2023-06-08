@@ -1,5 +1,5 @@
 \section{Non Linear Equation Solver Package}
-As part of extending BNumMet's functionality, we decided to implement the numerical methods associated with solving nonlinear equations because it is a topic that, like the others, is widely taught in a numerical methods course and is a fundamental tool in numerical analysis since it provides a unique way to solve non-linear equations.
+As part of extending BNumMet's functionality, we decided to implement the numerical methods associated with solving nonlinear equations because it is a topic that, like the others, is widely taught in numerical methods courses and is a fundamental tool in numerical analysis since it provides a unique and only way of finding solutions of non-lnear equations by numerical approaches.
 
 The following algorithm implementations that we have realized will be detailed in this section:
 \begin{itemize}
@@ -40,7 +40,7 @@ The algorithm is based upon C. Moller's implementation~\cite{doi:10.1137/1.97808
 	\input{Content/Thesis/Documentation/Examples/NonLinear/Secant Examples}
 
 \subsection{Inverse Quadratic Interpolation (I.Q.I.)}
-The aim is to utilize quadratic interpolation to approximate the inverse of a function, and further iterations will result in the zero we want. It should be noted that this method is often used as part of another method that we will examine later~\cite{10.5555/2553197}, that is why we created it as a standalone to offer students with a glimpse of what the method is about without additional code that may interfere with the learning process. Additionally, this method is a natural extension of the secant method in which a second order polynomial is used instead of a linear one.
+The aim of this method is to extent the secant method to use a second order approximation. However, a polynomial of second degree does not always have a crossing with the x-axis. That is why the inverse function of a second order polynomial is used which always posseses such a crossing. It should be noted that this method is often used as part of another method that we will examine later~\cite{10.5555/2553197}, that is why we created it as a standalone to offer students with a glimpse of what the method is about without additional code that may interfere with the learning process. Additionally, this method is a natural extension of the secant method in which a second order polynomial is used instead of a linear one.
 
 The algorithm is primarily based upon~\cite{kreyszig11}  as well as Moller's implementation~\cite{doi:10.1137/1.9780898717952}.
 \subsubsection{Examples}

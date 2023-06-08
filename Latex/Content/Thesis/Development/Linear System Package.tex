@@ -10,7 +10,7 @@ During this section, the following algorithms that we have carefully implemented
 \end{itemize}
 
 \subsection{LU Decomposition}
-The (P)LU decomposition, developed in this package, factors a matrix into a product of three matrices PLU, P being a permutation matrix, L a lower triangular matrix and finally U an upper triangular matrix. This approach is usually used to solve linear problems; however, it may be applied in a variety of ways.
+The (P)LU decomposition, developed in this package, factors a matrix into a product of three matrices PLU, P being a permutation matrix, L a lower triangular matrix and finally U an upper triangular matrix. This approach is usually used to solve linear systems; however, it may be applied in a variety of ways.
 
 During the development of such method, some considerations have been taken into account; firstly, we put all the variables in the English language as well as a choosing a naming that will provide the future student some hints on what each variable is doing. 
 
@@ -107,7 +107,7 @@ Visually, this can be seen as:
     \end{tikzpicture}
     
 \end{center}
-The main problem with this operation is within how Python's Numpy interprets the matrices $[C]$ and $[X|A]$, it interprets it as a vector, not as a column/row matrix. This is a problem because the operation for multipliying matrices and vectors are different.
+The main problem with this operation is within how Python's Numpy interprets the matrices $[C]$ and $[X|A]$. It interprets it as a vector, not as a column/row matrix. This is a problem because the operation for multipliying matrices and vectors are different.
 
 In order to solve the problem we have multiple options to choose from:
 
@@ -238,7 +238,7 @@ We implemented the function that solves a linear system $Ax=b$ using the LU fact
 \subsection{QR Solver}
 Similarly to the LU Solver, we have added a functionality that will be critical on solving the Least Squares Problem, that is the QR solver. The reason for the QR solver, aside from being used in the Least Squares Problem to avoid the ill-conditioning of solving the Least Squares Problem using the well-known formula of $A^T A x= A^T b$, is that it implements an optimized version of QR taking into account the fact that we are solving a Linear System, in this optimized version, the algorithm does not compute the Q matrix but rather it applies it to the independent terms wihtout storing such matrix and then uses the backward substitution on R (which is computed).
 
-Not only does this method will provide student with another approach on solving linear systems or the Least Squares Problem, but it also grants the underlying procedure of the well-known Matlab Backslash.
+Not only does this method provides students with another approach on solving linear systems or the Least Squares Problem, but it also grants the underlying procedure of the well-known Matlab Backslash.
 
 The algorithm is based upon C.Moller's~\cite{doi:10.1137/1.9780898717952} and Fernando Terán's work~\cite{Vergara}
 \subsubsection{Examples}
