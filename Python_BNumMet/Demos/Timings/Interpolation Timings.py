@@ -91,7 +91,7 @@ def splines(x, y, u, sorted=False, mode=None):
             int
         )  # Create a vector of ones of the same size as u, to store the result
         for i in range(1, n):
-            k[x[i - 1] <= u] = int(i)
+            k[x[i - 1] <= u] = i
 
         s = [
             u[i] - x[k[i] - 1] for i in range(len(u))
